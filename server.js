@@ -51,14 +51,16 @@ function readRequestBody(request) {
 }
 
 function getStoredApiKey() {
-  if (process.env.PRIMESERVE_GSTIN_API_KEY) return process.env.PRIMESERVE_GSTIN_API_KEY.trim();
-  if (!existsSync(keyFile)) return "";
-  try {
-    const parsed = JSON.parse(readFileSync(keyFile, "utf8"));
-    return String(parsed.apiKey || "").trim();
-  } catch {
-    return "";
+  if (existsSync(keyFile)) {
+    try {
+      const parsed = JSON.parse(readFileSync(keyFile, "utf8"));
+      const storedKey = String(parsed.apiKey || "").trim();
+      if (storedKey) return storedKey;
+    } catch {
+      // Fall back to the environment variable below.
+    }
   }
+  return String(process.env.PRIMESERVE_GSTIN_API_KEY || "").trim();
 }
 
 function saveStoredApiKey(apiKey) {
