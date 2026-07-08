@@ -945,6 +945,35 @@ function yesNo(value) {
   return value || "No";
 }
 
+function firstAvailable(...values) {
+  return values.find((value) => value !== undefined && value !== null && value !== "");
+}
+
+function findFieldDeep(source, keys, seen = new Set()) {
+  if (!source || typeof source !== "object" || seen.has(source)) return undefined;
+  seen.add(source);
+
+  for (const key of keys) {
+    if (Object.prototype.hasOwnProperty.call(source, key) && source[key] !== undefined && source[key] !== null && source[key] !== "") {
+      return source[key];
+    }
+  }
+
+  for (const value of Object.values(source)) {
+    if (value && typeof value === "object") {
+      const found = findFieldDeep(value, keys, seen);
+      if (found !== undefined && found !== null && found !== "") return found;
+    }
+  }
+
+  return undefined;
+}
+
+function getGstField(source, ...keys) {
+  if (!source || typeof source !== "object") return undefined;
+  return firstAvailable(...keys.map((key) => source[key]), findFieldDeep(source, keys));
+}
+
 function GstInfoCell({ label, value, isLink }) {
   return (
     <div className="gst-info-cell">
@@ -992,37 +1021,42 @@ async function fetchGstinViaProxy({ gstin, endpoint }) {
 }
 
 function GstinResultView({ data, searchedGstin, onBack }) {
-  const principalAddress = data?.pradr?.addr;
-  const additionalTradeNames = Array.isArray(data?.tradeNamAdditional)
-    ? data.tradeNamAdditional.join(", ")
-    : data?.additionalTradeName || "View";
-  const natureOfBusiness = Array.isArray(data?.nba) ? data.nba : [];
-  const additionalPlaces = Array.isArray(data?.adadr) ? data.adadr : [];
+  const gstData = normalizeGstinPayload(data) || data || {};
+  const principalRecord = getGstField(gstData, "pradr", "principalAddress", "principalPlaceOfBusiness");
+  const principalAddress = principalRecord?.addr || principalRecord;
+  const tradeNames = getGstField(gstData, "tradeNamAdditional", "additionalTradeName", "additionalTradeNames");
+  const additionalTradeNames = Array.isArray(tradeNames)
+    ? tradeNames.join(", ")
+    : tradeNames || "View";
+  const businessActivities = getGstField(gstData, "nba", "natureOfBusinessActivities", "businessActivities");
+  const natureOfBusiness = Array.isArray(businessActivities) ? businessActivities : [];
+  const additionalBusinessPlaces = getGstField(gstData, "adadr", "additionalPlaces", "additionalAddresses");
+  const additionalPlaces = Array.isArray(additionalBusinessPlaces) ? additionalBusinessPlaces : [];
 
   return (
     <article className="gst-result-panel">
       <div className="gst-result-topbar">
-        <h2>Search Result based on GSTIN/UIN : <span>{data?.gstin || searchedGstin}</span></h2>
+        <h2>Search Result based on GSTIN/UIN : <span>{getGstField(gstData, "gstin", "gstinNo", "gstIn") || searchedGstin}</span></h2>
         <button type="button" onClick={onBack}>Back</button>
       </div>
 
       <div className="gst-info-grid">
-        <GstInfoCell label="Legal Name of Business" value={data?.lgnm} />
-        <GstInfoCell label="Trade Name" value={data?.tradeNam || data?.tradeName} />
-        <GstInfoCell label="Effective Date of Registration" value={data?.rgdt} />
-        <GstInfoCell label="Constitution of Business" value={data?.ctb} />
-        <GstInfoCell label="GSTIN / UIN Status" value={data?.sts} />
-        <GstInfoCell label="Taxpayer Type" value={data?.dty} />
-        <GstInfoCell label="Administrative Office" value={formatOffice("(JURISDICTION - STATE)", data?.stjCd, data?.stj)} />
-        <GstInfoCell label="Other Office" value={formatOffice("(JURISDICTION - CENTER)", data?.ctjCd, data?.ctj)} />
+        <GstInfoCell label="Legal Name of Business" value={getGstField(gstData, "lgnm", "legalName", "legalNameOfBusiness")} />
+        <GstInfoCell label="Trade Name" value={getGstField(gstData, "tradeNam", "tradeName", "businessName")} />
+        <GstInfoCell label="Effective Date of Registration" value={getGstField(gstData, "rgdt", "registrationDate", "effectiveDateOfRegistration")} />
+        <GstInfoCell label="Constitution of Business" value={getGstField(gstData, "ctb", "constitutionOfBusiness", "constitution")} />
+        <GstInfoCell label="GSTIN / UIN Status" value={getGstField(gstData, "sts", "status", "gstinStatus")} />
+        <GstInfoCell label="Taxpayer Type" value={getGstField(gstData, "dty", "taxpayerType")} />
+        <GstInfoCell label="Administrative Office" value={formatOffice("(JURISDICTION - STATE)", getGstField(gstData, "stjCd", "stateJurisdictionCode"), getGstField(gstData, "stj", "stateJurisdiction"))} />
+        <GstInfoCell label="Other Office" value={formatOffice("(JURISDICTION - CENTER)", getGstField(gstData, "ctjCd", "centerJurisdictionCode"), getGstField(gstData, "ctj", "centerJurisdiction"))} />
         <GstInfoCell label="Principal Place of Business" value={formatAddress(principalAddress)} />
-        <GstInfoCell label="Whether Aadhaar Authenticated?" value={yesNo(data?.adhrVFlag || data?.aadhaarVerified)} />
-        <GstInfoCell label="Whether e-KYC Verified?" value={yesNo(data?.ekycVFlag || data?.ekycVerified)} />
+        <GstInfoCell label="Whether Aadhaar Authenticated?" value={yesNo(getGstField(gstData, "adhrVFlag", "aadhaarAuthenticated", "aadhaarVerified"))} />
+        <GstInfoCell label="Whether e-KYC Verified?" value={yesNo(getGstField(gstData, "ekycVFlag", "ekycVerified"))} />
         <GstInfoCell label="Additional Trade Name" value={additionalTradeNames} isLink={additionalTradeNames === "View"} />
       </div>
 
       <GstSection title="Nature of Core Business Activity">
-        <p className="gst-red-text">{data?.nba?.[0] || data?.ntcrbs || "Not available"}</p>
+        <p className="gst-red-text">{natureOfBusiness[0] || getGstField(gstData, "ntcrbs", "natureOfCoreBusinessActivity") || "Not available"}</p>
       </GstSection>
 
       <GstSection title="Nature of Business Activities">
