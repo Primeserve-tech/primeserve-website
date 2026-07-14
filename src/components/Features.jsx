@@ -60,7 +60,6 @@ function Features() {
             <div className={`feature-icon ${card.icon}`} />
             <h3>{card.title}</h3>
             <p>{card.text}</p>
-            <a href="#demo">Learn More <span>→</span></a>
           </article>
         ))}
         </div>

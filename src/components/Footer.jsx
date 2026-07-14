@@ -35,6 +35,34 @@ function FooterIcon({ type }) {
   return <span className={`footer-icon footer-icon-${type}`}>{icons[type]}</span>;
 }
 
+function SocialIcon({ type }) {
+  if (type === "linkedin") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6.94 8.5H3.56V21h3.38V8.5ZM5.25 3a1.96 1.96 0 1 0 0 3.92A1.96 1.96 0 0 0 5.25 3ZM21 13.84c0-3.76-2-5.51-4.68-5.51-2.16 0-3.12 1.19-3.66 2.02V8.5H9.28V21h3.38v-6.19c0-1.63.31-3.22 2.34-3.22 2 0 2.03 1.87 2.03 3.33V21H21v-7.16Z" />
+      </svg>
+    );
+  }
+
+  if (type === "instagram") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M7.2 2h9.6A5.2 5.2 0 0 1 22 7.2v9.6a5.2 5.2 0 0 1-5.2 5.2H7.2A5.2 5.2 0 0 1 2 16.8V7.2A5.2 5.2 0 0 1 7.2 2Zm0 2A3.2 3.2 0 0 0 4 7.2v9.6A3.2 3.2 0 0 0 7.2 20h9.6a3.2 3.2 0 0 0 3.2-3.2V7.2A3.2 3.2 0 0 0 16.8 4H7.2ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm5.3-3.4a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Z"
+        />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M20.5 3.5A11.8 11.8 0 0 0 12.1 0C5.6 0 .3 5.3.3 11.8c0 2.1.6 4.2 1.6 6L.2 24l6.4-1.7a11.8 11.8 0 0 0 5.6 1.4h.1c6.5 0 11.8-5.3 11.8-11.8 0-3.2-1.3-6.1-3.6-8.4Zm-8.3 18.2a9.8 9.8 0 0 1-5-1.4l-.4-.2-3.8 1 1-3.7-.2-.4a9.7 9.7 0 1 1 8.4 4.7Zm5.4-7.3c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.2-.2.3-.8.9-1 1.1-.2.2-.4.2-.7.1-1.8-.9-3-1.6-4.2-3.6-.3-.5.3-.5.9-1.7.1-.2 0-.4 0-.6l-.9-2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.3 3.4 1.5 3.6c.2.2 2.5 3.8 6 5.3.8.4 1.5.6 2 .7.8.3 1.6.2 2.2.1.7-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.4-.2-.8-.3Z" />
+    </svg>
+  );
+}
+
 function Footer() {
   const [activePolicy, setActivePolicy] = useState(null);
   const [newsletterMessage, setNewsletterMessage] = useState("");
@@ -150,7 +178,7 @@ function Footer() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  in
+      <SocialIcon type="linkedin" />
                 </a>
                 <a
                   className="social-link instagram"
@@ -159,7 +187,7 @@ function Footer() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  ig
+      <SocialIcon type="instagram" />
                 </a>
                 <a
                   className="social-link whatsapp"
@@ -168,7 +196,7 @@ function Footer() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  wa
+      <SocialIcon type="whatsapp" />
                 </a>
               </div>
             </div>

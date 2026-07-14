@@ -1,15 +1,25 @@
-import companyHero from "../assets/company-page-hero.png";
+import companyHeroOriginal from "../assets/company-page-hero.png";
+import companyHeroV2 from "../assets/company-page-hero-v2.png";
+import companyHeroV3 from "../assets/company-page-hero-v3.png";
+import companyHeroV4 from "../assets/company-page-hero-v4.png";
+import companyHeroV5 from "../assets/company-page-hero-v5.png";
+import companyHeroV6 from "../assets/company-page-hero-v6.png";
+
+// Change this value to an earlier version to restore a previous Company hero.
+const COMPANY_HERO_VERSION = "v6";
+const companyHero = COMPANY_HERO_VERSION === "v6"
+  ? companyHeroV6
+  : COMPANY_HERO_VERSION === "v5"
+    ? companyHeroV5
+  : COMPANY_HERO_VERSION === "v4"
+    ? companyHeroV4
+  : COMPANY_HERO_VERSION === "v3"
+    ? companyHeroV3
+  : COMPANY_HERO_VERSION === "v2"
+    ? companyHeroV2
+    : companyHeroOriginal;
 
 function CompanyPage() {
-  const stats = [
-    { icon: "code", number: "250+", title: "APIs", text: "and Growing" },
-    { icon: "users", number: "100+", title: "Clients", text: "Across India" },
-    { icon: "cloud", number: "10M+", title: "API Calls", text: "Every Month" },
-    { icon: "shield", number: "99.99%", title: "Uptime", text: "High Reliability" },
-    { icon: "support", number: "24x7", title: "Support", text: "Always Available" },
-    { icon: "india", number: "PAN India", title: "Services", text: "Seamless Coverage" },
-  ];
-
   const industries = [
     { icon: "bank", title: "Banking & Financial Services", text: "Identity verification, credit bureau, bank verification, KYC and GST validation." },
     { icon: "fintech", title: "FinTech & Lending", text: "Customer onboarding, income verification, credit decisioning, GST and ITR APIs." },
@@ -26,28 +36,29 @@ function CompanyPage() {
   ];
 
   const heroServices = [
-    { icon: "business", text: "Company APIs" },
-    { icon: "identity", text: "KYC APIs" },
-    { icon: "gst", text: "GST APIs" },
-    { icon: "finance", text: "PAN India" },
+    { icon: "document", text: "250+ APIs" },
+    { icon: "sap", text: "SAP Solution" },
+    { icon: "cloud", text: "ASP GSP Solution" },
+    { icon: "signature", text: "DSC" },
+    { icon: "tax", text: "Managed Services" },
   ];
 
   return (
     <div className="company-page">
-      <section className="company-hero">
+      <section className="company-hero" style={{ "--page-hero-image": `url(${companyHero})` }}>
         <div className="company-hero-copy">
-          <span className="company-eyebrow">ABOUT PRIMESERVE</span>
           <h1>
-            Building Technology
+            Empowering Businesses Through
             <br />
-            that Empowers Businesses
+            APIs, Compliance &
             <br />
-            <span>Across India</span>
+            <span>Enterprise Technology</span>
           </h1>
           <p>
-            PrimeServe Global Solution Pvt. Ltd. is a technology company
-            delivering innovative APIs, products and solutions that simplify
-            compliance, automate processes and accelerate digital transformation.
+            Primeserve Global Solution Pvt. Ltd. delivers enterprise APIs, GST
+            automation, Digital Signature solutions, SAP services and compliance
+            technologies that help businesses automate operations, simplify
+            regulatory processes and accelerate digital transformation.
           </p>
 
           <div className="company-actions">
@@ -60,33 +71,21 @@ function CompanyPage() {
           </div>
 
           <div className="hero-logo-strip" aria-label="PrimeServe company logos">
-            {heroServices.map((item) => (
-              <span className="hero-logo-chip" key={item.text}>
-                <i className={`api-card-icon ${item.icon}`} />
-                {item.text}
+            {heroServices.map((item, index) => (
+              <span className="hero-service-entry" key={item.text}>
+                {index === 3 && <span className="hero-service-row-break" aria-hidden="true" />}
+                <span className="hero-logo-chip">
+                  <i className={`feature-icon ${item.icon}`} />
+                  {item.text}
+                </span>
               </span>
             ))}
           </div>
         </div>
 
-        <div className="company-hero-art">
-          <img src={companyHero} alt="PrimeServe PAN India technology network" />
-        </div>
-
       </section>
 
       <section className="company-content">
-        <div className="company-stats-strip">
-          {stats.map((stat) => (
-            <article className="company-stat" key={stat.number}>
-              <span className={`company-stat-icon ${stat.icon}`} />
-              <strong>{stat.number}</strong>
-              <b>{stat.title}</b>
-              <small>{stat.text}</small>
-            </article>
-          ))}
-        </div>
-
         <section className="industry-section" id="industries">
           <div className="industry-heading">
             <span>- INDUSTRIES WE SERVE -</span>
@@ -105,9 +104,6 @@ function CompanyPage() {
                   <div>
                     <h3>{item.title}</h3>
                     <p>{item.text}</p>
-                    <a href="#contact">
-                      Learn More <span className="arrow-icon">→</span>
-                    </a>
                   </div>
                 </article>
               ))}

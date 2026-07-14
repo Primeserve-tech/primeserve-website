@@ -1,5 +1,10 @@
-import apiHero from "../assets/api-page-hero.png";
+import apiHeroOriginal from "../assets/api-page-hero.png";
+import apiHeroV2 from "../assets/api-page-hero-v2.png";
 import Stats from "./Stats";
+
+// Change to false to restore the original API hero.
+const USE_API_HERO_V2 = true;
+const apiHero = USE_API_HERO_V2 ? apiHeroV2 : apiHeroOriginal;
 
 function ApiPage() {
   const trustItems = [
@@ -36,7 +41,7 @@ function ApiPage() {
 
   return (
     <div className="api-page">
-      <section className="api-hero">
+      <section className="api-hero" style={{ "--page-hero-image": `url(${apiHero})` }}>
         <div className="api-hero-copy">
           <h1>
             Enterprise APIs for
@@ -81,9 +86,6 @@ function ApiPage() {
           </div>
         </div>
 
-        <div className="api-hero-art">
-          <img src={apiHero} alt="API gateway connected to API categories" />
-        </div>
       </section>
 
       <Stats />

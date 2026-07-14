@@ -128,7 +128,6 @@ const moduleConfig = {
       ["servicesUsed", "Services Used", "text"],
       ["clientLogo", "Client Logo", "file"],
       ["coverImage", "Cover Image", "file"],
-      ["pdf", "PDF Upload Optional", "file"],
       ["status", "Status", "select", ["Draft", "Published"]],
       ["featured", "Featured", "select", ["No", "Yes"]],
       ["seoTitle", "SEO Title", "text"],
@@ -381,6 +380,7 @@ const settingsFields = [
   ["termsUrl", "Terms URL", "text"],
   ["hsnSacToolEnabled", "HSN/SAC Tool Enabled", "select", ["Yes", "No"]],
   ["gstinValidatorEnabled", "GSTIN Validator Enabled", "select", ["Yes", "No"]],
+  ["gstBulkDataFetchEnabled", "GST Bulk Data Fetch Enabled", "select", ["Yes", "No"]],
   ["gstinApiUrl", "GSTIN API URL", "url"],
   ["gstinApiKey", "GSTIN API Key", "password"],
   ["gstinAdminSecret", "Server Update Secret", "password"],
@@ -430,7 +430,7 @@ function AdminLogin({ onLogin }) {
 }
 
 function renderInput(field, value, onChange) {
-  const [key, label, type, options] = field;
+  const [key, , type, options] = field;
   if (type === "richtext") {
     return (
       <>
@@ -476,7 +476,26 @@ function renderInput(field, value, onChange) {
             const file = event.target.files?.[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = () => onChange(key, reader.result || "");
+            reader.onload = () => {
+              if (!file.type.startsWith("image/")) {
+                onChange(key, reader.result || "");
+                return;
+              }
+              const image = new Image();
+              image.onload = () => {
+                const maxSide = 900;
+                const scale = Math.min(1, maxSide / Math.max(image.width, image.height));
+                const canvas = document.createElement("canvas");
+                canvas.width = Math.max(1, Math.round(image.width * scale));
+                canvas.height = Math.max(1, Math.round(image.height * scale));
+                const context = canvas.getContext("2d");
+                context.fillStyle = "#ffffff";
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                context.drawImage(image, 0, 0, canvas.width, canvas.height);
+                onChange(key, canvas.toDataURL("image/jpeg", 0.68));
+              };
+              image.src = reader.result;
+            };
             reader.readAsDataURL(file);
           }}
         />
@@ -489,6 +508,42 @@ function renderInput(field, value, onChange) {
     );
   }
   return <input type={type} value={value || ""} onChange={(event) => onChange(key, event.target.value)} />;
+}
+
+function compressStoredImage(dataUrl, maxSide = 900, quality = 0.68) {
+  if (!String(dataUrl || "").startsWith("data:image/")) return Promise.resolve(dataUrl);
+  return new Promise((resolve) => {
+    const image = new Image();
+    image.onload = () => {
+      const scale = Math.min(1, maxSide / Math.max(image.width, image.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(image.width * scale));
+      canvas.height = Math.max(1, Math.round(image.height * scale));
+      const context = canvas.getContext("2d");
+      context.fillStyle = "#ffffff";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      const optimized = canvas.toDataURL("image/jpeg", quality);
+      resolve(optimized.length < dataUrl.length ? optimized : dataUrl);
+    };
+    image.onerror = () => resolve(dataUrl);
+    image.src = dataUrl;
+  });
+}
+
+async function optimizeCmsStorage(value, key = "", maxSide = 900, quality = 0.68) {
+  if (typeof value === "string") {
+    if ((key === "pdf" || key === "attachment") && value.startsWith("data:")) return "";
+    return compressStoredImage(value, maxSide, quality);
+  }
+  if (Array.isArray(value)) return Promise.all(value.map((entry) => optimizeCmsStorage(entry, "", maxSide, quality)));
+  if (value && typeof value === "object") {
+    const entries = await Promise.all(
+      Object.entries(value).map(async ([childKey, childValue]) => [childKey, await optimizeCmsStorage(childValue, childKey, maxSide, quality)])
+    );
+    return Object.fromEntries(entries);
+  }
+  return value;
 }
 
 function AdminDashboard() {
@@ -569,7 +624,7 @@ function AdminDashboard() {
     window.location.href = mailto;
   };
 
-  const saveItem = () => {
+  const saveItem = async () => {
     const { moduleKey, item, isNew } = editing;
     const nextItem = { ...item };
     if (moduleKey === "blogs") {
@@ -578,10 +633,41 @@ function AdminDashboard() {
       nextItem.readingTime = `${Math.max(1, Math.ceil(words / 200))} min read`;
       nextItem.lastUpdatedDate = nextItem.lastUpdatedDate || new Date().toISOString().slice(0, 10);
     }
+    if (moduleKey === "caseStudies" && !String(nextItem.slug || "").trim()) {
+      nextItem.slug = String(nextItem.title || "case-study")
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+    }
     const list = data[moduleKey] || [];
     const nextList = isNew ? [nextItem, ...list] : list.map((entry) => (entry.id === nextItem.id ? nextItem : entry));
-    updateData({ ...data, [moduleKey]: nextList }, "Saved successfully.");
-    setEditing(null);
+    const nextData = { ...data, [moduleKey]: nextList };
+    try {
+      updateData(nextData, "Saved successfully.");
+      setEditing(null);
+    } catch (error) {
+      const storageFull = error?.name === "QuotaExceededError";
+      if (!storageFull) {
+        setToast("Unable to save this record. Please try again.");
+        return;
+      }
+      setToast("Optimizing uploaded media and retrying automatically...");
+      try {
+        const optimizedData = await optimizeCmsStorage(nextData);
+        try {
+          updateData(optimizedData, "Saved successfully. Media was optimized automatically.");
+          setEditing(null);
+        } catch (retryError) {
+          if (retryError?.name !== "QuotaExceededError") throw retryError;
+          const compactData = await optimizeCmsStorage(optimizedData, "", 600, 0.5);
+          updateData(compactData, "Saved successfully. Media was optimized automatically.");
+          setEditing(null);
+        }
+      } catch {
+        setToast("Storage is still full. Remove one old large attachment and save again.");
+      }
+    }
   };
 
   const importHsnCsv = (event) => {

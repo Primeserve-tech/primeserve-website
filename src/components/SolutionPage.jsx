@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import solutionHero from "../assets/solution-page-hero.png";
+import solutionHeroOriginal from "../assets/solution-page-hero.png";
+import solutionHeroV2 from "../assets/solution-page-hero-v2.png";
+
+// Change this to false at any time to restore the original hero image.
+const USE_SOLUTION_HERO_V2 = true;
+const solutionHero = USE_SOLUTION_HERO_V2 ? solutionHeroV2 : solutionHeroOriginal;
 
 function SolutionPage() {
   const [selectedSolution, setSelectedSolution] = useState(null);
@@ -10,14 +15,19 @@ function SolutionPage() {
       icon: "sap",
       title: "SAP Implementation & Digital Signature Solutions",
       description:
-        "End-to-end SAP integration, automation and digital signature enablement for enterprise compliance workflows.",
+        "End-to-end SAP implementation, integration, vendor payment automation, digital signatures and enterprise workflow transformation.",
       bullets: [
         "SAP Implementation",
         "SAP GST Integration",
         "SAP DMS",
         "SAP Digital Signature",
         "Invoice Automation",
+        "Vendor Payment Automation",
+        "Vendor Onboarding",
         "Workflow Automation",
+        "SAP FICO Integration",
+        "SAP API Integration",
+        "Payment Reconciliation",
         "SAP Support & Consulting",
       ],
     },
@@ -26,12 +36,17 @@ function SolutionPage() {
       icon: "tax",
       title: "Managed Tax & Compliance Services",
       description:
-        "Complete tax, GST and regulatory compliance support delivered by domain experts.",
+        "Complete direct tax, indirect tax, GST, corporate and regulatory compliance services delivered by domain experts.",
       bullets: [
         "GST Return Filing",
         "Direct Tax",
         "Indirect Tax",
         "ROC Compliance",
+        "Income Tax Returns",
+        "TDS & TCS Compliance",
+        "GST Reconciliation",
+        "Notice Management",
+        "Vendor Compliance",
         "Audit Support",
         "Tax Advisory",
         "Compliance Automation",
@@ -42,12 +57,17 @@ function SolutionPage() {
       icon: "cloud",
       title: "Cloud ASP/GSP Platform & Managed Services",
       description:
-        "Cloud-based GST, e-Invoice and e-Way Bill automation platform for enterprises, ASPs and GSP-led workflows.",
+        "Cloud-based GST, vendor management, e-Invoice, e-Way Bill and reconciliation platform for enterprises, ASPs and GSPs.",
       bullets: [
         "Cloud GST Platform",
         "e-Invoice Automation",
         "e-Way Bill Automation",
         "GST Reconciliation",
+        "Vendor Management",
+        "Vendor Onboarding",
+        "Vendor Compliance Tracking",
+        "Purchase Register Matching",
+        "Input Tax Credit Controls",
         "Multi-user Dashboard",
         "Compliance Reports",
         "API Integration",
@@ -59,7 +79,7 @@ function SolutionPage() {
       icon: "gst",
       title: "GST & Compliance APIs",
       description:
-        "Reliable APIs for GST, e-Invoice, e-Way Bill, MCA, IEC, MSME and compliance automation.",
+        "Extensive APIs for GST, returns, e-Invoice, e-Way Bill, MCA, IEC, MSME, TDS and enterprise compliance automation.",
       bullets: [
         "GST Public Search",
         "GST Taxpayer API",
@@ -67,6 +87,12 @@ function SolutionPage() {
         "GSTR-1, 2A, 2B, 3B, 6, 9",
         "e-Invoice APIs",
         "e-Way Bill APIs",
+        "GST Registration Status",
+        "GST Filing History",
+        "GSTR-2B Reconciliation",
+        "ITC Eligibility",
+        "HSN/SAC & Tax Rates",
+        "TDS & TCS APIs",
         "MCA / CIN / DIN / TAN",
         "IEC / MSME / HSN / TDS",
       ],
@@ -76,20 +102,41 @@ function SolutionPage() {
       icon: "identity",
       title: "Identity Verification APIs",
       description:
-        "Real-time verification APIs for customer onboarding, KYC, business verification and risk checks.",
+        "180+ real-time Vehicle, PAN, Passport, Aadhaar, MSME, Company, CIN and DIN verification APIs for onboarding, KYC and business risk checks.",
       bullets: [
-        "Aadhaar eKYC",
+        "Vehicle APIs",
         "PAN Verification",
-        "PAN Fetch",
-        "PAN to GST",
-        "PAN to MSME",
+        "Passport",
+        "Aadhaar eKYC",
+        "MSME Verification",
+        "Company Verification",
+        "CIN Verification",
+        "DIN Verification",
         "Bank Account Verification",
         "Driving Licence",
         "Voter ID",
-        "Passport",
-        "Face Match",
-        "Video KYC",
-        "TransUnion & Equifax Credit APIs",
+        "Face Match & Video KYC",
+        "UAN & Employment Check",
+        "Criminal & Court Check",
+        "FSSAI Verification",
+        "Bank & UPI Verification",
+        "Mobile Intelligence",
+      ],
+    },
+    {
+      category: "Digital Signature",
+      icon: "signature",
+      title: "Digital Signature Certificates (DSC)",
+      description: "Secure Digital Signature Certificates (DSC), USB Crypto Tokens, document signing, tender participation, GST, MCA, Income Tax, DGFT and enterprise authentication solutions.",
+      bullets: [
+        "Class 3 Individual DSC",
+        "Class 3 Organisation DSC",
+        "Signing & Encryption",
+        "DGFT Digital Signature",
+        "USB Crypto Token",
+        "e-Tendering & e-Procurement",
+        "Document Signing",
+        "Enterprise Support",
       ],
     },
   ];
@@ -130,9 +177,8 @@ function SolutionPage() {
 
   return (
     <div className="solution-page">
-      <section className="solution-hero">
+      <section className="solution-hero" style={{ "--solution-hero-image": `url(${solutionHero})` }}>
         <div className="solution-hero-copy">
-          <span className="solution-eyebrow">OUR SOLUTIONS</span>
           <h1>
             Enterprise Solutions for
             <br />
@@ -165,9 +211,6 @@ function SolutionPage() {
           </div>
         </div>
 
-        <div className="solution-hero-art">
-          <img src={solutionHero} alt="Business verification compliance automation growth workflow" />
-        </div>
       </section>
 
       <section className="solution-list-section" id="solutions">
@@ -181,17 +224,20 @@ function SolutionPage() {
 
         <div className="solution-carousel-shell" aria-label="PrimeServe solutions">
           <div className="solution-card-track">
-            {solutions.map((solution) => (
-              <article className="solution-card" key={solution.title}>
+            {[...solutions, ...solutions].map((solution, index) => (
+              <article className="solution-card" key={`${solution.title}-${index}`}>
                 <div className={`solution-card-icon ${solution.icon}`} />
                 <span className={`solution-card-category ${solution.icon}`}>
                   {solution.category}
                 </span>
                 <h3>{solution.title}</h3>
                 <p>{solution.description}</p>
-                <button type="button" onClick={() => setSelectedSolution(solution)}>
-                  Learn More <span className="arrow-icon">→</span>
-                </button>
+                <div className="solution-card-highlights" aria-label={`${solution.title} features`}>
+                  {solution.bullets.slice(0, 8).map((bullet) => (
+                    <span key={bullet}>{bullet}</span>
+                  ))}
+                  <span className="solution-card-more">Many More...</span>
+                </div>
               </article>
             ))}
           </div>

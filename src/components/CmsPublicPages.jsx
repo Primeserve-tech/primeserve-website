@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { jsPDF } from "jspdf";
 import { createId, getCmsData, saveCmsData } from "../cmsStore";
 import { hsnSacSeedData } from "../data/hsnSacData";
+import primeServeLogo from "../assets/primeserve-logo-clean.png";
 
 function PublicHero({ eyebrow, title, text, compact = false }) {
   return (
@@ -52,16 +54,77 @@ function usePageSeo({ title, description, path }) {
   }, [title, description, path]);
 }
 
+const plainHeadingPattern = /^(introduction|what is .*|why .*|how .*|where .*|when .*|which .*|benefits? .*|key .*|conclusion|summary|overview|use cases?|features?|faqs?)$/i;
+
+function isPlainHeading(text = "") {
+  const cleanText = text.trim();
+  return (
+    cleanText.length <= 90 &&
+    !/[.!]$/.test(cleanText) &&
+    (plainHeadingPattern.test(cleanText) || cleanText.endsWith("?") || /\bAPIs?$/i.test(cleanText))
+  );
+}
+
+function headingId(text = "", index = 0) {
+  const slug = text
+    .toLowerCase()
+    .replace(/<[^>]*>/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+  return `${slug || "article-section"}-${index + 1}`;
+}
+
+function getStarListItems(text = "") {
+  const parts = text
+    .split("*")
+    .map((item) => item.trim())
+    .filter(Boolean);
+  return parts.length > 1 ? parts : [];
+}
+
 function renderRichContent(content = "") {
   const looksHtml = /<\/?[a-z][\s\S]*>/i.test(content);
   if (looksHtml) {
-    return <div className="cms-rich-content" dangerouslySetInnerHTML={{ __html: content }} />;
+    let headingIndex = 0;
+    const linkedHtml = content.replace(/<h([1-3])([^>]*)>([\s\S]*?)<\/h\1>/gi, (match, level, attrs, inner) => {
+      const text = inner.replace(/<[^>]*>/g, "").trim();
+      const id = headingId(text, headingIndex++);
+      const cleanAttrs = attrs.replace(/\s+id=("[^"]*"|'[^']*')/i, "");
+      return `<h${level}${cleanAttrs} id="${id}">${inner}</h${level}>`;
+    });
+    return <div className="cms-rich-content" dangerouslySetInnerHTML={{ __html: linkedHtml }} />;
   }
+  const blocks = content.split(/\n{2,}/).filter(Boolean);
+  let headingIndex = 0;
   return (
     <div className="cms-rich-content">
-      {content.split(/\n{2,}/).filter(Boolean).map((paragraph, index) => (
-        <p key={index}>{paragraph}</p>
-      ))}
+      {blocks.map((paragraph, index) => {
+        const cleanParagraph = paragraph.trim();
+        const starItems = getStarListItems(cleanParagraph);
+        if (isPlainHeading(cleanParagraph)) {
+          const id = headingId(cleanParagraph, headingIndex++);
+          if (/\bAPIs?$/i.test(cleanParagraph) && blocks[index + 1] && !isPlainHeading(blocks[index + 1].trim())) {
+            return (
+              <section className="blog-api-card" id={id} key={index}>
+                <h3>{cleanParagraph}</h3>
+                <p>{blocks[index + 1].trim()}</p>
+              </section>
+            );
+          }
+          return <h2 id={id} key={index}>{cleanParagraph}</h2>;
+        }
+        if (index > 0 && /\bAPIs?$/i.test(blocks[index - 1].trim()) && isPlainHeading(blocks[index - 1].trim())) return null;
+        if (starItems.length) {
+          return (
+            <ul className="cms-detail-list" key={index}>
+              {starItems.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          );
+        }
+        return <p key={index}>{cleanParagraph}</p>;
+      })}
     </div>
   );
 }
@@ -71,10 +134,188 @@ function getHeadings(content = "") {
   const regex = /<h([1-3])[^>]*>(.*?)<\/h\1>/gi;
   let match = regex.exec(content);
   while (match) {
-    headings.push(match[2].replace(/<[^>]*>/g, ""));
+    headings.push(match[2].replace(/<[^>]*>/g, "").trim());
     match = regex.exec(content);
   }
-  return headings;
+  if (headings.length) {
+    return headings.map((text, index) => ({ text, id: headingId(text, index) }));
+  }
+  return content
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .filter((paragraph) => isPlainHeading(paragraph))
+    .map((text, index) => ({ text, id: headingId(text, index) }));
+}
+
+function getPdfBlocks(content = "") {
+  if (!/<\/?[a-z][\s\S]*>/i.test(content)) {
+    return content.split(/\n{2,}/).map((text) => ({ text: text.replace(/\*/g, "").trim(), heading: isPlainHeading(text.trim()) })).filter((item) => item.text);
+  }
+  const container = document.createElement("div");
+  container.innerHTML = content;
+  return Array.from(container.querySelectorAll("h1,h2,h3,p,li"))
+    .map((node) => ({ text: node.textContent.trim(), heading: /^H[1-3]$/.test(node.tagName) }))
+    .filter((item) => item.text);
+}
+
+async function imageToDataUrl(source = "") {
+  if (!source || source.startsWith("data:image")) return source;
+  const response = await fetch(source);
+  const blob = await response.blob();
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function downloadBlogPdf(blog) {
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 18;
+  const contentWidth = pageWidth - margin * 2;
+  let y = 25;
+
+  const addWatermark = () => {
+    doc.saveGraphicsState();
+    doc.setTextColor(225, 231, 241);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(34);
+    doc.text("PRIMESERVE", pageWidth / 2, pageHeight / 2, { align: "center", angle: 35 });
+    doc.restoreGraphicsState();
+  };
+  const ensureSpace = (height = 12) => {
+    if (y + height > pageHeight - 20) {
+      doc.addPage();
+      addWatermark();
+      y = 22;
+    }
+  };
+  const writeText = (text, options = {}) => {
+    const { size = 11, bold = false, color = [62, 78, 102], gap = 5 } = options;
+    doc.setFont("helvetica", bold ? "bold" : "normal");
+    doc.setFontSize(size);
+    doc.setTextColor(...color);
+    const lines = doc.splitTextToSize(text, contentWidth);
+    const height = lines.length * size * 0.42 + gap;
+    ensureSpace(height);
+    doc.text(lines, margin, y);
+    y += height;
+  };
+
+  doc.setFillColor(0, 35, 82);
+  doc.rect(0, 0, pageWidth, 16, "F");
+  doc.setTextColor(255, 196, 0);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.text("PRIMESERVE GLOBAL SOLUTION PVT. LTD.", margin, 10.5);
+  try {
+    const logoData = await imageToDataUrl(primeServeLogo);
+    doc.addImage(logoData, undefined, pageWidth - 43, 2, 25, 12, undefined, "FAST");
+  } catch {
+    // The branded text header remains if the logo cannot be loaded.
+  }
+  addWatermark();
+  writeText(blog.title, { size: 22, bold: true, color: [7, 31, 85], gap: 8 });
+  writeText(`${blog.category || "Article"}  |  By ${blog.author || "PrimeServe Team"}  |  ${blog.publishDate || ""}`, { size: 9, color: [98, 110, 130], gap: 8 });
+
+  let pdfImage = blog.coverImage || "";
+  if (pdfImage && !pdfImage.startsWith("data:image")) {
+    try {
+      pdfImage = await imageToDataUrl(pdfImage);
+    } catch {
+      pdfImage = "";
+    }
+  }
+  if (pdfImage.startsWith("data:image")) {
+    try {
+      ensureSpace(72);
+      doc.addImage(pdfImage, undefined, margin, y, contentWidth, 65, undefined, "FAST");
+      y += 72;
+    } catch {
+      // Keep the complete article downloadable even if an uploaded image format is unsupported.
+    }
+  }
+
+  getPdfBlocks(blog.content).forEach((block) => {
+    writeText(block.text, block.heading
+      ? { size: 15, bold: true, color: [7, 31, 85], gap: 6 }
+      : { size: 10.5, color: [62, 78, 102], gap: 5 });
+  });
+
+  const totalPages = doc.getNumberOfPages();
+  for (let page = 1; page <= totalPages; page += 1) {
+    doc.setPage(page);
+    doc.setDrawColor(220, 228, 239);
+    doc.line(margin, pageHeight - 14, pageWidth - margin, pageHeight - 14);
+    doc.setFontSize(8);
+    doc.setTextColor(105, 117, 135);
+    doc.text("www.primeserve.in", margin, pageHeight - 8);
+    doc.text(`Page ${page} of ${totalPages}`, pageWidth - margin, pageHeight - 8, { align: "right" });
+  }
+  doc.save(`${blog.slug || "primeserve-blog"}.pdf`);
+}
+
+function downloadNewsPdf(item) {
+  return downloadBlogPdf({
+    title: item.title,
+    category: "PrimeServe News & Updates",
+    author: "PrimeServe Team",
+    publishDate: item.date,
+    coverImage: item.image,
+    content: item.fullDescription || item.shortDescription,
+    slug: `primeserve-news-${item.id || "update"}`,
+  });
+}
+
+function downloadCaseStudyPdf(item) {
+  const content = [
+    "About the Client", item.clientName,
+    "Business Challenge", item.challenge,
+    "PrimeServe Solution", item.solution,
+    "Results Achieved", item.results,
+    "Services Used", item.servicesUsed,
+  ].filter(Boolean).join("\n\n");
+  return downloadBlogPdf({
+    title: item.title,
+    category: item.industry || "Case Study",
+    author: "PrimeServe Team",
+    coverImage: item.coverImage || item.clientLogo,
+    content,
+    slug: item.slug || `primeserve-case-study-${item.id}`,
+  });
+}
+
+function AutoCarousel({ items, children, label }) {
+  const carouselRef = useRef(null);
+
+  useEffect(() => {
+    if (items.length <= 1) return undefined;
+    const timer = window.setInterval(() => {
+      const carousel = carouselRef.current;
+      if (!carousel) return;
+      const slide = carousel.querySelector(".cms-carousel-slide");
+      const step = (slide?.getBoundingClientRect().width || 360) + 22;
+      const atEnd = carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 8;
+      carousel.scrollTo({ left: atEnd ? 0 : carousel.scrollLeft + step, behavior: "smooth" });
+    }, 2800);
+    return () => window.clearInterval(timer);
+  }, [items.length]);
+
+  if (!items.length) return <p className="cms-empty-message">No published items yet.</p>;
+  return (
+    <section className={`cms-auto-carousel ${items.length === 1 ? "cms-auto-carousel-single" : ""}`} aria-label={label} ref={carouselRef}>
+      <div className="cms-auto-carousel-track">
+        {items.map((item) => (
+          <div className="cms-carousel-slide" key={item.id}>
+            {children(item)}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 function LeadCaptureForm({ sourcePage = "Website", service = "PrimeServe Services" }) {
@@ -405,7 +646,7 @@ export function BlogPage() {
               <a href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`${activeBlog.title} ${shareUrl}`)}`} target="_blank" rel="noreferrer">WhatsApp</a>
               <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(activeBlog.title)}&url=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noreferrer">X</a>
               <a href={`mailto:?subject=${encodeURIComponent(activeBlog.title)}&body=${encodeURIComponent(shareUrl)}`}>Email</a>
-              {activeBlog.downloadPdf !== "No" && <button type="button" onClick={() => window.print()}>Download PDF</button>}
+              {activeBlog.downloadPdf !== "No" && <button type="button" onClick={() => downloadBlogPdf(activeBlog)}>Download PDF</button>}
             </div>
             <div className="blog-cta-box">
               <h3>Looking for enterprise APIs, GST solutions, DSC, SAP integration or managed compliance services?</h3>
@@ -423,7 +664,11 @@ export function BlogPage() {
           <aside className="blog-sidebar">
             <div className="toc-card">
               <h3>Table of Contents</h3>
-              {headings.length ? headings.map((heading) => <span key={heading}>{heading}</span>) : <span>Article Overview</span>}
+              <nav className="toc-links" aria-label="Article table of contents">
+                {headings.length
+                  ? headings.map((heading) => <a key={heading.id} href={`#${heading.id}`}>{heading.text}</a>)
+                  : <span>Article Overview</span>}
+              </nav>
             </div>
             <LeadCaptureForm sourcePage={`/blog/${activeBlog.slug}`} service="Enterprise APIs" />
           </aside>
@@ -432,6 +677,23 @@ export function BlogPage() {
     );
   }
 
+  const renderBlogCard = (blog) => (
+    <article className="cms-public-card" key={blog.id}>
+      <span>{blog.category}</span>
+      <h2>{blog.title}</h2>
+      <p>{blog.shortDescription}</p>
+      {blog.coverImage && (
+        <img className="blog-card-cover" src={blog.coverImage} alt={blog.coverAlt || blog.title} />
+      )}
+      <div className="blog-card-actions">
+        {blog.downloadPdf !== "No" && (
+          <button type="button" onClick={() => downloadBlogPdf(blog)}>Download Blog PDF</button>
+        )}
+        <a href={`/blog/${blog.slug}`}>Read Blog</a>
+      </div>
+    </article>
+  );
+
   return (
     <div className="cms-public-page">
       <PublicHero
@@ -439,21 +701,15 @@ export function BlogPage() {
         title="Insights for APIs, compliance and digital transformation."
         text="Read PrimeServe updates and practical guides for enterprise technology teams."
       />
-      <section className="cms-public-grid">
-        {blogs.map((blog) => (
-          <article className="cms-public-card" key={blog.id}>
-            <span>{blog.category}</span>
-            <h2>{blog.title}</h2>
-            <p>{blog.shortDescription}</p>
-            {blog.coverImage && (
-              <a className="cms-media-link" href={blog.coverImage} target="_blank" rel="noreferrer" download>
-                View / Download Attachment
-              </a>
-            )}
-            <a href={`/blog/${blog.slug}`}>Read Blog</a>
-          </article>
-        ))}
-      </section>
+      {blogs.length > 3 ? (
+        <AutoCarousel items={blogs} label="PrimeServe blog articles">
+          {renderBlogCard}
+        </AutoCarousel>
+      ) : (
+        <section className="cms-public-grid">
+          {blogs.map(renderBlogCard)}
+        </section>
+      )}
     </div>
   );
 }
@@ -468,20 +724,17 @@ export function NewsPage() {
         title="Latest company updates from PrimeServe."
         text="Follow new launches, business updates and important announcements."
       />
-      <section className="cms-public-grid">
-        {news.map((item) => (
+      <AutoCarousel items={news} label="PrimeServe news carousel">
+        {(item) => (
           <article className="cms-public-card" key={item.id}>
+            {item.image && <img className="cms-carousel-image" src={item.image} alt={item.title} />}
             <span>{item.date}</span>
             <h2>{item.title}</h2>
             <p>{item.fullDescription}</p>
-            {item.image && (
-              <a className="cms-media-link" href={item.image} target="_blank" rel="noreferrer" download>
-                View / Download Attachment
-              </a>
-            )}
+            <button type="button" onClick={() => downloadNewsPdf(item)}>Download News PDF</button>
           </article>
-        ))}
-      </section>
+        )}
+      </AutoCarousel>
     </div>
   );
 }
@@ -496,8 +749,8 @@ export function ApiUpdatesPage() {
         title="API and product release updates."
         text="Track new launches, enhancements, maintenance notices and product changes."
       />
-      <section className="cms-public-grid">
-        {updates.map((item) => (
+      <AutoCarousel items={updates} label="PrimeServe API and product updates carousel">
+        {(item) => (
           <article className="cms-public-card" key={item.id}>
             <span>{item.updateType}</span>
             <h2>{item.productName}</h2>
@@ -506,8 +759,8 @@ export function ApiUpdatesPage() {
               <b>{item.releaseDate}</b>
             </div>
           </article>
-        ))}
-      </section>
+        )}
+      </AutoCarousel>
     </div>
   );
 }
@@ -597,7 +850,7 @@ export function CaseStudiesPage() {
           <p>{active.results}</p>
           <h2>Services Used</h2>
           <p>{active.servicesUsed}</p>
-          {active.pdf && <a className="cms-media-link" href={active.pdf} target="_blank" rel="noreferrer" download>Download PDF</a>}
+          <button className="cms-media-link" type="button" onClick={() => downloadCaseStudyPdf(active)}>Download Case Study PDF</button>
           <LeadCaptureForm sourcePage={`/case-studies/${active.slug}`} service="Case Study Enquiry" />
         </article>
       </div>
@@ -607,17 +860,20 @@ export function CaseStudiesPage() {
   return (
     <div className="cms-public-page">
       <PublicHero eyebrow="CASE STUDIES" title="Enterprise results powered by PrimeServe." text="Explore how our APIs, automation and compliance services help businesses move faster." />
-      <section className="knowledge-grid">
-        {caseStudies.map((item) => (
+      <AutoCarousel items={caseStudies} label="PrimeServe case studies carousel">
+        {(item) => (
           <article className="knowledge-card" key={item.id}>
-            {item.coverImage && item.coverImage.startsWith("data:image") && <img src={item.coverImage} alt={item.title} />}
+            {item.coverImage && <img src={item.coverImage} alt={item.title} />}
             <span>{item.industry}</span>
             <h2>{item.title}</h2>
             <p>{item.challenge}</p>
-            <a href={`/case-studies/${item.slug}`}>Read Case Study</a>
+            <div className="blog-card-actions">
+              <button type="button" onClick={() => downloadCaseStudyPdf(item)}>Download PDF</button>
+              <a href={`/case-studies/${item.slug}`}>Read Case Study</a>
+            </div>
           </article>
-        ))}
-      </section>
+        )}
+      </AutoCarousel>
     </div>
   );
 }
@@ -823,13 +1079,6 @@ export function HsnSacFinderPage() {
   );
 }
 
-function formatJsonLabel(key) {
-  return String(key)
-    .replace(/_/g, " ")
-    .replace(/([a-z])([A-Z])/g, "$1 $2")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
-}
-
 function getBase64Candidate(payload) {
   if (typeof payload === "string") return payload.trim();
   if (!payload || typeof payload !== "object") return "";
@@ -887,39 +1136,6 @@ function normalizeGstinPayload(payload) {
   return payload;
 }
 
-function ReadableJson({ data }) {
-  if (data === null || data === undefined || data === "") {
-    return <span className="json-empty">Not available</span>;
-  }
-
-  if (Array.isArray(data)) {
-    return (
-      <div className="readable-json-list">
-        {data.map((item, index) => (
-          <div className="readable-json-nested" key={index}>
-            <ReadableJson data={item} />
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  if (typeof data === "object") {
-    return (
-      <div className="readable-json-grid">
-        {Object.entries(data).map(([key, value]) => (
-          <div className="readable-json-row" key={key}>
-            <small>{formatJsonLabel(key)}</small>
-            <ReadableJson data={value} />
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  return <span>{String(data)}</span>;
-}
-
 function formatAddress(address = {}) {
   if (!address || typeof address !== "object") return "Not available";
   return [
@@ -943,35 +1159,6 @@ function yesNo(value) {
   if (value === true || value === "Y" || value === "Yes" || value === "YES") return "Yes";
   if (value === false || value === "N" || value === "No" || value === "NO") return "No";
   return value || "No";
-}
-
-function firstAvailable(...values) {
-  return values.find((value) => value !== undefined && value !== null && value !== "");
-}
-
-function findFieldDeep(source, keys, seen = new Set()) {
-  if (!source || typeof source !== "object" || seen.has(source)) return undefined;
-  seen.add(source);
-
-  for (const key of keys) {
-    if (Object.prototype.hasOwnProperty.call(source, key) && source[key] !== undefined && source[key] !== null && source[key] !== "") {
-      return source[key];
-    }
-  }
-
-  for (const value of Object.values(source)) {
-    if (value && typeof value === "object") {
-      const found = findFieldDeep(value, keys, seen);
-      if (found !== undefined && found !== null && found !== "") return found;
-    }
-  }
-
-  return undefined;
-}
-
-function getGstField(source, ...keys) {
-  if (!source || typeof source !== "object") return undefined;
-  return firstAvailable(...keys.map((key) => source[key]), findFieldDeep(source, keys));
 }
 
 function GstInfoCell({ label, value, isLink }) {
@@ -1001,7 +1188,7 @@ function getReadableApiError(rawText, fallback) {
   }
 }
 
-async function fetchGstinViaProxy({ gstin, endpoint }) {
+async function fetchGstinViaProxy({ endpoint }) {
   const response = await fetch(endpoint, { method: "GET" });
   const rawText = await response.text();
   if (!response.ok) {
@@ -1021,48 +1208,43 @@ async function fetchGstinViaProxy({ gstin, endpoint }) {
 }
 
 function GstinResultView({ data, searchedGstin, onBack }) {
-  const gstData = normalizeGstinPayload(data) || data || {};
-  const principalRecord = getGstField(gstData, "pradr", "principalAddress", "principalPlaceOfBusiness");
-  const principalAddress = principalRecord?.addr || principalRecord;
-  const tradeNames = getGstField(gstData, "tradeNamAdditional", "additionalTradeName", "additionalTradeNames");
-  const additionalTradeNames = Array.isArray(tradeNames)
-    ? tradeNames.join(", ")
-    : tradeNames || "View";
-  const businessActivities = getGstField(gstData, "nba", "natureOfBusinessActivities", "businessActivities");
-  const natureOfBusiness = Array.isArray(businessActivities) ? businessActivities : [];
-  const additionalBusinessPlaces = getGstField(gstData, "adadr", "additionalPlaces", "additionalAddresses");
-  const additionalPlaces = Array.isArray(additionalBusinessPlaces) ? additionalBusinessPlaces : [];
+  const principalAddress = data?.pradr?.addr;
+  const additionalTradeNames = Array.isArray(data?.tradeNamAdditional)
+    ? data.tradeNamAdditional.join(", ")
+    : data?.additionalTradeName || "View";
+  const natureOfBusiness = Array.isArray(data?.nba) ? data.nba : [];
+  const additionalPlaces = Array.isArray(data?.adadr) ? data.adadr : [];
 
   return (
     <article className="gst-result-panel">
       <div className="gst-result-topbar">
-        <h2>Search Result based on GSTIN/UIN : <span>{getGstField(gstData, "gstin", "gstinNo", "gstIn") || searchedGstin}</span></h2>
+        <h2>Search Result based on GSTIN/UIN : <span>{data?.gstin || searchedGstin}</span></h2>
         <button type="button" onClick={onBack}>Back</button>
       </div>
 
       <div className="gst-info-grid">
-        <GstInfoCell label="Legal Name of Business" value={getGstField(gstData, "lgnm", "legalName", "legalNameOfBusiness")} />
-        <GstInfoCell label="Trade Name" value={getGstField(gstData, "tradeNam", "tradeName", "businessName")} />
-        <GstInfoCell label="Effective Date of Registration" value={getGstField(gstData, "rgdt", "registrationDate", "effectiveDateOfRegistration")} />
-        <GstInfoCell label="Constitution of Business" value={getGstField(gstData, "ctb", "constitutionOfBusiness", "constitution")} />
-        <GstInfoCell label="GSTIN / UIN Status" value={getGstField(gstData, "sts", "status", "gstinStatus")} />
-        <GstInfoCell label="Taxpayer Type" value={getGstField(gstData, "dty", "taxpayerType")} />
-        <GstInfoCell label="Administrative Office" value={formatOffice("(JURISDICTION - STATE)", getGstField(gstData, "stjCd", "stateJurisdictionCode"), getGstField(gstData, "stj", "stateJurisdiction"))} />
-        <GstInfoCell label="Other Office" value={formatOffice("(JURISDICTION - CENTER)", getGstField(gstData, "ctjCd", "centerJurisdictionCode"), getGstField(gstData, "ctj", "centerJurisdiction"))} />
+        <GstInfoCell label="Legal Name of Business" value={data?.lgnm} />
+        <GstInfoCell label="Trade Name" value={data?.tradeNam || data?.tradeName} />
+        <GstInfoCell label="Effective Date of Registration" value={data?.rgdt} />
+        <GstInfoCell label="Constitution of Business" value={data?.ctb} />
+        <GstInfoCell label="GSTIN / UIN Status" value={data?.sts} />
+        <GstInfoCell label="Taxpayer Type" value={data?.dty} />
+        <GstInfoCell label="Administrative Office" value={formatOffice("(JURISDICTION - STATE)", data?.stjCd, data?.stj)} />
+        <GstInfoCell label="Other Office" value={formatOffice("(JURISDICTION - CENTER)", data?.ctjCd, data?.ctj)} />
         <GstInfoCell label="Principal Place of Business" value={formatAddress(principalAddress)} />
-        <GstInfoCell label="Whether Aadhaar Authenticated?" value={yesNo(getGstField(gstData, "adhrVFlag", "aadhaarAuthenticated", "aadhaarVerified"))} />
-        <GstInfoCell label="Whether e-KYC Verified?" value={yesNo(getGstField(gstData, "ekycVFlag", "ekycVerified"))} />
+        <GstInfoCell label="Whether Aadhaar Authenticated?" value={yesNo(data?.adhrVFlag || data?.aadhaarVerified)} />
+        <GstInfoCell label="Whether e-KYC Verified?" value={yesNo(data?.ekycVFlag || data?.ekycVerified)} />
         <GstInfoCell label="Additional Trade Name" value={additionalTradeNames} isLink={additionalTradeNames === "View"} />
       </div>
 
       <GstSection title="Nature of Core Business Activity">
-        <p className="gst-red-text">{natureOfBusiness[0] || getGstField(gstData, "ntcrbs", "natureOfCoreBusinessActivity") || "Not available"}</p>
+        <p className="gst-red-text">{data?.nba?.[0] || data?.ntcrbs || "Not available"}</p>
       </GstSection>
 
       <GstSection title="Nature of Business Activities">
         {natureOfBusiness.length ? (
           <ol className="gst-business-list">
-            {natureOfBusiness.map((item, index) => <li key={item}>{item}</li>)}
+            {natureOfBusiness.map((item) => <li key={item}>{item}</li>)}
           </ol>
         ) : (
           <p>Not available</p>

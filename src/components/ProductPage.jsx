@@ -1,5 +1,10 @@
-import productHero from "../assets/product-page-hero.png";
+import productHeroOriginal from "../assets/product-page-hero.png";
+import productHeroV2 from "../assets/product-page-hero-v2.png";
 import productCta from "../assets/product-cta.png";
+
+// Change to false to restore the original Product hero.
+const USE_PRODUCT_HERO_V2 = true;
+const productHero = USE_PRODUCT_HERO_V2 ? productHeroV2 : productHeroOriginal;
 
 function ProductPage() {
   const trustItems = [
@@ -57,9 +62,8 @@ function ProductPage() {
 
   return (
     <div className="product-page">
-      <section className="product-hero">
+      <section className="product-hero" style={{ "--page-hero-image": `url(${productHero})` }}>
         <div className="product-hero-copy">
-          <span className="product-eyebrow">OUR PRODUCTS</span>
           <h1>
             Enterprise Products Built for
             <br />
@@ -99,14 +103,10 @@ function ProductPage() {
           </div>
         </div>
 
-        <div className="product-hero-art">
-          <img src={productHero} alt="PrimeServe product dashboard" />
-        </div>
       </section>
 
       <section className="product-list-section" id="products">
         <div className="product-section-heading">
-          <span>- OUR PRODUCTS -</span>
           <h2>Complete Suite of Products for Modern Businesses</h2>
           <p>
             From compliance to automation, we have the right product for every
@@ -121,9 +121,6 @@ function ProductPage() {
               <div className={`product-card-icon ${product.icon}`} />
               <h3>{product.title}</h3>
               <p>{product.text}</p>
-              <a href="#products">
-                Learn More <span className="arrow-icon">→</span>
-              </a>
             </article>
           ))}
           </div>

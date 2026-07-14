@@ -6,10 +6,11 @@ function Hero() {
   ];
 
   const heroServices = [
-    { icon: "document", text: "GST APIs" },
-    { icon: "identity", text: "Identity APIs" },
-    { icon: "business", text: "Company Verification" },
-    { icon: "ocr", text: "OCR APIs" },
+    { icon: "document", text: "250+ APIs" },
+    { icon: "sap", text: "SAP Solution" },
+    { icon: "cloud", text: "ASP GSP Solution" },
+    { icon: "signature", text: "DSC" },
+    { icon: "tax", text: "Managed Services" },
   ];
 
   return (
@@ -47,10 +48,13 @@ function Hero() {
           </div>
 
           <div className="hero-logo-strip" aria-label="PrimeServe service logos">
-            {heroServices.map((item) => (
-              <span className="hero-logo-chip" key={item.text}>
-                <i className={`feature-icon ${item.icon}`} />
-                {item.text}
+            {heroServices.map((item, index) => (
+              <span className="hero-service-entry" key={item.text}>
+                {index === 3 && <span className="hero-service-row-break" aria-hidden="true" />}
+                <span className="hero-logo-chip">
+                  <i className={`feature-icon ${item.icon}`} />
+                  {item.text}
+                </span>
               </span>
             ))}
           </div>

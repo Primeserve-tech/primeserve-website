@@ -224,6 +224,7 @@ export const defaultCmsData = {
     termsUrl: "/terms-of-service",
     hsnSacToolEnabled: "Yes",
     gstinValidatorEnabled: "Yes",
+    gstBulkDataFetchEnabled: "Yes",
     gstinApiUrl: "https://api.primeserve.in/commonapi/v1.1/search",
     gstinApiKey: "",
   },
