@@ -43,13 +43,13 @@ function AboutUsPage() {
           <span className="about-eyebrow">ABOUT PRIMESERVE</span>
           <h1>Powering Digital Compliance, Enterprise Integration & Business Transformation</h1>
           <p>
-            PrimeServe Global Solution Private Limited is a technology and
+            Primeserve Global Solution Private Limited is a technology and
             compliance solutions company helping businesses connect, automate,
             secure and transform critical operations through enterprise APIs,
             ASP-GSP services, SAP and ERP integration, Digital Signature
             Certificates, enterprise software and managed compliance services.
           </p>
-          <div className="about-hero-metrics" aria-label="PrimeServe capabilities">
+          <div className="about-hero-metrics" aria-label="Primeserve capabilities">
             {heroMetrics.map((metric) => (
               <article key={metric.value}>
                 <strong>{metric.value}</strong>
@@ -59,7 +59,7 @@ function AboutUsPage() {
           </div>
         </div>
         <div className="about-hero-panel">
-          <img src={logo} alt="PrimeServe Global Solution Pvt. Ltd." />
+          <img src={logo} alt="Primeserve Global Solution Pvt. Ltd." />
           <strong>Complete Enterprise Technology Partner</strong>
           <p>Connect systems, automate compliance and enable secure digital transactions.</p>
           <div>
@@ -78,7 +78,7 @@ function AboutUsPage() {
         </div>
         <div className="about-copy-block">
           <p>
-            With a portfolio of more than 250 enterprise-grade APIs, PrimeServe
+            With a portfolio of more than 250 enterprise-grade APIs, Primeserve
             enables businesses to integrate critical digital services into their
             applications with speed, security and reliability. Our solutions
             support Banking, NBFC, FinTech, Insurance, Logistics, Manufacturing,
@@ -100,7 +100,7 @@ function AboutUsPage() {
           <span>Our Core Services</span>
           <h2>One partner for APIs, compliance, DSC and enterprise automation.</h2>
         </div>
-        <div className="about-service-carousel" aria-label="PrimeServe services carousel">
+        <div className="about-service-carousel" aria-label="Primeserve services carousel">
           <div className="about-service-track">
             {carouselItems.map((service, index) => (
               <article key={`${service.title}-${index}`} className="about-service-card">
@@ -128,7 +128,7 @@ function AboutUsPage() {
           <span className="about-eyebrow">DIGITAL SIGNATURE CERTIFICATES</span>
           <h2>Secure digital authentication for statutory and enterprise workflows.</h2>
           <p>
-            PrimeServe provides Class 3 Digital Signature Certificates for
+            Primeserve provides Class 3 Digital Signature Certificates for
             individuals, organizations, directors, professionals and
             government-related applications. Our DSC solutions support
             e-Tendering, GST, Income Tax, MCA, ICEGATE, DGFT, EPFO and other
@@ -172,7 +172,7 @@ function AboutUsPage() {
       </section>
 
       <section className="about-closing">
-        <h2>At PrimeServe, we do not just provide APIs.</h2>
+        <h2>At Primeserve, we do not just provide APIs.</h2>
         <p>
           We deliver complete digital business solutions that connect, automate,
           secure and transform how modern businesses operate.

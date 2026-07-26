@@ -76,7 +76,7 @@ function ApiPage() {
             ))}
           </div>
 
-          <div className="hero-logo-strip" aria-label="PrimeServe API logos">
+          <div className="hero-logo-strip" aria-label="Primeserve API logos">
             {heroServices.map((item) => (
               <span className="hero-logo-chip" key={item.text}>
                 <i className={`api-card-icon ${item.icon}`} />
@@ -100,7 +100,7 @@ function ApiPage() {
           </p>
         </div>
 
-        <div className="api-carousel-shell" aria-label="PrimeServe API catalogue carousel">
+        <div className="api-carousel-shell" aria-label="Primeserve API catalogue carousel">
           <div className="api-card-track">
           {[...apiCards, ...apiCards].map((card, index) => (
             <article className="api-card" key={`${card.title}-${index}`}>

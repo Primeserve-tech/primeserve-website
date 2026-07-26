@@ -5048,6 +5048,197 @@ body.modal-open {
   }
 }
 
+/* Final letterhead overrides must remain at the end of this stylesheet. */
+.letterhead-preview {
+  overflow: visible;
+}
+
+.letterhead-preview .letterhead-sheet {
+  aspect-ratio: 210 / 297;
+  height: auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 17.6% 9.3% 21.5%;
+  max-width: 794px;
+  width: 100%;
+}
+
+.letterhead-preview .letterhead-body {
+  font-size: clamp(9px, 1.05vw, 14px);
+  min-height: 0;
+}
+
+.letterhead-print-document {
+  display: none;
+}
+
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body > #root {
+    display: none !important;
+  }
+
+  body:has(.letterhead-studio) .letterhead-print-document,
+  body:has(.letterhead-studio) .letterhead-print-document * {
+    visibility: visible !important;
+  }
+
+  .letterhead-print-document {
+    box-sizing: border-box;
+    color: #17243b;
+    display: block !important;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11pt;
+    line-height: 1.55;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .letterhead-print-template {
+    display: block !important;
+    height: 297mm;
+    inset: 0;
+    object-fit: fill;
+    position: fixed;
+    width: 210mm;
+    z-index: 0;
+  }
+
+  .letterhead-print-body {
+    display: block !important;
+    position: relative;
+    z-index: 1;
+  }
+
+  .letterhead-print-body p,
+  .letterhead-print-body h1,
+  .letterhead-print-body h2,
+  .letterhead-print-body h3,
+  .letterhead-print-body ul,
+  .letterhead-print-body ol,
+  .letterhead-print-body table {
+    break-inside: avoid;
+  }
+
+  .letterhead-print-body table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .letterhead-print-body td,
+  .letterhead-print-body th {
+    border: 1px solid #cad4df;
+    padding: 2mm;
+  }
+
+  @page {
+    margin: 50mm 19.5mm 61mm;
+    size: A4;
+  }
+}
+
+/* Responsive full-sheet preview and reliable A4 print pagination */
+.letterhead-preview {
+  overflow: visible;
+}
+
+.letterhead-sheet {
+  aspect-ratio: 210 / 297;
+  height: auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 17.6% 9.3% 21.5%;
+  width: min(100%, 794px);
+}
+
+.letterhead-body {
+  font-size: clamp(9px, 1.05vw, 14px);
+  min-height: 0;
+}
+
+.letterhead-print-document {
+  display: none;
+}
+
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body > #root {
+    display: none !important;
+  }
+
+  body:has(.letterhead-studio) .letterhead-print-document,
+  body:has(.letterhead-studio) .letterhead-print-document * {
+    visibility: visible !important;
+  }
+
+  .letterhead-print-document {
+    box-sizing: border-box;
+    color: #17243b;
+    display: block !important;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11pt;
+    line-height: 1.55;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .letterhead-print-template {
+    display: block !important;
+    height: 297mm;
+    inset: 0;
+    object-fit: fill;
+    position: fixed;
+    width: 210mm;
+    z-index: 0;
+  }
+
+  .letterhead-print-body {
+    display: block !important;
+    position: relative;
+    z-index: 1;
+  }
+
+  .letterhead-print-body p,
+  .letterhead-print-body h1,
+  .letterhead-print-body h2,
+  .letterhead-print-body h3,
+  .letterhead-print-body ul,
+  .letterhead-print-body ol,
+  .letterhead-print-body table {
+    break-inside: avoid;
+  }
+
+  .letterhead-print-body table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .letterhead-print-body td,
+  .letterhead-print-body th {
+    border: 1px solid #cad4df;
+    padding: 2mm;
+  }
+
+  @page {
+    margin: 50mm 19.5mm 61mm;
+    size: A4;
+  }
+}
+
 @media (max-width: 760px) {
   .site-header {
     align-items: center;
@@ -5514,7 +5705,7 @@ body.modal-open {
   }
 }
 
-/* Why PrimeServe page */
+/* Why Primeserve page */
 .why-page {
   background:
     radial-gradient(circle at 78% 8%, rgba(248, 180, 0, 0.13), transparent 26%),
@@ -6413,6 +6604,433 @@ body.modal-open {
   font-size: 54px;
   line-height: 1;
   margin-top: 18px;
+}
+
+/* Admin letterhead document studio */
+.letterhead-studio {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 310px minmax(0, 1fr);
+}
+
+.letterhead-controls {
+  align-self: start;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  display: grid;
+  gap: 14px;
+  padding: 22px;
+  position: sticky;
+  top: 24px;
+}
+
+.letterhead-intro span {
+  color: #ffc400;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.letterhead-intro h2 {
+  color: #fff;
+  font-size: 24px;
+  line-height: 1.15;
+  margin: 8px 0 10px;
+}
+
+.letterhead-intro p,
+.letterhead-help p {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.letterhead-controls label {
+  display: grid;
+  gap: 7px;
+}
+
+.letterhead-controls label > span,
+.letterhead-help strong {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.letterhead-controls input {
+  background: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 7px;
+  color: #061f4e;
+  font: inherit;
+  min-height: 43px;
+  padding: 10px 12px;
+}
+
+.letterhead-upload,
+.letterhead-pdf,
+.letterhead-word {
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 900;
+  min-height: 46px;
+  padding: 10px 15px;
+}
+
+.letterhead-upload {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px dashed rgba(255, 196, 0, 0.72);
+  color: #ffc400;
+}
+
+.letterhead-upload small {
+  color: rgba(255, 255, 255, 0.62);
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.letterhead-status {
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 12px;
+  margin: -5px 0 0;
+}
+
+.letterhead-help {
+  background: rgba(255, 196, 0, 0.08);
+  border-left: 3px solid #ffc400;
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.letterhead-help p {
+  font-size: 11px;
+  margin-top: 5px;
+}
+
+.letterhead-pdf {
+  background: linear-gradient(135deg, #ffc400, #e8a914);
+  border: 0;
+  color: #061f4e;
+}
+
+.letterhead-word {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+}
+
+.letterhead-preview {
+  background: rgba(0, 18, 48, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  overflow: auto;
+  padding: 24px;
+}
+
+.letterhead-preview-label {
+  color: rgba(255, 255, 255, 0.68);
+  display: flex;
+  font-size: 10px;
+  font-weight: 800;
+  justify-content: space-between;
+  letter-spacing: 0.8px;
+  margin: 0 auto 10px;
+  max-width: 794px;
+  text-transform: uppercase;
+}
+
+.letterhead-preview-label span:first-child {
+  color: #ffc400;
+}
+
+.letterhead-sheet {
+  background: #fff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+  color: #17243b;
+  margin: 0 auto;
+  min-height: 1123px;
+  padding: 145px 72px 112px;
+  position: relative;
+  width: 794px;
+}
+
+.letterhead-accent {
+  background: #ffc400;
+  height: 14px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.letterhead-header {
+  align-items: center;
+  border-bottom: 2px solid #06366d;
+  display: flex;
+  justify-content: space-between;
+  left: 72px;
+  padding-bottom: 17px;
+  position: absolute;
+  right: 72px;
+  top: 43px;
+}
+
+.letterhead-header img {
+  height: auto;
+  max-width: 235px;
+}
+
+.letterhead-contact {
+  color: #53647a;
+  font-size: 9px;
+  line-height: 1.55;
+  text-align: right;
+}
+
+.letterhead-body {
+  font-size: 14px;
+  line-height: 1.65;
+  min-height: 780px;
+  outline: none;
+}
+
+.letterhead-body:focus {
+  box-shadow: 0 0 0 2px rgba(255, 196, 0, 0.25);
+}
+
+.letterhead-body p {
+  margin: 0 0 15px;
+}
+
+.letterhead-body table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.letterhead-body td,
+.letterhead-body th {
+  border: 1px solid #cad4df;
+  padding: 7px;
+}
+
+.letterhead-footer {
+  border-top: 1px solid #ccd5df;
+  bottom: 38px;
+  color: #637186;
+  display: flex;
+  font-size: 9px;
+  justify-content: space-between;
+  left: 72px;
+  padding-top: 11px;
+  position: absolute;
+  right: 72px;
+}
+
+.letterhead-footer strong {
+  color: #06366d;
+}
+
+@media (max-width: 1100px) {
+  .letterhead-studio {
+    grid-template-columns: 1fr;
+  }
+
+  .letterhead-controls {
+    position: static;
+  }
+}
+
+@media print {
+  body:has(.letterhead-studio) * {
+    visibility: hidden;
+  }
+
+  body:has(.letterhead-studio) .letterhead-sheet,
+  body:has(.letterhead-studio) .letterhead-sheet * {
+    visibility: visible;
+  }
+
+  body:has(.letterhead-studio) .letterhead-sheet {
+    box-shadow: none;
+    left: 0;
+    margin: 0;
+    min-height: 297mm;
+    position: absolute;
+    top: 0;
+    width: 210mm;
+  }
+
+  @page {
+    margin: 0;
+    size: A4;
+  }
+}
+
+/* Saved letterhead library and approved stationery template */
+.letterhead-content-column {
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+}
+
+.letterhead-save,
+.letterhead-new {
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 900;
+  min-height: 46px;
+  padding: 10px 15px;
+}
+
+.letterhead-save {
+  background: #ffffff;
+  border: 0;
+  color: #06366d;
+}
+
+.letterhead-new {
+  background: transparent;
+  border: 1px solid rgba(255, 196, 0, 0.5);
+  color: #ffc400;
+}
+
+.letterhead-sheet {
+  overflow: hidden;
+  padding: 190px 74px 230px;
+}
+
+.letterhead-template-image {
+  height: 100%;
+  inset: 0;
+  object-fit: fill;
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+  z-index: 0;
+}
+
+.letterhead-body {
+  min-height: 700px;
+  position: relative;
+  z-index: 1;
+}
+
+.letterhead-library {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.letterhead-library-heading {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.letterhead-library-heading span {
+  color: #ffc400;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.letterhead-library-heading h2 {
+  color: #fff;
+  font-size: 22px;
+  margin: 5px 0 0;
+}
+
+.letterhead-library-heading > strong {
+  align-items: center;
+  background: rgba(255, 196, 0, 0.14);
+  border: 1px solid rgba(255, 196, 0, 0.42);
+  border-radius: 50%;
+  color: #ffc400;
+  display: flex;
+  height: 42px;
+  justify-content: center;
+  width: 42px;
+}
+
+.letterhead-empty {
+  border: 1px dashed rgba(255, 255, 255, 0.24);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  padding: 20px;
+}
+
+.letterhead-document-list {
+  display: grid;
+  gap: 10px;
+}
+
+.letterhead-document-list article {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 13px 14px;
+}
+
+.letterhead-document-list article > div:first-child {
+  min-width: 0;
+}
+
+.letterhead-document-list strong,
+.letterhead-document-list span {
+  display: block;
+}
+
+.letterhead-document-list strong {
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.letterhead-document-list span {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.letterhead-document-list button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 800;
+  margin-left: 7px;
+  padding: 8px 11px;
+}
+
+.letterhead-document-list button.delete {
+  border-color: rgba(255, 126, 126, 0.42);
+  color: #ffb5b5;
+}
+
+@media print {
+  body:has(.letterhead-studio) .letterhead-sheet {
+    height: 297mm;
+    min-height: 297mm;
+    padding: 50mm 19.5mm 61mm;
+  }
 }
 
 .admin-table-card {
@@ -8363,4 +8981,671 @@ body.modal-open {
     align-items: flex-start;
     padding-top: 42px;
   }
+}
+
+@media print {
+  @page {
+    margin: 50mm 19.5mm 61mm !important;
+    size: A4 portrait;
+  }
+
+  body > #root {
+    display: none !important;
+  }
+
+  .letterhead-print-document {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .letterhead-print-template {
+    display: block !important;
+    height: 297mm !important;
+    inset: 0 !important;
+    object-fit: fill !important;
+    position: fixed !important;
+    width: 210mm !important;
+    z-index: 0 !important;
+  }
+
+  .letterhead-print-body {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+}
+
+/* Letter creator v2 — code-rendered A4 stationery */
+.letter-creator-v2 {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(340px, 430px) minmax(0, 1fr);
+}
+
+.letter-editor-panel,
+.letter-preview-panel,
+.letter-saved-library {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  box-shadow: 0 18px 54px rgba(0, 0, 0, 0.16);
+}
+
+.letter-editor-panel {
+  align-self: start;
+  display: grid;
+  gap: 13px;
+  padding: 22px;
+  position: sticky;
+  top: 20px;
+}
+
+.letter-editor-heading > span,
+.letter-preview-heading span,
+.letter-saved-library > div:first-child span {
+  color: #ffc400;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.letter-editor-heading h2 {
+  color: #fff;
+  font-size: 25px;
+  margin: 7px 0;
+}
+
+.letter-editor-heading p {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.letter-editor-panel label {
+  display: grid;
+  gap: 6px;
+}
+
+.letter-editor-panel label > span {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.letter-editor-panel input {
+  background: #fff;
+  border: 1px solid #d7dfeb;
+  border-radius: 7px;
+  color: #092652;
+  font: inherit;
+  min-height: 42px;
+  padding: 9px 11px;
+}
+
+.letter-format-toolbar {
+  align-items: center;
+  background: #edf2f8;
+  border: 1px solid #cad5e2;
+  border-radius: 7px 7px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 6px;
+}
+
+.letter-format-toolbar button {
+  background: #fff;
+  border: 1px solid #c8d3df;
+  border-radius: 4px;
+  color: #0a2b58;
+  cursor: pointer;
+  font-size: 12px;
+  min-height: 31px;
+  min-width: 31px;
+  padding: 4px 8px;
+}
+
+.letter-format-toolbar button:nth-of-type(5) {
+  text-align: center;
+}
+
+.letter-format-toolbar button:nth-of-type(6) {
+  text-align: right;
+}
+
+.letter-format-toolbar > span {
+  background: #bbc7d4;
+  height: 23px;
+  margin: 0 2px;
+  width: 1px;
+}
+
+.letter-rich-editor {
+  background: #fff;
+  border: 1px solid #cad5e2;
+  border-radius: 0 0 7px 7px;
+  color: #17243b;
+  font-size: 14px;
+  line-height: 1.55;
+  min-height: 285px;
+  outline: none;
+  overflow-y: auto;
+  padding: 14px;
+}
+
+.letter-rich-editor:focus {
+  border-color: #ffc400;
+  box-shadow: 0 0 0 3px rgba(255, 196, 0, 0.14);
+}
+
+.letter-import,
+.letter-actions button,
+.letter-save {
+  border-radius: 7px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 900;
+  min-height: 41px;
+}
+
+.letter-import {
+  background: transparent;
+  border: 1px dashed rgba(255, 196, 0, 0.7);
+  color: #ffc400;
+}
+
+.letter-editor-status {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11px;
+  margin: -3px 0 0;
+}
+
+.letter-actions {
+  display: grid;
+  gap: 7px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.letter-actions button {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+.letter-actions button.download {
+  background: linear-gradient(135deg, #ffc400, #e8a914);
+  border: 0;
+  color: #061f4e;
+}
+
+.letter-save {
+  background: #fff;
+  border: 0;
+  color: #082a58;
+}
+
+.letter-preview-column {
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+}
+
+.letter-preview-panel {
+  padding: 20px;
+}
+
+.letter-preview-heading {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto 12px;
+  max-width: 794px;
+}
+
+.letter-preview-heading strong {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+}
+
+.letter-live-pdf-frame {
+  aspect-ratio: 210 / 297;
+  background: #d9dee5;
+  border: 0;
+  display: block;
+  margin: 0 auto;
+  max-height: calc(100vh - 150px);
+  min-height: 720px;
+  width: 100%;
+}
+
+.letter-live-pdf-loading {
+  align-items: center;
+  aspect-ratio: 210 / 297;
+  background: #fff;
+  color: #17345d;
+  display: flex;
+  font-weight: 800;
+  justify-content: center;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.official-pages {
+  display: grid;
+  gap: 24px;
+}
+
+.official-letter-page {
+  aspect-ratio: 210 / 297;
+  background: #fff;
+  box-shadow: 0 14px 45px rgba(0, 0, 0, 0.28);
+  color: #172438;
+  margin: 0 auto;
+  max-width: 794px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.official-letter-header {
+  height: 15.2%;
+  left: 7.5%;
+  position: absolute;
+  right: 7.5%;
+  top: 1.9%;
+}
+
+.official-letter-header img {
+  height: 100%;
+  object-fit: contain;
+  width: 100%;
+}
+
+.official-letter-content {
+  bottom: 13.3%;
+  font-size: clamp(8px, 1vw, 13.5px);
+  left: 9.5%;
+  line-height: 1.55;
+  overflow: hidden;
+  position: absolute;
+  right: 9.5%;
+  top: 16.5%;
+}
+
+.official-letter-content h1 {
+  color: #092a58;
+  font-size: 1.15em;
+  line-height: 1.35;
+  margin: 0 0 1.4em;
+}
+
+.official-letter-content p {
+  margin: 0 0 1em;
+}
+
+.official-letter-footer {
+  background: #022552;
+  bottom: 0;
+  color: #fff;
+  font-size: clamp(4.5px, 0.57vw, 7.5px);
+  height: 10.1%;
+  left: 0;
+  padding: 1.25% 5% 0;
+  position: absolute;
+  right: 0;
+  text-align: center;
+}
+
+.official-footer-goldline {
+  background: #d3a01c;
+  height: 3px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.official-letter-footer p {
+  line-height: 1.3;
+  margin: 0 0 0.35em;
+}
+
+.official-letter-footer strong {
+  color: #ffc400;
+}
+
+.official-footer-contact {
+  border-top: 1px solid rgba(211, 160, 28, 0.82);
+  margin: 0.55em auto 0 !important;
+  max-width: 92%;
+  padding-top: 0.65em;
+}
+
+.official-footer-contact i {
+  border-left: 1px solid #d3a01c;
+  display: inline-block;
+  height: 0.9em;
+  margin: 0 1.2em;
+}
+
+.official-page-number {
+  bottom: 10.8%;
+  color: #7b8796;
+  font-size: 7px;
+  position: absolute;
+  right: 3%;
+}
+
+.letter-saved-library {
+  padding: 18px;
+}
+
+.letter-saved-library > div:first-child {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.letter-saved-library > div:first-child > strong {
+  color: #ffc400;
+}
+
+.letter-saved-library > p {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.letter-saved-library article {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 7px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding: 11px 12px;
+}
+
+.letter-saved-library article strong,
+.letter-saved-library article small {
+  display: block;
+}
+
+.letter-saved-library article strong {
+  color: #fff;
+}
+
+.letter-saved-library article small {
+  color: rgba(255, 255, 255, 0.58);
+  margin-top: 3px;
+}
+
+.letter-saved-library article button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 800;
+  margin-left: 6px;
+  padding: 7px 9px;
+}
+
+.letter-saved-library article button.delete {
+  color: #ffb7b7;
+}
+
+@media (max-width: 1180px) {
+  .letter-creator-v2 {
+    grid-template-columns: 1fr;
+  }
+
+  .letter-editor-panel {
+    position: static;
+  }
+}
+
+/* Full-width corporate header/footer alignment */
+.official-letter-header {
+  height: 17%;
+  left: 4%;
+  right: 4%;
+  top: 2%;
+}
+
+.official-letter-header img {
+  object-fit: contain;
+}
+
+.official-letter-content {
+  bottom: 15.5%;
+  top: 20%;
+}
+
+.official-letter-footer {
+  font-size: clamp(5.5px, 0.68vw, 9px);
+  height: 9.45%;
+  padding-left: 1.5%;
+  padding-right: 1.5%;
+  padding-top: 1.05%;
+}
+
+.official-footer-contact {
+  max-width: 100%;
+}
+
+.official-page-number {
+  bottom: 10.2%;
+}
+
+.official-letter-content {
+  bottom: 12%;
+}
+
+.letter-editor-panel select {
+  background: #fff;
+  border: 1px solid #d7dfeb;
+  border-radius: 7px;
+  color: #092652;
+  font: inherit;
+  min-height: 42px;
+  padding: 9px 11px;
+}
+
+.letter-category-manager {
+  display: grid;
+  gap: 8px;
+}
+
+.letter-category-manager > div:first-child {
+  display: grid;
+  gap: 7px;
+  grid-template-columns: 1fr auto;
+}
+
+.letter-category-manager > div:first-child button {
+  background: #ffc400;
+  border: 0;
+  border-radius: 7px;
+  color: #082750;
+  cursor: pointer;
+  font-weight: 900;
+  padding: 0 15px;
+}
+
+.letter-category-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.letter-category-chips > span {
+  align-items: center;
+  background: rgba(255, 196, 0, 0.12);
+  border: 1px solid rgba(255, 196, 0, 0.4);
+  border-radius: 999px;
+  color: #fff;
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 800;
+  gap: 6px;
+  padding: 5px 8px 5px 10px;
+}
+
+.letter-category-chips button {
+  background: transparent;
+  border: 0;
+  color: #ffc400;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
+}
+
+.official-letter-footer {
+  left: -1px;
+  right: -1px;
+}
+
+.letter-category-manager > div:first-child button {
+  min-height: 42px;
+  position: relative;
+  z-index: 2;
+}
+
+.letter-category-error {
+  color: #ffd36a;
+  font-size: 11px;
+  font-weight: 800;
+  margin: -2px 0 0;
+}
+
+.letter-search-box {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #d2dce8;
+  border-radius: 7px;
+  display: grid;
+  gap: 7px;
+  grid-template-columns: auto 1fr;
+  margin-bottom: 13px;
+  padding: 0 11px;
+}
+
+.letter-search-box > span {
+  color: #0a2b58;
+  font-size: 23px;
+  line-height: 1;
+  transform: rotate(-18deg);
+}
+
+.letter-search-box input {
+  background: transparent;
+  border: 0;
+  color: #0a2b58;
+  font: inherit;
+  min-height: 42px;
+  outline: none;
+  width: 100%;
+}
+
+.plain-continuation-page .official-letter-content {
+  bottom: 7%;
+  top: 7%;
+}
+
+.plain-continuation-page .official-page-number {
+  bottom: 2.5%;
+}
+
+.letter-pdf-preview-overlay {
+  align-items: center;
+  background: rgba(0, 18, 45, 0.88);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 18px;
+  position: fixed;
+  z-index: 10000;
+}
+
+.letter-pdf-preview-modal {
+  background: #e8edf3;
+  border: 1px solid rgba(255, 196, 0, 0.45);
+  border-radius: 10px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: calc(100vh - 36px);
+  max-width: 1180px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.letter-pdf-preview-modal > header,
+.letter-pdf-preview-modal > footer {
+  align-items: center;
+  background: #062c5d;
+  color: #fff;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  padding: 12px 16px;
+}
+
+.letter-pdf-preview-modal > header div {
+  display: grid;
+  gap: 2px;
+}
+
+.letter-pdf-preview-modal > header strong {
+  color: #ffc400;
+  font-size: 18px;
+}
+
+.letter-pdf-preview-modal > header span {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 12px;
+}
+
+.letter-pdf-preview-modal iframe {
+  background: #d7dce2;
+  border: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.letter-pdf-preview-modal button {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 800;
+  padding: 9px 14px;
+}
+
+.letter-pdf-preview-modal > header > button {
+  border-radius: 50%;
+  font-size: 22px;
+  height: 38px;
+  line-height: 1;
+  padding: 0;
+  width: 38px;
+}
+
+.letter-pdf-preview-modal > footer {
+  justify-content: flex-end;
+}
+
+.letter-pdf-preview-modal button.download {
+  background: #ffc400;
+  border-color: #ffc400;
+  color: #062652;
 }

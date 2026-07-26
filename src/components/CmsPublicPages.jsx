@@ -219,7 +219,7 @@ async function downloadBlogPdf(blog) {
   }
   addWatermark();
   writeText(blog.title, { size: 22, bold: true, color: [7, 31, 85], gap: 8 });
-  writeText(`${blog.category || "Article"}  |  By ${blog.author || "PrimeServe Team"}  |  ${blog.publishDate || ""}`, { size: 9, color: [98, 110, 130], gap: 8 });
+  writeText(`${blog.category || "Article"}  |  By ${blog.author || "Primeserve Team"}  |  ${blog.publishDate || ""}`, { size: 9, color: [98, 110, 130], gap: 8 });
 
   let pdfImage = blog.coverImage || "";
   if (pdfImage && !pdfImage.startsWith("data:image")) {
@@ -261,8 +261,8 @@ async function downloadBlogPdf(blog) {
 function downloadNewsPdf(item) {
   return downloadBlogPdf({
     title: item.title,
-    category: "PrimeServe News & Updates",
-    author: "PrimeServe Team",
+    category: "Primeserve News & Updates",
+    author: "Primeserve Team",
     publishDate: item.date,
     coverImage: item.image,
     content: item.fullDescription || item.shortDescription,
@@ -274,14 +274,14 @@ function downloadCaseStudyPdf(item) {
   const content = [
     "About the Client", item.clientName,
     "Business Challenge", item.challenge,
-    "PrimeServe Solution", item.solution,
+    "Primeserve Solution", item.solution,
     "Results Achieved", item.results,
     "Services Used", item.servicesUsed,
   ].filter(Boolean).join("\n\n");
   return downloadBlogPdf({
     title: item.title,
     category: item.industry || "Case Study",
-    author: "PrimeServe Team",
+    author: "Primeserve Team",
     coverImage: item.coverImage || item.clientLogo,
     content,
     slug: item.slug || `primeserve-case-study-${item.id}`,
@@ -318,7 +318,7 @@ function AutoCarousel({ items, children, label }) {
   );
 }
 
-function LeadCaptureForm({ sourcePage = "Website", service = "PrimeServe Services" }) {
+function LeadCaptureForm({ sourcePage = "Website", service = "Primeserve Services" }) {
   const [sent, setSent] = useState(false);
 
   const submitLead = (event) => {
@@ -344,7 +344,7 @@ function LeadCaptureForm({ sourcePage = "Website", service = "PrimeServe Service
 
   return (
     <form className="lead-capture-card" onSubmit={submitLead}>
-      <h3>Need help from PrimeServe?</h3>
+      <h3>Need help from Primeserve?</h3>
       <p>Share your details and our team will connect with you.</p>
       {sent && <strong className="lead-success">Request saved successfully.</strong>}
       <input name="name" placeholder="Name" required />
@@ -441,7 +441,7 @@ export function CareersPage() {
     <div className="cms-public-page">
       <PublicHero
         eyebrow="CAREERS"
-        title="Join PrimeServe"
+        title="Join Primeserve"
         text="Build the future of digital compliance, enterprise APIs and business technology with us."
       />
       {toast && <div className="cms-toast">{toast}</div>}
@@ -451,10 +451,10 @@ export function CareersPage() {
           <span>WHY JOIN PRIMESERVE</span>
           <h2>Build meaningful enterprise technology.</h2>
           <p>
-            At PrimeServe Global Solution Private Limited, we are passionate
+            At Primeserve Global Solution Private Limited, we are passionate
             about innovation, technology and customer success. Whether you are a
             software developer, sales professional, compliance expert, SAP
-            consultant or customer support specialist, PrimeServe offers an
+            consultant or customer support specialist, Primeserve offers an
             environment where your ideas are valued and your career can grow.
           </p>
         </div>
@@ -553,7 +553,7 @@ export function CareersPage() {
           <span>SUBMIT RESUME</span>
           <h2>Stay connected for future roles.</h2>
           <p>
-            Share your profile with PrimeServe. This request is sent to the
+            Share your profile with Primeserve. This request is sent to the
             careers email configured in Admin CMS.
           </p>
         </div>
@@ -650,7 +650,7 @@ export function BlogPage() {
             </div>
             <div className="blog-cta-box">
               <h3>Looking for enterprise APIs, GST solutions, DSC, SAP integration or managed compliance services?</h3>
-              <p>Contact PrimeServe for secure, scalable and reliable digital business solutions.</p>
+              <p>Contact Primeserve for secure, scalable and reliable digital business solutions.</p>
             </div>
             {relatedBlogs.length > 0 && (
               <div className="related-articles">
@@ -699,10 +699,10 @@ export function BlogPage() {
       <PublicHero
         eyebrow="BLOG"
         title="Insights for APIs, compliance and digital transformation."
-        text="Read PrimeServe updates and practical guides for enterprise technology teams."
+        text="Read Primeserve updates and practical guides for enterprise technology teams."
       />
       {blogs.length > 3 ? (
-        <AutoCarousel items={blogs} label="PrimeServe blog articles">
+        <AutoCarousel items={blogs} label="Primeserve blog articles">
           {renderBlogCard}
         </AutoCarousel>
       ) : (
@@ -721,10 +721,10 @@ export function NewsPage() {
     <div className="cms-public-page">
       <PublicHero
         eyebrow="NEWS & UPDATES"
-        title="Latest company updates from PrimeServe."
+        title="Latest company updates from Primeserve."
         text="Follow new launches, business updates and important announcements."
       />
-      <AutoCarousel items={news} label="PrimeServe news carousel">
+      <AutoCarousel items={news} label="Primeserve news carousel">
         {(item) => (
           <article className="cms-public-card" key={item.id}>
             {item.image && <img className="cms-carousel-image" src={item.image} alt={item.title} />}
@@ -749,7 +749,7 @@ export function ApiUpdatesPage() {
         title="API and product release updates."
         text="Track new launches, enhancements, maintenance notices and product changes."
       />
-      <AutoCarousel items={updates} label="PrimeServe API and product updates carousel">
+      <AutoCarousel items={updates} label="Primeserve API and product updates carousel">
         {(item) => (
           <article className="cms-public-card" key={item.id}>
             <span>{item.updateType}</span>
@@ -778,7 +778,7 @@ export function FaqPage() {
 
   return (
     <div className="cms-public-page">
-      <PublicHero eyebrow="FAQS" title="Answers for PrimeServe services." text="Search common questions about APIs, GST, DSC, ASP-GSP, onboarding and support." />
+      <PublicHero eyebrow="FAQS" title="Answers for Primeserve services." text="Search common questions about APIs, GST, DSC, ASP-GSP, onboarding and support." />
       <section className="knowledge-section">
         <div className="knowledge-filters">
           <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search FAQs by keyword" />
@@ -804,7 +804,7 @@ export function WebinarsPage() {
   const webinars = (data.webinars || []).filter((item) => item.status === "Published");
   return (
     <div className="cms-public-page">
-      <PublicHero eyebrow="WEBINARS" title="PrimeServe webinars and events." text="Join upcoming sessions or watch recorded discussions from our experts." />
+      <PublicHero eyebrow="WEBINARS" title="Primeserve webinars and events." text="Join upcoming sessions or watch recorded discussions from our experts." />
       <section className="knowledge-grid">
         {webinars.map((item) => (
           <article className="knowledge-card" key={item.id}>
@@ -838,13 +838,13 @@ export function CaseStudiesPage() {
   if (active) {
     return (
       <div className="cms-public-page">
-        <PublicHero eyebrow={active.industry} title={active.title} text={`How PrimeServe supported ${active.clientName}.`} />
+        <PublicHero eyebrow={active.industry} title={active.title} text={`How Primeserve supported ${active.clientName}.`} />
         <article className="cms-detail-article">
           <h2>About the Client</h2>
           <p>{active.clientName}</p>
           <h2>Business Challenge</h2>
           <p>{active.challenge}</p>
-          <h2>PrimeServe Solution</h2>
+          <h2>Primeserve Solution</h2>
           <p>{active.solution}</p>
           <h2>Results Achieved</h2>
           <p>{active.results}</p>
@@ -859,8 +859,8 @@ export function CaseStudiesPage() {
 
   return (
     <div className="cms-public-page">
-      <PublicHero eyebrow="CASE STUDIES" title="Enterprise results powered by PrimeServe." text="Explore how our APIs, automation and compliance services help businesses move faster." />
-      <AutoCarousel items={caseStudies} label="PrimeServe case studies carousel">
+      <PublicHero eyebrow="CASE STUDIES" title="Enterprise results powered by Primeserve." text="Explore how our APIs, automation and compliance services help businesses move faster." />
+      <AutoCarousel items={caseStudies} label="Primeserve case studies carousel">
         {(item) => (
           <article className="knowledge-card" key={item.id}>
             {item.coverImage && <img src={item.coverImage} alt={item.title} />}
@@ -883,7 +883,7 @@ export function ProductAnnouncementsPage() {
   const announcements = (data.productAnnouncements || []).filter((item) => item.status === "Published");
   return (
     <div className="cms-public-page">
-      <PublicHero eyebrow="ANNOUNCEMENTS" title="Product and service announcements." text="Track PrimeServe launches, feature updates, maintenance and partnership news." />
+      <PublicHero eyebrow="ANNOUNCEMENTS" title="Product and service announcements." text="Track Primeserve launches, feature updates, maintenance and partnership news." />
       <section className="knowledge-grid">
         {announcements.map((item) => (
           <article className="knowledge-card" key={item.id}>
@@ -962,7 +962,7 @@ export function ResourcesPage() {
 
   return (
     <div className="cms-public-page">
-      <PublicHero eyebrow="RESOURCES" title="Download PrimeServe resources." text="Access catalogues, guides, documents and business resources." />
+      <PublicHero eyebrow="RESOURCES" title="Download Primeserve resources." text="Access catalogues, guides, documents and business resources." />
       <section className="knowledge-grid">
         {resources.map((item) => (
           <article className="knowledge-card" key={item.id}>
@@ -1017,7 +1017,7 @@ export function HsnSacFinderPage() {
         {!isEnabled ? (
           <div className="tool-disabled-card">
             <h2>HSN/SAC Code Finder is currently unavailable.</h2>
-            <p>Please contact PrimeServe for GST API or HSN/SAC integration support.</p>
+            <p>Please contact Primeserve for GST API or HSN/SAC integration support.</p>
           </div>
         ) : (
           <form className="tool-search-card" onSubmit={handleSearch}>
@@ -1037,7 +1037,7 @@ export function HsnSacFinderPage() {
         {isEnabled && searched && matches.length === 0 && (
           <div className="hsn-no-result">
             <h2>No matching HSN/SAC code found.</h2>
-            <p>Please contact PrimeServe for assistance.</p>
+            <p>Please contact Primeserve for assistance.</p>
             <LeadCaptureForm sourcePage="/tools/hsn-sac-code-finder" service="GST APIs / HSN SAC Integration" />
           </div>
         )}
@@ -1299,12 +1299,12 @@ export function GstinValidatorPage() {
 
   return (
     <div className="cms-public-page">
-      <PublicHero compact eyebrow="TOOLS" title="GSTIN Validator" text="Enter a GSTIN and click Search to validate taxpayer details through PrimeServe API." />
+      <PublicHero compact eyebrow="TOOLS" title="GSTIN Validator" text="Enter a GSTIN and click Search to validate taxpayer details through Primeserve API." />
       <section className="hsn-tool-panel tools-search-panel">
         {!isEnabled ? (
           <div className="tool-disabled-card">
             <h2>GSTIN Validator is currently disabled.</h2>
-            <p>Please contact PrimeServe for GST verification API access.</p>
+            <p>Please contact Primeserve for GST verification API access.</p>
           </div>
         ) : (
           <>
@@ -1339,8 +1339,8 @@ export function GstinValidatorPage() {
 
 export function GstinSearchPage() {
   usePageSeo({
-    title: "GSTIN Search | GST Public Search API | PrimeServe",
-    description: "Search GSTIN details securely using PrimeServe GST Public API. Enter a valid GSTIN to view taxpayer status, legal name, trade name, registration details and business activity.",
+    title: "GSTIN Search | GST Public Search API | Primeserve",
+    description: "Search GSTIN details securely using Primeserve GST Public API. Enter a valid GSTIN to view taxpayer status, legal name, trade name, registration details and business activity.",
     path: "/gstin-search",
   });
 
@@ -1383,7 +1383,7 @@ export function GstinSearchPage() {
 
   return (
     <div className="cms-public-page">
-      <PublicHero compact eyebrow="GST PUBLIC SEARCH" title="GSTIN Search" text="Enter a GSTIN and click Search to view live taxpayer details through PrimeServe GST Public API." />
+      <PublicHero compact eyebrow="GST PUBLIC SEARCH" title="GSTIN Search" text="Enter a GSTIN and click Search to view live taxpayer details through Primeserve GST Public API." />
       <section className="hsn-tool-panel tools-search-panel gstin-search-hidden-page">
         <form className="tool-search-card" onSubmit={handleSearch}>
           <label htmlFor="gstin-search-input">Enter GSTIN</label>

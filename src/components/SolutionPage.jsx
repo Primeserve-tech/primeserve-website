@@ -143,7 +143,7 @@ function SolutionPage() {
 
   const stats = [
     { icon: "rocket", number: "250+", text: "APIs & Solutions Built for Scale" },
-    { icon: "users", number: "100+", text: "Enterprises Trust PrimeServe" },
+    { icon: "users", number: "100+", text: "Enterprises Trust Primeserve" },
     { icon: "shield", number: "99.99%", text: "Platform Uptime & Reliability" },
     { icon: "support", number: "24x7", text: "Expert Support Always Available" },
     { icon: "lock", number: "Enterprise-Grade", text: "Security & Data Protection" },
@@ -201,7 +201,7 @@ function SolutionPage() {
             </a>
           </div>
 
-          <div className="hero-logo-strip" aria-label="PrimeServe solution logos">
+          <div className="hero-logo-strip" aria-label="Primeserve solution logos">
             {heroServices.map((item) => (
               <span className="hero-logo-chip" key={item.text}>
                 <i className={`solution-card-icon ${item.icon}`} />
@@ -222,7 +222,7 @@ function SolutionPage() {
           </p>
         </div>
 
-        <div className="solution-carousel-shell" aria-label="PrimeServe solutions">
+        <div className="solution-carousel-shell" aria-label="Primeserve solutions">
           <div className="solution-card-track">
             {[...solutions, ...solutions].map((solution, index) => (
               <article className="solution-card" key={`${solution.title}-${index}`}>

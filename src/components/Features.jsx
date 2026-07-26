@@ -53,7 +53,7 @@ function Features() {
         </p>
       </div>
 
-      <div className="home-carousel-shell" aria-label="PrimeServe services carousel">
+      <div className="home-carousel-shell" aria-label="Primeserve services carousel">
         <div className="home-card-track">
         {[...cards, ...cards].map((card, index) => (
           <article className="feature-card" key={`${card.title}-${index}`}>

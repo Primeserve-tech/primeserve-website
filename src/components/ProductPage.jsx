@@ -93,7 +93,7 @@ function ProductPage() {
             ))}
           </div>
 
-          <div className="hero-logo-strip" aria-label="PrimeServe product logos">
+          <div className="hero-logo-strip" aria-label="Primeserve product logos">
             {heroServices.map((item) => (
               <span className="hero-logo-chip" key={item.text}>
                 <i className={`product-card-icon ${item.icon}`} />
@@ -114,7 +114,7 @@ function ProductPage() {
           </p>
         </div>
 
-        <div className="product-carousel-shell" aria-label="PrimeServe products carousel">
+        <div className="product-carousel-shell" aria-label="Primeserve products carousel">
           <div className="product-card-track">
           {[...products, ...products].map((product, index) => (
             <article className="product-card" key={`${product.title}-${index}`}>

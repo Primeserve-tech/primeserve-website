@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "jspdf": "^4.2.1",
+    "mammoth": "^1.10.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },

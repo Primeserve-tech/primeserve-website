@@ -10,6 +10,7 @@ export const defaultAdminUsers = [
     password: "Password@#321",
     name: "Super Admin",
     role: "Super Admin",
+    letterheadAccess: "Yes",
     status: "Active",
   },
   {
@@ -18,6 +19,7 @@ export const defaultAdminUsers = [
     password: "Password@#321",
     name: "HR Admin",
     role: "HR Admin",
+    letterheadAccess: "No",
     status: "Active",
   },
   {
@@ -26,6 +28,7 @@ export const defaultAdminUsers = [
     password: "Password@#321",
     name: "Content Admin",
     role: "Content Admin",
+    letterheadAccess: "No",
     status: "Active",
   },
 ];
@@ -41,7 +44,7 @@ export const defaultCmsData = {
       location: "Greater Noida / Remote",
       employmentType: "Full Time",
       salaryRange: "As per experience",
-      description: "Build polished customer-facing dashboards and reusable React components for PrimeServe products.",
+      description: "Build polished customer-facing dashboards and reusable React components for Primeserve products.",
       responsibilities: "Develop UI modules, integrate APIs, improve performance, support responsive design.",
       skills: "React, JavaScript, CSS, REST APIs, Git",
       status: "Inactive",
@@ -74,7 +77,7 @@ export const defaultCmsData = {
       expectedCtc: "7 LPA",
       noticePeriod: "30 Days",
       resumeName: "sample-resume.pdf",
-      message: "Interested in PrimeServe technology team.",
+      message: "Interested in Primeserve technology team.",
       status: "New",
       date: today,
     },
@@ -88,10 +91,10 @@ export const defaultCmsData = {
       shortDescription: "A practical look at how GST, e-Invoice and e-Way Bill APIs reduce manual work.",
       coverImage: "",
       content: "Enterprise GST compliance becomes faster when validation, filing status, e-Invoice and e-Way Bill workflows are automated through secure APIs.",
-      author: "PrimeServe Team",
+      author: "Primeserve Team",
       tags: "GST, APIs, Compliance",
       seoTitle: "GST Compliance APIs for Enterprises",
-      seoDescription: "Learn how PrimeServe GST APIs help enterprises automate compliance.",
+      seoDescription: "Learn how Primeserve GST APIs help enterprises automate compliance.",
       status: "Published",
       publishDate: today,
       lastUpdatedDate: today,
@@ -99,7 +102,7 @@ export const defaultCmsData = {
       showOnHomepage: "Yes",
       readingTime: "1 min read",
       ogImage: "",
-      coverAlt: "PrimeServe GST compliance APIs",
+      coverAlt: "Primeserve GST compliance APIs",
       canonicalUrl: "",
       relatedBlogs: "",
       downloadPdf: "Yes",
@@ -108,15 +111,15 @@ export const defaultCmsData = {
   faqs: [
     {
       id: "faq-1",
-      question: "What API services does PrimeServe provide?",
-      answer: "PrimeServe provides GST APIs, e-Invoice, e-Way Bill, identity verification, business verification, DSC, SAP integration and managed compliance services.",
+      question: "What API services does Primeserve provide?",
+      answer: "Primeserve provides GST APIs, e-Invoice, e-Way Bill, identity verification, business verification, DSC, SAP integration and managed compliance services.",
       category: "Enterprise APIs",
       tags: "api,gst,verification",
       sortOrder: "1",
       status: "Active",
       showOnHomepage: "Yes",
-      seoTitle: "PrimeServe API FAQs",
-      seoDescription: "Frequently asked questions about PrimeServe APIs and compliance solutions.",
+      seoTitle: "Primeserve API FAQs",
+      seoDescription: "Frequently asked questions about Primeserve APIs and compliance solutions.",
     },
   ],
   webinars: [],
@@ -139,9 +142,9 @@ export const defaultCmsData = {
   news: [
     {
       id: "news-1",
-      title: "PrimeServe expands enterprise API catalogue",
+      title: "Primeserve expands enterprise API catalogue",
       shortDescription: "New verification, GST and compliance APIs added for growing enterprises.",
-      fullDescription: "PrimeServe continues to expand its enterprise API catalogue with secure and scalable APIs for verification, GST, compliance and automation workflows.",
+      fullDescription: "Primeserve continues to expand its enterprise API catalogue with secure and scalable APIs for verification, GST, compliance and automation workflows.",
       image: "",
       date: today,
       status: "Published",
@@ -174,10 +177,10 @@ export const defaultCmsData = {
     {
       id: "testimonial-1",
       clientName: "Enterprise Client",
-      companyName: "PrimeServe Customer",
+      companyName: "Primeserve Customer",
       designation: "Operations Head",
       photo: "",
-      testimonial: "PrimeServe helped us automate compliance workflows with reliable support.",
+      testimonial: "Primeserve helped us automate compliance workflows with reliable support.",
       rating: "5",
       status: "Active",
     },
@@ -187,8 +190,8 @@ export const defaultCmsData = {
   newsletterCampaigns: [
     {
       id: "newsletter-1",
-      subject: "PrimeServe Updates",
-      body: "Hello,\n\nHere are the latest updates from PrimeServe.\n\nRegards,\nPrimeServe Team",
+      subject: "Primeserve Updates",
+      body: "Hello,\n\nHere are the latest updates from Primeserve.\n\nRegards,\nPrimeserve Team",
       status: "Draft",
       date: today,
     },
@@ -209,7 +212,7 @@ export const defaultCmsData = {
   ],
   settings: {
     id: "settings-1",
-    companyName: "PrimeServe Global Solution Pvt. Ltd.",
+    companyName: "Primeserve Global Solution Pvt. Ltd.",
     website: "www.primeserve.in",
     salesEmail: "sales@primeserve.in",
     infoEmail: "info@primeserve.in",
@@ -232,9 +235,9 @@ export const defaultCmsData = {
     {
       id: "seo-home",
       page: "Home",
-      title: "PrimeServe - Enterprise APIs & Compliance Solutions",
-      metaDescription: "PrimeServe provides GST APIs, e-Invoice, e-Way Bill, verification APIs, DSC, SAP and managed compliance solutions.",
-      metaKeywords: "GST API, e-Invoice API, e-Way Bill API, DSC, ASP GSP, PrimeServe",
+      title: "Primeserve - Enterprise APIs & Compliance Solutions",
+      metaDescription: "Primeserve provides GST APIs, e-Invoice, e-Way Bill, verification APIs, DSC, SAP and managed compliance solutions.",
+      metaKeywords: "GST API, e-Invoice API, e-Way Bill API, DSC, ASP GSP, Primeserve",
       ogImage: "",
     },
   ],
@@ -252,12 +255,18 @@ export function getCmsData() {
       ...defaultCmsData.settings,
       ...(storedData.settings || {}),
     };
-    const mergedData = {
+    let mergedData = {
       ...defaultCmsData,
       ...storedData,
       adminUsers: storedData.adminUsers || defaultCmsData.adminUsers,
       settings,
     };
+
+    if (!settings.primeserveNameCasingMigrated) {
+      mergedData = JSON.parse(JSON.stringify(mergedData).replaceAll("PrimeServe", "Primeserve"));
+      mergedData.settings = { ...mergedData.settings, primeserveNameCasingMigrated: "true" };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedData));
+    }
 
     const now = Date.now();
     mergedData.supportTeam = (mergedData.supportTeam || []).filter((member) => {
@@ -270,7 +279,7 @@ export function getCmsData() {
       mergedData.jobs = (mergedData.jobs || []).map((job) =>
         ["job-1", "job-2"].includes(job.id) ? { ...job, status: "Inactive" } : job
       );
-      mergedData.settings = { ...settings, careersSeedMigrated: "true" };
+      mergedData.settings = { ...mergedData.settings, careersSeedMigrated: "true" };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedData));
     }
 
@@ -303,7 +312,12 @@ export function loginAdmin(email, password) {
       item.password === password
   );
   if (!user) return null;
-  const session = { email: user.email, name: user.name, role: user.role };
+  const session = {
+    email: user.email,
+    name: user.name,
+    role: user.role,
+    letterheadAccess: user.role === "Super Admin" ? "Yes" : user.letterheadAccess || "No",
+  };
   localStorage.setItem(SESSION_KEY, JSON.stringify(session));
   return session;
 }

@@ -8,7 +8,7 @@ function Stats() {
   ];
 
   return (
-    <section className="stats-wrap" aria-label="PrimeServe highlights">
+    <section className="stats-wrap" aria-label="Primeserve highlights">
       <div className="stats-card">
         {stats.map((item) => (
           <article className="stat-item" key={item.number}>

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import logo from "../assets/primeserve-logo-clean.png";
+import LetterheadDocuments from "./LetterheadDocuments";
 import {
   createId,
   getCmsData,
@@ -20,9 +21,10 @@ const moduleConfig = {
       ["email", "Email", "email"],
       ["password", "Temporary Password", "password"],
       ["role", "Role", "select", ["HR Admin", "Content Admin", "Super Admin"]],
+      ["letterheadAccess", "Letterhead Access", "select", ["No", "Yes"]],
       ["status", "Status", "select", ["Active", "Inactive"]],
     ],
-    columns: ["name", "email", "role", "status"],
+    columns: ["name", "email", "role", "letterheadAccess", "status"],
   },
   jobs: {
     label: "Careers",
@@ -389,6 +391,7 @@ const settingsFields = [
 function AdminLogin({ onLogin }) {
   const [error, setError] = useState("");
   const [resetMessage, setResetMessage] = useState("");
+  const [resetBusy, setResetBusy] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -401,27 +404,44 @@ function AdminLogin({ onLogin }) {
     onLogin(session);
   };
 
-  const handleForgotPassword = () => {
+  const handleForgotPassword = async () => {
     const emailInput = document.querySelector("input[name='email']");
-    const email = emailInput?.value || "your registered email";
+    const email = String(emailInput?.value || "").trim();
     setError("");
-    setResetMessage(
-      `A secure password reset link has been requested for ${email}. In production, this link will be sent to the registered email address.`
-    );
+    setResetMessage("");
+    if (!email) {
+      setError("Enter the Super Admin email address first.");
+      return;
+    }
+    setResetBusy(true);
+    try {
+      const response = await fetch("/api/admin/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.message || "Unable to send the recovery email.");
+      setResetMessage(payload.message || "Super Admin credentials were sent to the registered email.");
+    } catch (requestError) {
+      setError(requestError.message || "Unable to send the recovery email.");
+    } finally {
+      setResetBusy(false);
+    }
   };
 
   return (
     <div className="admin-login-page">
       <form className="admin-login-card" onSubmit={handleSubmit}>
-        <img src={logo} alt="PrimeServe" />
+        <img src={logo} alt="Primeserve" />
         <span>Secure CMS Login</span>
-        <h1>PrimeServe Admin Dashboard</h1>
+        <h1>Primeserve Admin Dashboard</h1>
         {error && <p className="admin-error">{error}</p>}
         <input name="email" type="email" placeholder="Admin email" required />
         <input name="password" type="password" placeholder="Password" required />
         <button type="submit">Login</button>
-        <button className="admin-forgot-btn" type="button" onClick={handleForgotPassword}>
-          Forgot password?
+        <button className="admin-forgot-btn" type="button" onClick={handleForgotPassword} disabled={resetBusy}>
+          {resetBusy ? "Sending..." : "Forgot password?"}
         </button>
         {resetMessage && <p className="admin-reset-message">{resetMessage}</p>}
       </form>
@@ -627,6 +647,28 @@ function AdminDashboard() {
   const saveItem = async () => {
     const { moduleKey, item, isNew } = editing;
     const nextItem = { ...item };
+    if (moduleKey === "adminUsers") {
+      nextItem.letterheadAccess = nextItem.role === "Super Admin" ? "Yes" : nextItem.letterheadAccess || "No";
+      const existingItem = (data.adminUsers || []).find((entry) => entry.id === nextItem.id);
+      if (!isNew && existingItem?.role === "Super Admin" && nextItem.password !== existingItem.password) {
+        try {
+          const response = await fetch("/api/admin/super-password", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: existingItem.email,
+              currentPassword: existingItem.password,
+              newPassword: nextItem.password,
+            }),
+          });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(payload.message || "Unable to update the Super Admin password.");
+        } catch (passwordError) {
+          setToast(passwordError.message || "Unable to update the Super Admin password.");
+          return;
+        }
+      }
+    }
     if (moduleKey === "blogs") {
       const plainText = String(nextItem.content || "").replace(/<[^>]*>/g, " ");
       const words = plainText.trim().split(/\s+/).filter(Boolean).length;
@@ -762,10 +804,13 @@ function AdminDashboard() {
   return (
     <div className="admin-shell">
       <aside className="admin-sidebar">
-        <img src={logo} alt="PrimeServe" />
+        <img src={logo} alt="Primeserve" />
         <p>{session.name}</p>
         <span>{session.role}</span>
         <button className={activeModule === "dashboard" ? "active" : ""} onClick={() => setActiveModule("dashboard")}>Dashboard</button>
+        {(session.role === "Super Admin" || session.letterheadAccess === "Yes") && (
+          <button className={activeModule === "letterhead" ? "active" : ""} onClick={() => setActiveModule("letterhead")}>Letterhead Documents</button>
+        )}
         {allowedModules.map((moduleKey) => (
           <button
             key={moduleKey}
@@ -789,8 +834,8 @@ function AdminDashboard() {
       <section className="admin-main">
         <header className="admin-topbar">
           <div>
-            <span>PrimeServe CMS</span>
-            <h1>{activeModule === "dashboard" ? "Dashboard Home" : activeModule === "settings" ? "Website Settings" : moduleConfig[activeModule]?.label}</h1>
+            <span>Primeserve CMS</span>
+            <h1>{activeModule === "dashboard" ? "Dashboard Home" : activeModule === "letterhead" ? "Letterhead Documents" : activeModule === "settings" ? "Website Settings" : moduleConfig[activeModule]?.label}</h1>
           </div>
           <button onClick={() => {
             resetCmsData();
@@ -813,6 +858,8 @@ function AdminDashboard() {
             ))}
           </div>
         )}
+
+        {activeModule === "letterhead" && (session.role === "Super Admin" || session.letterheadAccess === "Yes") && <LetterheadDocuments session={session} />}
 
         {activeModule === "settings" && (
           <form className="admin-form-grid" onSubmit={saveSettings}>
@@ -869,7 +916,13 @@ function AdminDashboard() {
                 <tbody>
                   {filteredRows(activeModule).map((row) => (
                     <tr key={row.id}>
-                      {moduleConfig[activeModule].columns.map((column) => <td key={column}>{row[column]}</td>)}
+                      {moduleConfig[activeModule].columns.map((column) => (
+                        <td key={column}>
+                          {activeModule === "adminUsers" && column === "letterheadAccess"
+                            ? row.role === "Super Admin" ? "Yes" : row.letterheadAccess || "No"
+                            : row[column]}
+                        </td>
+                      ))}
                       <td>
                         <button onClick={() => setEditing({ moduleKey: activeModule, item: row, isNew: false })}>Edit</button>
                         {activeModule === "newsletterCampaigns" && <button onClick={() => sendNewsletterCampaign(row)}>Send Email</button>}

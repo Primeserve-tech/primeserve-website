@@ -27,7 +27,7 @@ function Testimonials() {
         <span>- CLIENT TESTIMONIALS -</span>
         <h2>Trusted by growing businesses.</h2>
         <p>
-          Feedback published from the PrimeServe Admin CMS appears here
+          Feedback published from the Primeserve Admin CMS appears here
           automatically.
         </p>
       </div>
