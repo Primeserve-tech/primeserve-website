@@ -47,7 +47,7 @@ function Hero() {
             ))}
           </div>
 
-          <div className="hero-logo-strip" aria-label="PrimeServe service logos">
+          <div className="hero-logo-strip" aria-label="Primeserve service logos">
             {heroServices.map((item, index) => (
               <span className="hero-service-entry" key={item.text}>
                 {index === 3 && <span className="hero-service-row-break" aria-hidden="true" />}

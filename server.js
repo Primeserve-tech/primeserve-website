@@ -9,6 +9,7 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const distDir = resolve(__dirname, "dist");
 const runtimeDir = resolve(process.env.PRIMESERVE_RUNTIME_DIR || join(__dirname, ".runtime"));
 const keyFile = join(runtimeDir, "gstin-key.json");
+const superAdminFile = join(runtimeDir, "super-admin.json");
 const port = Number(process.env.PORT || 3000);
 const defaultApiUrl = "https://api.primeserve.in/commonapi/v1.1/search";
 
@@ -35,6 +36,82 @@ function sendJson(response, statusCode, payload) {
     "Cache-Control": "no-store",
   });
   response.end(JSON.stringify(payload));
+}
+
+function escapeHtml(value) {
+  return String(value || "").replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  })[character]);
+}
+
+async function handleSuperAdminRecovery(request, response) {
+  if (request.method !== "POST") return sendJson(response, 405, { message: "Method not allowed." });
+  try {
+    const body = JSON.parse(await readRequestBody(request) || "{}");
+    const requestedEmail = String(body.email || "").trim().toLowerCase();
+    const credentials = getSuperAdminCredentials();
+    const superAdminEmail = credentials.email;
+    const superAdminPassword = credentials.password;
+    const token = String(process.env.MAIL_SEND_TOKEN || process.env.SMTP_PASSWORD || "");
+    if (requestedEmail !== superAdminEmail) return sendJson(response, 403, { message: "Credential recovery is available only for Super Admin." });
+    if (!token || !superAdminPassword) return sendJson(response, 503, { message: "Recovery email is not configured on this server." });
+    const authorization = token.startsWith("Zoho-enczapikey ") ? token : `Zoho-enczapikey ${token}`;
+    const mailResponse = await fetch(process.env.MAIL_API_URL || "https://api.zeptomail.in/v1.1/email", {
+      method: "POST",
+      headers: { authorization, "content-type": "application/json" },
+      body: JSON.stringify({
+        from: { address: process.env.MAIL_FROM_ADDRESS || "info@primeserve.in", name: process.env.MAIL_FROM_NAME || "Primeserve" },
+        to: [{ email_address: { address: superAdminEmail, name: "Primeserve Super Admin" } }],
+        subject: "Primeserve CMS Super Admin credentials",
+        htmlbody: `<div style="font-family:Arial,sans-serif"><h2>Primeserve CMS credentials</h2><p>User ID: <strong>${escapeHtml(superAdminEmail)}</strong></p><p>Password: <strong>${escapeHtml(superAdminPassword)}</strong></p><p>For security, sign in and update the password if this message was unexpected.</p></div>`,
+      }),
+      signal: AbortSignal.timeout(15000),
+    });
+    if (!mailResponse.ok) throw new Error("Mail delivery failed.");
+    return sendJson(response, 200, { success: true, message: "Super Admin credentials were sent to the registered email." });
+  } catch {
+    return sendJson(response, 502, { message: "Unable to send the recovery email. Please check the mail configuration." });
+  }
+}
+
+function getSuperAdminCredentials() {
+  if (existsSync(superAdminFile)) {
+    try {
+      const parsed = JSON.parse(readFileSync(superAdminFile, "utf8"));
+      return {
+        email: String(parsed.email || "").trim().toLowerCase(),
+        password: String(parsed.password || ""),
+      };
+    } catch {
+      // Fall back to environment configuration.
+    }
+  }
+  return {
+    email: String(process.env.PRIMESERVE_SUPER_ADMIN_EMAIL || "primeserve45@gmail.com").trim().toLowerCase(),
+    password: String(process.env.PRIMESERVE_SUPER_ADMIN_PASSWORD || ""),
+  };
+}
+
+async function handleSuperAdminPasswordUpdate(request, response) {
+  if (request.method !== "POST") return sendJson(response, 405, { message: "Method not allowed." });
+  try {
+    const body = JSON.parse(await readRequestBody(request) || "{}");
+    const credentials = getSuperAdminCredentials();
+    const email = String(body.email || "").trim().toLowerCase();
+    const currentPassword = String(body.currentPassword || "");
+    const newPassword = String(body.newPassword || "");
+    if (email !== credentials.email || currentPassword !== credentials.password) {
+      return sendJson(response, 403, { message: "Current Super Admin credentials are invalid." });
+    }
+    if (newPassword.length < 8) {
+      return sendJson(response, 400, { message: "Password must contain at least 8 characters." });
+    }
+    mkdirSync(runtimeDir, { recursive: true });
+    writeFileSync(superAdminFile, JSON.stringify({ email: credentials.email, password: newPassword, updatedAt: new Date().toISOString() }, null, 2));
+    return sendJson(response, 200, { success: true, message: "Super Admin password updated." });
+  } catch {
+    return sendJson(response, 400, { message: "Unable to update the Super Admin password." });
+  }
 }
 
 function readRequestBody(request) {
@@ -263,7 +340,16 @@ createServer(async (request, response) => {
     return;
   }
 
+  if (requestUrl.pathname === "/api/admin/forgot-password") {
+    await handleSuperAdminRecovery(request, response);
+    return;
+  }
+  if (requestUrl.pathname === "/api/admin/super-password") {
+    await handleSuperAdminPasswordUpdate(request, response);
+    return;
+  }
+
   serveStatic(requestUrl, response);
 }).listen(port, "0.0.0.0", () => {
-  console.log(`PrimeServe server running on port ${port}`);
+  console.log(`Primeserve server running on port ${port}`);
 });

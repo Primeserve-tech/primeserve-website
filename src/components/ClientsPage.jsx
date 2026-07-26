@@ -44,13 +44,13 @@ function ClientsPage() {
           <span className="about-eyebrow">OUR ESTEEMED CLIENTELE</span>
           <h1>Trusted by leading organizations across industries.</h1>
           <p>
-            PrimeServe supports enterprises, financial institutions, technology
+            Primeserve supports enterprises, financial institutions, technology
             companies, logistics businesses, advisors and fast-growing brands
             with reliable APIs, compliance automation and digital solutions.
           </p>
         </div>
         <div className="clients-hero-card">
-          <img src={logo} alt="PrimeServe Global Solution Pvt. Ltd." />
+          <img src={logo} alt="Primeserve Global Solution Pvt. Ltd." />
           <strong>100+</strong>
           <span>Enterprise Clients</span>
           <p>Reliable APIs, innovative solutions and responsive support.</p>
@@ -60,9 +60,9 @@ function ClientsPage() {
       <section className="clients-showcase">
         <div className="about-section-heading centered">
           <span>Client Network</span>
-          <h2>Organizations that trust PrimeServe for digital execution.</h2>
+          <h2>Organizations that trust Primeserve for digital execution.</h2>
         </div>
-        <div className="clients-carousel" aria-label="PrimeServe client carousel">
+        <div className="clients-carousel" aria-label="Primeserve client carousel">
           <div className="clients-track">
             {carouselClients.map((client, index) => (
               <article className="client-logo-card" key={`${client.name}-${index}`}>

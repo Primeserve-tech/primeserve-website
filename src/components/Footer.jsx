@@ -118,10 +118,10 @@ function Footer() {
     <footer className="site-footer">
       <div className="site-footer-inner">
         <div className="footer-grid">
-          <section className="footer-brand-block" aria-label="PrimeServe contact">
-            <img className="footer-logo" src={logo} alt="PrimeServe" />
+          <section className="footer-brand-block" aria-label="Primeserve contact">
+            <img className="footer-logo" src={logo} alt="Primeserve" />
             <p className="footer-about">
-              PrimeServe Global Solution Pvt. Ltd. delivers powerful API
+              Primeserve Global Solution Pvt. Ltd. delivers powerful API
               solutions that help businesses automate workflows, ensure
               compliance, and drive growth with secure, reliable, and real-time
               data.
@@ -214,7 +214,7 @@ function Footer() {
             <div className="footer-newsletter-heading">
               <span className="footer-newsletter-main-icon">!</span>
               <div>
-                <h3>PrimeServe <span>Updates Hub</span></h3>
+                <h3>Primeserve <span>Updates Hub</span></h3>
                 <p>Stay informed. Stay ahead.</p>
               </div>
             </div>
@@ -267,7 +267,7 @@ function Footer() {
           <section className="footer-contact-form-card" aria-label="Contact form">
             <h3>Need Help?</h3>
             <p>
-              PrimeServe Global Solution Pvt. Ltd. team will get back to you.
+              Primeserve Global Solution Pvt. Ltd. team will get back to you.
             </p>
             {supportTeam.length > 0 && (
               <div className="footer-support-team">
@@ -302,7 +302,7 @@ function Footer() {
 
       <div className="footer-bottom">
         <p>
-          &copy; 2026 PrimeServe Global Solution Pvt. Ltd. All rights reserved.
+          &copy; 2026 Primeserve Global Solution Pvt. Ltd. All rights reserved.
           <span>CIN U62011UW2026PTC253187</span>
         </p>
         <div className="footer-policy-links">

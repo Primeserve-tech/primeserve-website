@@ -66,7 +66,7 @@ function WhyPrimeServePage() {
           <span className="about-eyebrow">WHY PRIMESERVE</span>
           <h1>Technology that simplifies compliance, integration and business growth.</h1>
           <p>
-            At PrimeServe Global Solution Private Limited, we combine industry
+            At Primeserve Global Solution Private Limited, we combine industry
             expertise with enterprise-grade technology to help organizations
             automate operations, strengthen compliance and accelerate digital
             transformation.
@@ -79,7 +79,7 @@ function WhyPrimeServePage() {
         </div>
 
         <div className="why-hero-card">
-          <img src={logo} alt="PrimeServe Global Solution Pvt. Ltd." />
+          <img src={logo} alt="Primeserve Global Solution Pvt. Ltd." />
           <h2>Your trusted partner for end-to-end digital transformation.</h2>
           <div className="why-hero-tags">
             <span>Enterprise APIs</span>
@@ -97,7 +97,7 @@ function WhyPrimeServePage() {
           <span>What Makes Us Different</span>
           <h2>A complete enterprise technology and compliance partner.</h2>
         </div>
-        <div className="why-carousel" aria-label="PrimeServe differentiators">
+        <div className="why-carousel" aria-label="Primeserve differentiators">
           <div className="why-carousel-track">
             {carouselItems.map((item, index) => (
               <article className="why-card" key={`${item.title}-${index}`}>
@@ -112,10 +112,10 @@ function WhyPrimeServePage() {
 
       <section className="about-section why-proof-section">
         <div className="why-proof-copy">
-          <span className="about-eyebrow">Why Businesses Choose PrimeServe</span>
+          <span className="about-eyebrow">Why Businesses Choose Primeserve</span>
           <h2>One platform. Practical solutions. Reliable execution.</h2>
           <p>
-            PrimeServe gives businesses a single partner for API integration,
+            Primeserve gives businesses a single partner for API integration,
             compliance automation, Digital Signature Certificates, SAP and ERP
             workflows, managed services and enterprise-grade support.
           </p>
@@ -131,7 +131,7 @@ function WhyPrimeServePage() {
       </section>
 
       <section className="about-closing why-closing">
-        <h2>PrimeServe is built for businesses that need dependable digital execution.</h2>
+        <h2>Primeserve is built for businesses that need dependable digital execution.</h2>
         <p>
           We help you move faster with secure APIs, compliance automation,
           enterprise integration and support that understands the realities of

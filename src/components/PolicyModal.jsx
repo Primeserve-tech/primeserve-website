@@ -6,7 +6,7 @@ const policies = {
     content: (
       <>
         <p>
-          At PrimeServe Global Solution Private Limited, we respect your privacy
+          At Primeserve Global Solution Private Limited, we respect your privacy
           and are committed to protecting your personal data in accordance with
           the provisions of the Digital Personal Data Protection Act, 2023 (DPDP
           Act) and other applicable laws of India. We collect and process
@@ -29,7 +29,7 @@ const policies = {
           continue providing certain services.
         </p>
         <p>
-          PrimeServe implements appropriate technical and organizational
+          Primeserve implements appropriate technical and organizational
           safeguards to protect personal data from unauthorized access,
           disclosure, alteration, misuse, or destruction. We employ
           industry-standard security measures, including encrypted
@@ -52,7 +52,7 @@ const policies = {
           incomplete information, request erasure where legally permissible,
           withdraw consent where applicable, nominate another individual to
           exercise your rights, and raise grievances regarding the processing of
-          your personal data. PrimeServe will make reasonable efforts to respond
+          your personal data. Primeserve will make reasonable efforts to respond
           to such requests in accordance with applicable legal requirements after
           verifying your identity.
         </p>
@@ -65,7 +65,7 @@ const policies = {
           accordance with the timelines prescribed under applicable law.
         </p>
         <p>
-          PrimeServe Global Solution Private Limited may update this DPDP Notice
+          Primeserve Global Solution Private Limited may update this DPDP Notice
           from time to time to reflect changes in applicable laws, our services,
           or our data processing practices. Any revised version will be published
           on this website with an updated effective date. Continued use of our
@@ -80,14 +80,14 @@ const policies = {
     content: (
       <>
         <p>
-          At PrimeServe Global Solution Private Limited, we provide API services,
+          At Primeserve Global Solution Private Limited, we provide API services,
           software solutions, enterprise automation, managed services, and
           compliance technology solutions on a prepaid, subscription, usage-based,
           or contractual basis. Since our services involve digital access, API
           consumption, system setup, onboarding, integration, technical
           enablement, and third-party service costs, all payments made to
-          PrimeServe are generally non-refundable, unless otherwise expressly
-          agreed in writing between PrimeServe and the customer.
+          Primeserve are generally non-refundable, unless otherwise expressly
+          agreed in writing between Primeserve and the customer.
         </p>
         <p>
           Any setup fee, onboarding fee, implementation fee, subscription fee,
@@ -107,7 +107,7 @@ const policies = {
           written request to{" "}
           <a href="mailto:finance@primeserve.in">finance@primeserve.in</a> along
           with the relevant invoice, payment reference, transaction details, and
-          supporting documentation. Upon verification, PrimeServe may, at its sole
+          supporting documentation. Upon verification, Primeserve may, at its sole
           discretion, approve a refund or adjust the amount against future
           invoices, API wallet balance, subscription renewals, or other services.
         </p>
@@ -118,19 +118,19 @@ const policies = {
           <a href="mailto:finance@primeserve.in">finance@primeserve.in</a>.
           Cancellation requests shall be governed by the applicable proposal,
           purchase order, service agreement, statement of work, or any other
-          commercial arrangement executed between the customer and PrimeServe.
+          commercial arrangement executed between the customer and Primeserve.
           Cancellation shall not relieve the customer of any payment obligations
           for services already rendered, committed resources, completed
           integrations, or amounts already invoiced.
         </p>
         <p>
-          PrimeServe shall not be responsible for providing refunds arising from
+          Primeserve shall not be responsible for providing refunds arising from
           service interruptions, scheduled maintenance, temporary downtime,
           failures caused by third-party systems, government portal
           unavailability, incorrect or incomplete data provided by the customer,
           customer-side integration issues, internet connectivity problems, force
           majeure events, or any circumstances beyond the reasonable control of
-          PrimeServe. However, where appropriate, PrimeServe may, at its
+          Primeserve. However, where appropriate, Primeserve may, at its
           discretion, provide technical assistance, service credits, wallet
           adjustments, reprocessing of requests, or other commercial remedies.
         </p>
@@ -138,12 +138,12 @@ const policies = {
           Where a refund is approved, it shall ordinarily be processed to the
           original payment method or through another mutually agreed payment
           mechanism within a reasonable period after successful verification.
-          PrimeServe reserves the right to deduct applicable taxes, bank charges,
+          Primeserve reserves the right to deduct applicable taxes, bank charges,
           payment gateway fees, transaction charges, or any statutory deductions
           before processing the refund.
         </p>
         <p>
-          By making payment to PrimeServe Global Solution Private Limited or by
+          By making payment to Primeserve Global Solution Private Limited or by
           using our website, APIs, software platforms, or related services, you
           acknowledge that you have read, understood, and agreed to be bound by
           this Refund & Cancellation Policy.
@@ -156,7 +156,7 @@ const policies = {
     content: (
       <>
         <p>
-          PrimeServe Global Solution Private Limited ("PrimeServe", "we", "our",
+          Primeserve Global Solution Private Limited ("Primeserve", "we", "our",
           or "us") values your privacy and is committed to protecting the
           personal and business information you share with us. This Privacy
           Policy explains how we collect, use, disclose, store, process, and
@@ -178,7 +178,7 @@ const policies = {
           information necessary to deliver our services.
         </p>
         <p>
-          PrimeServe processes your information for legitimate business purposes,
+          Primeserve processes your information for legitimate business purposes,
           including providing API services, software solutions, enterprise
           automation, customer onboarding, identity and business verification,
           managed services, technical support, billing, account management, fraud
@@ -195,7 +195,7 @@ const policies = {
           properly as a result.
         </p>
         <p>
-          PrimeServe implements commercially reasonable administrative, technical,
+          Primeserve implements commercially reasonable administrative, technical,
           and organizational safeguards to protect the confidentiality,
           integrity, and availability of the information entrusted to us. While we
           strive to protect all information using industry-standard security
@@ -210,7 +210,7 @@ const policies = {
           regulatory agencies, law enforcement authorities, or other entities
           where such disclosure is required to provide our services, comply with
           applicable laws, enforce contractual rights, investigate fraud, or
-          protect the legitimate interests of PrimeServe or our customers.
+          protect the legitimate interests of Primeserve or our customers.
         </p>
         <p>
           We retain personal and business information only for as long as
@@ -236,7 +236,7 @@ const policies = {
     content: (
       <>
         <p>
-          Welcome to PrimeServe Global Solution Private Limited ("PrimeServe",
+          Welcome to Primeserve Global Solution Private Limited ("Primeserve",
           "Company", "we", "our", or "us"). These Terms of Service ("Terms")
           govern your access to and use of{" "}
           <a href="https://www.primeserve.in" target="_blank" rel="noreferrer">
@@ -248,13 +248,13 @@ const policies = {
           understood, and agreed to be bound by these Terms.
         </p>
         <p>
-          PrimeServe provides digital products and services including API
+          Primeserve provides digital products and services including API
           solutions, identity verification services, GST and compliance
           solutions, ASP-GSP services, enterprise software, SAP integration,
           digital onboarding solutions, managed services, and other technology
           offerings. All services are provided subject to applicable commercial
           agreements, service proposals, purchase orders, statements of work, or
-          subscription plans entered into between PrimeServe and the customer.
+          subscription plans entered into between Primeserve and the customer.
         </p>
         <p>
           To access certain services, you may be required to create an account,
@@ -278,14 +278,14 @@ const policies = {
           All intellectual property rights, including copyrights, trademarks,
           logos, software, source code, APIs, documentation, website content,
           designs, graphics, databases, and other proprietary materials available
-          through our website or services, are owned by or licensed to PrimeServe
+          through our website or services, are owned by or licensed to Primeserve
           Global Solution Private Limited. Except as expressly permitted in
           writing, no content may be copied, reproduced, modified, distributed,
           published, reverse engineered, or commercially exploited without our
           prior written consent.
         </p>
         <p>
-          All fees payable for PrimeServe services shall be governed by the
+          All fees payable for Primeserve services shall be governed by the
           applicable commercial agreement, quotation, invoice, subscription plan,
           or purchase order. Unless otherwise agreed in writing, all fees are
           payable in advance and are exclusive of applicable taxes. Payments once
@@ -315,7 +315,7 @@ const policies = {
       <>
         <p>
           The information, products, services, APIs, and other content available
-          on this website are provided by PrimeServe Global Solution Private
+          on this website are provided by Primeserve Global Solution Private
           Limited for general informational and business purposes only. While we
           strive to ensure that the information presented is accurate, complete,
           and up to date, we make no warranties or representations, express or
@@ -324,19 +324,19 @@ const policies = {
           graphics contained on this website.
         </p>
         <p>
-          PrimeServe provides enterprise APIs, software solutions, compliance
+          Primeserve provides enterprise APIs, software solutions, compliance
           services, Digital Signature Certificate (DSC) services, SAP
           integration, ASP-GSP solutions, and managed technology services. The
           availability, accuracy, and functionality of certain APIs or services
           may depend on third-party providers, government authorities, statutory
-          bodies, financial institutions, or other external systems. PrimeServe
+          bodies, financial institutions, or other external systems. Primeserve
           shall not be held responsible for delays, interruptions, inaccuracies,
           or service disruptions arising from such third-party systems or
           external dependencies.
         </p>
         <p>
           Any reliance you place on the information or services available through
-          this website is strictly at your own discretion and risk. PrimeServe
+          this website is strictly at your own discretion and risk. Primeserve
           shall not be liable for any direct, indirect, incidental,
           consequential, or special damages arising out of or in connection with
           the use of this website, its content, products, or services.
@@ -344,7 +344,7 @@ const policies = {
         <p>
           This website may contain links to third-party websites for your
           convenience. Such links do not constitute an endorsement or
-          recommendation by PrimeServe, and we are not responsible for the
+          recommendation by Primeserve, and we are not responsible for the
           content, privacy practices, security, or availability of any external
           websites.
         </p>
@@ -356,7 +356,7 @@ const policies = {
           or endorsement should be inferred.
         </p>
         <p>
-          PrimeServe reserves the right to modify, update, suspend, or
+          Primeserve reserves the right to modify, update, suspend, or
           discontinue any content, product, service, pricing, API, or feature on
           this website at any time without prior notice.
         </p>
@@ -390,7 +390,7 @@ function PolicyModal({ policy, onClose }) {
           x
         </button>
         <div className="policy-modal-header">
-          <img src={logo} alt="PrimeServe Global Solution Pvt. Ltd." />
+          <img src={logo} alt="Primeserve Global Solution Pvt. Ltd." />
           <h2>{activePolicy.title}</h2>
         </div>
         <div className="policy-modal-content">{activePolicy.content}</div>

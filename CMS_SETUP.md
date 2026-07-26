@@ -1,4 +1,4 @@
-# PrimeServe CMS/Admin Dashboard Setup
+# Primeserve CMS/Admin Dashboard Setup
 
 This project now includes a working React CMS dashboard at:
 

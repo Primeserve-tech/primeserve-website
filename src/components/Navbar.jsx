@@ -19,7 +19,7 @@ function Navbar({ activePage, onNavigate }) {
 
   const companyDetails = [
     { label: "About Us", page: "company-about" },
-    { label: "Why PrimeServe", page: "company-why" },
+    { label: "Why Primeserve", page: "company-why" },
     { label: "Our Clients", page: "company-clients" },
     { label: "Careers", page: "careers" },
     { label: "Partners", page: "company" },
@@ -56,9 +56,9 @@ function Navbar({ activePage, onNavigate }) {
           setOpenMenu(null);
           onNavigate("home");
         }}
-        aria-label="PrimeServe home"
+        aria-label="Primeserve home"
       >
-        <img src={logo} alt="PrimeServe Global Solution Pvt. Ltd." />
+        <img src={logo} alt="Primeserve Global Solution Pvt. Ltd." />
       </button>
 
       <button

@@ -3,7 +3,7 @@ function CTA() {
     <section className="section-shell cta" id="demo">
       <div>
         <span className="eyebrow">Get started</span>
-        <h2>Launch your compliance and API stack with PrimeServe</h2>
+        <h2>Launch your compliance and API stack with Primeserve</h2>
         <p>
           Tell us what you want to build. Our team can help you choose the right
           API, product, or managed service.

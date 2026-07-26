@@ -7,7 +7,7 @@ function Clients() {
         <span className="eyebrow">Who we serve</span>
         <h2>Reliable digital infrastructure for growing businesses</h2>
         <p>
-          From startups to enterprise teams, PrimeServe supports businesses that
+          From startups to enterprise teams, Primeserve supports businesses that
           need secure verification, tax compliance, and automation workflows.
         </p>
       </div>

@@ -70,7 +70,7 @@ function CompanyPage() {
             </a>
           </div>
 
-          <div className="hero-logo-strip" aria-label="PrimeServe company logos">
+          <div className="hero-logo-strip" aria-label="Primeserve company logos">
             {heroServices.map((item, index) => (
               <span className="hero-service-entry" key={item.text}>
                 {index === 3 && <span className="hero-service-row-break" aria-hidden="true" />}
@@ -91,7 +91,7 @@ function CompanyPage() {
             <span>- INDUSTRIES WE SERVE -</span>
             <h2>Powering Every Industry with Intelligent APIs</h2>
             <p>
-              From startups to large enterprises, PrimeServe delivers secure APIs
+              From startups to large enterprises, Primeserve delivers secure APIs
               and compliance solutions that accelerate digital transformation.
             </p>
           </div>
@@ -116,7 +116,7 @@ function CompanyPage() {
           <div>
             <h3>Build Smarter. Scale Faster.</h3>
             <p>
-              PrimeServe provides the APIs and expertise to help your business
+              Primeserve provides the APIs and expertise to help your business
               launch with confidence.
             </p>
           </div>
