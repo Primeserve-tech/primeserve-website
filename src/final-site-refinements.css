@@ -1,0 +1,99 @@
+/* Final scoped refinements requested after the homepage hero lock. */
+
+@media (min-width: 1024px) {
+  .hero {
+    height: clamp(410px, calc(100vh - 185px), 530px);
+    min-height: 410px !important;
+  }
+
+  .hero .hero-inner {
+    padding-left: clamp(12px, 1vw, 24px);
+  }
+
+  .hero .hero-copy {
+    transform: translateY(-72px);
+  }
+
+  .hero .hero-copy h1 {
+    line-height: 1.1 !important;
+  }
+
+  .about-hero {
+    align-items: center;
+    box-sizing: border-box;
+    gap: clamp(24px, 3vw, 48px);
+    grid-template-columns: minmax(0, 1.15fr) minmax(330px, .85fr);
+    height: clamp(570px, calc(100vh - 133px), 680px) !important;
+    max-height: 680px !important;
+    min-height: 570px;
+    padding: 24px clamp(36px, 5vw, 80px) !important;
+  }
+
+  .about-hero-copy {
+    max-width: 780px;
+    min-width: 0;
+  }
+
+  .about-hero h1 {
+    font-size: clamp(42px, 3.6vw, 58px);
+    line-height: 1.02;
+    max-width: 780px;
+  }
+
+  .about-hero p {
+    font-size: clamp(15px, 1.05vw, 18px);
+    line-height: 1.45;
+    margin-top: 16px;
+    max-width: 760px;
+  }
+
+  .about-hero-offerings {
+    margin-top: 16px;
+  }
+
+  .about-hero-offerings-track > a {
+    flex-basis: 285px;
+    grid-template-columns: 46px minmax(0, 1fr) 18px;
+    min-height: 70px;
+    padding: 8px 12px;
+  }
+
+  .about-hero-offerings-track .offering-service-icon {
+    height: 44px;
+    width: 44px;
+  }
+
+  .about-hero-panel {
+    gap: 10px;
+    max-height: 520px;
+    padding: 20px;
+  }
+
+  .about-hero-panel img {
+    max-width: 250px;
+  }
+
+  .about-hero-panel strong {
+    font-size: 22px;
+  }
+
+  .about-hero-panel p {
+    font-size: 15px;
+    margin: 0;
+  }
+
+  .about-hero-panel div {
+    gap: 7px;
+  }
+
+  .about-hero-panel div span {
+    font-size: 15px;
+    min-height: 36px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .hero-desktop-break {
+    display: none;
+  }
+}

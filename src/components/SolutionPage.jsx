@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import solutionHeroOriginal from "../assets/solution-page-hero.png";
 import solutionHeroV2 from "../assets/solution-page-hero-v2.png";
+import DSCIcon from "./DSCIcon";
 
 // Change this to false at any time to restore the original hero image.
 const USE_SOLUTION_HERO_V2 = true;
@@ -55,9 +56,9 @@ function SolutionPage() {
     {
       category: "Cloud Platform",
       icon: "cloud",
-      title: "Cloud ASP/GSP Platform & Managed Services",
+      title: "ASP-GSP Solutions",
       description:
-        "Cloud-based GST, vendor management, e-Invoice, e-Way Bill and reconciliation platform for enterprises, ASPs and GSPs.",
+        "ASP-GSP Solutions supports GST, vendor management, e-Invoice, e-Way Bill and reconciliation workflows for enterprises.",
       bullets: [
         "Cloud GST Platform",
         "e-Invoice Automation",
@@ -226,7 +227,9 @@ function SolutionPage() {
           <div className="solution-card-track">
             {[...solutions, ...solutions].map((solution, index) => (
               <article className="solution-card" key={`${solution.title}-${index}`}>
-                <div className={`solution-card-icon ${solution.icon}`} />
+                {solution.icon === "signature"
+                  ? <DSCIcon size="md" />
+                  : <div className={`solution-card-icon ${solution.icon}`} />}
                 <span className={`solution-card-category ${solution.icon}`}>
                   {solution.category}
                 </span>
@@ -284,7 +287,9 @@ function SolutionPage() {
               ×
             </button>
             <div className="solution-modal-header">
-              <span className={`solution-card-icon ${selectedSolution.icon}`} />
+              {selectedSolution.icon === "signature"
+                ? <DSCIcon size="md" />
+                : <span className={`solution-card-icon ${selectedSolution.icon}`} />}
               <div>
                 <span>{selectedSolution.category}</span>
                 <h2 id="solution-modal-title">{selectedSolution.title}</h2>

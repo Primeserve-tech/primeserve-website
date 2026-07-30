@@ -3,14 +3,22 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Stats from "./components/Stats";
 import Features from "./components/Features";
-import LatestCmsSections from "./components/LatestCmsSections";
+import LatestUpdatesTicker from "./components/LatestUpdatesTicker";
 import Testimonials from "./components/Testimonials";
 import ApiPage from "./components/ApiPage";
 import ProductPage from "./components/ProductPage";
 import SolutionPage from "./components/SolutionPage";
+import AspGspPage from "./components/AspGspPage";
+import SapServicesPage from "./components/SapServicesPage";
+import DscPage from "./components/DscPage";
+import ServicesPage from "./components/ServicesPage";
+import { BusinessOverviewPage, BusinessVerticalPage } from "./components/BusinessVerticalsPage";
+import ManagedTaxServicesPage from "./components/ManagedTaxServicesPage";
+import ApplicationDevelopmentPage from "./components/ApplicationDevelopmentPage";
+import OfferingsPage from "./components/OfferingsPage";
 import CompanyPage from "./components/CompanyPage";
 import AboutUsPage from "./components/AboutUsPage";
-import WhyPrimeServePage from "./components/WhyPrimeServePage";
+import WhyPrimeservePage from "./components/WhyPrimeservePage";
 import ClientsPage from "./components/ClientsPage";
 import AdminDashboard from "./components/AdminDashboard";
 import {
@@ -28,8 +36,10 @@ import {
   ResourcesPage,
   WebinarsPage,
 } from "./components/CmsPublicPages";
-import Footer from "./components/Footer";
+import Footer from "./components/CompactFooter";
 import "./App.css";
+import "./home-hero-final.css";
+import "./final-site-refinements.css";
 
 function App() {
   const getInitialPage = () => {
@@ -50,11 +60,27 @@ function App() {
     if (path.includes("case-studies")) return "case-studies";
     if (path.includes("product-announcements")) return "product-announcements";
     if (path.includes("api-release-notes")) return "api-release-notes";
+    if (path.includes("solutions/asp-gsp")) return "asp-gsp";
+    if (path.includes("sap-services")) return "sap-services";
+    if (path.includes("digital-signature-certificate")) return "dsc";
+    if (path.includes("application-development-ams")) return "application-development-ams";
     if (path.includes("resources")) return "resources";
     if (path.includes("blog")) return "blog";
     if (path.includes("news")) return "news";
     if (path.includes("updates")) return "updates";
+    if (path === "/business" || path === "/business/") return "business";
+    if (path.includes("business/technology-apis")) return "vertical-technology-apis";
+    if (path.includes("business/tax-compliance")) return "vertical-tax-compliance";
+    if (path.includes("business/enterprise-solutions")) return "vertical-enterprise-solutions";
+    if (path.includes("business/workforce-solutions")) return "vertical-workforce-solutions";
+    if (path.includes("business/managed-services")) return "vertical-managed-services";
+    if (path.includes("services/technology-apis")) return "vertical-technology-apis";
+    if (path.includes("services/tax-compliance")) return "vertical-tax-compliance";
+    if (path.includes("services/enterprise-solutions")) return "vertical-enterprise-solutions";
+    if (path.includes("services/workforce-solutions")) return "vertical-workforce-solutions";
+    if (path.includes("services/managed-services")) return "vertical-managed-services";
     if (path.includes("solutions")) return "solutions";
+    if (path.includes("services")) return "services";
     if (path.includes("products")) return "products";
     if (path.includes("apis")) return "apis";
     return "home";
@@ -76,6 +102,17 @@ function App() {
       apis: "/apis",
       products: "/products",
       solutions: "/solutions",
+      "asp-gsp": "/solutions/asp-gsp",
+      "sap-services": "/sap-services",
+      dsc: "/digital-signature-certificate",
+      services: "/services",
+      business: "/business",
+      "vertical-technology-apis": "/business/technology-apis",
+      "vertical-tax-compliance": "/business/tax-compliance",
+      "vertical-enterprise-solutions": "/business/enterprise-solutions",
+      "vertical-workforce-solutions": "/business/workforce-solutions",
+      "vertical-managed-services": "/business/managed-services",
+      "application-development-ams": "/application-development-ams",
       company: "/company",
       "company-about": "/company/about-us",
       "company-why": "/company/why-primeserve",
@@ -102,22 +139,49 @@ function App() {
 
   return (
     <>
-      {page !== "admin" && <Navbar activePage={page} onNavigate={navigate} />}
+      {page !== "admin" && (
+        <div className="public-sticky-header">
+          <LatestUpdatesTicker />
+          <Navbar activePage={page} onNavigate={navigate} />
+        </div>
+      )}
       <main>
         {page === "admin" ? (
           <AdminDashboard />
+        ) : page === "business" ? (
+          <BusinessOverviewPage />
+        ) : page === "vertical-technology-apis" ? (
+          <BusinessVerticalPage verticalId="technology-apis" />
+        ) : page === "vertical-tax-compliance" ? (
+          <BusinessVerticalPage verticalId="tax-compliance" />
+        ) : page === "vertical-enterprise-solutions" ? (
+          <BusinessVerticalPage verticalId="enterprise-solutions" />
+        ) : page === "vertical-managed-services" ? (
+          <ManagedTaxServicesPage />
+        ) : page === "application-development-ams" ? (
+          <ApplicationDevelopmentPage />
         ) : page === "apis" ? (
           <ApiPage />
         ) : page === "products" ? (
           <ProductPage />
         ) : page === "solutions" ? (
           <SolutionPage />
+        ) : page === "asp-gsp" ? (
+          <AspGspPage />
+        ) : page === "sap-services" ? (
+          <SapServicesPage />
+        ) : page === "dsc" ? (
+          <DscPage />
+        ) : page === "services" ? (
+          <OfferingsPage />
+        ) : page === "vertical-workforce-solutions" ? (
+          <ServicesPage />
         ) : page === "company" ? (
           <CompanyPage />
         ) : page === "company-about" ? (
           <AboutUsPage />
         ) : page === "company-why" ? (
-          <WhyPrimeServePage />
+          <WhyPrimeservePage />
         ) : page === "company-clients" ? (
           <ClientsPage />
         ) : page === "careers" ? (
@@ -151,7 +215,6 @@ function App() {
             <Hero />
             <Stats />
             <Features />
-            <LatestCmsSections />
             <Testimonials />
           </>
         )}

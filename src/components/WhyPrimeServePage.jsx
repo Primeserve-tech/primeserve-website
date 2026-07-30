@@ -1,6 +1,6 @@
 import logo from "../assets/primeserve-logo-clean.png";
 
-function WhyPrimeServePage() {
+function WhyPrimeservePage() {
   const differentiators = [
     {
       tag: "250+",
@@ -20,7 +20,7 @@ function WhyPrimeServePage() {
     {
       tag: "ECO",
       title: "Complete Digital Ecosystem",
-      text: "APIs, ASP-GSP services, SAP integration, enterprise software, Digital Signature Certificates and managed compliance services under one roof.",
+      text: "APIs, ASP-GSP Solutions, SAP integration, Digital Signature Certificates, managed tax services, application development and workforce staffing under one roof.",
     },
     {
       tag: "UP",
@@ -46,13 +46,16 @@ function WhyPrimeServePage() {
 
   const proofPoints = [
     "250+ Enterprise APIs",
-    "ASP-GSP Solution Provider",
+    "ASP-GSP Solutions",
     "SAP & ERP Integration Expertise",
     "Digital Signature Certificate Services",
     "GST, e-Invoice & e-Way Bill Solutions",
     "Identity, Business & Financial Verification APIs",
     "Enterprise Software Development",
     "Managed GST & Compliance Services",
+    "Managed Tax Services",
+    "Application Development & AMS",
+    "Workforce Staffing & Deployment",
     "Secure, Scalable Infrastructure",
     "Dedicated Technical Support",
   ];
@@ -84,10 +87,12 @@ function WhyPrimeServePage() {
           <div className="why-hero-tags">
             <span>Enterprise APIs</span>
             <span>GST Automation</span>
-            <span>ASP-GSP</span>
+            <span>ASP-GSP Solutions</span>
             <span>SAP & ERP</span>
             <span>DSC</span>
             <span>Managed Compliance</span>
+            <span>Managed Tax Services</span>
+            <span>Workforce Staffing</span>
           </div>
         </div>
       </section>
@@ -142,4 +147,4 @@ function WhyPrimeServePage() {
   );
 }
 
-export default WhyPrimeServePage;
+export default WhyPrimeservePage;

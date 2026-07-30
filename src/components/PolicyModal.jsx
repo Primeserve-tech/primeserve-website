@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import logo from "../assets/primeserve-logo-clean.png";
 
 const policies = {
@@ -250,7 +251,7 @@ const policies = {
         <p>
           Primeserve provides digital products and services including API
           solutions, identity verification services, GST and compliance
-          solutions, ASP-GSP services, enterprise software, SAP integration,
+          solutions, ASP-GSP Solutions, enterprise software, SAP integration,
           digital onboarding solutions, managed services, and other technology
           offerings. All services are provided subject to applicable commercial
           agreements, service proposals, purchase orders, statements of work, or
@@ -326,7 +327,7 @@ const policies = {
         <p>
           Primeserve provides enterprise APIs, software solutions, compliance
           services, Digital Signature Certificate (DSC) services, SAP
-          integration, ASP-GSP solutions, and managed technology services. The
+          integration, ASP-GSP Solutions, and managed technology services. The
           availability, accuracy, and functionality of certain APIs or services
           may depend on third-party providers, government authorities, statutory
           bodies, financial institutions, or other external systems. Primeserve
@@ -374,12 +375,32 @@ const policies = {
 };
 
 function PolicyModal({ policy, onClose }) {
+  useEffect(() => {
+    if (!policy) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [policy, onClose]);
+
   if (!policy || !policies[policy]) return null;
 
   const activePolicy = policies[policy];
 
   return (
-    <div className="policy-modal-overlay" role="dialog" aria-modal="true">
+    <div
+      className="policy-modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="policy-modal-title"
+      onMouseDown={(event) => event.target === event.currentTarget && onClose()}
+    >
       <div className="policy-modal">
         <button
           className="policy-modal-close"
@@ -391,7 +412,7 @@ function PolicyModal({ policy, onClose }) {
         </button>
         <div className="policy-modal-header">
           <img src={logo} alt="Primeserve Global Solution Pvt. Ltd." />
-          <h2>{activePolicy.title}</h2>
+          <h2 id="policy-modal-title">{activePolicy.title}</h2>
         </div>
         <div className="policy-modal-content">{activePolicy.content}</div>
       </div>

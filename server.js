@@ -74,6 +74,46 @@ async function handleSuperAdminRecovery(request, response) {
   }
 }
 
+async function handleSubmissionNotification(request, response) {
+  if (request.method !== "POST") return sendJson(response, 405, { message: "Method not allowed." });
+  try {
+    const body = JSON.parse(await readRequestBody(request, 8 * 1024 * 1024) || "{}");
+    const token = String(process.env.MAIL_SEND_TOKEN || process.env.SMTP_PASSWORD || "");
+    if (!token) return sendJson(response, 503, { message: "Email notification is not configured on this server." });
+    const kind = String(body.kind || "Website submission").slice(0, 120);
+    const details = body.details && typeof body.details === "object" ? body.details : {};
+    const attachment = body.attachment && typeof body.attachment === "object" ? body.attachment : null;
+    const rows = Object.entries(details)
+      .filter(([, value]) => value !== undefined && value !== null && String(value).trim())
+      .map(([key, value]) => `<tr><td style="padding:7px 12px;border:1px solid #dbe4ef;font-weight:700">${escapeHtml(key.replace(/([A-Z])/g, " $1"))}</td><td style="padding:7px 12px;border:1px solid #dbe4ef">${escapeHtml(String(value))}</td></tr>`)
+      .join("");
+    const authorization = token.startsWith("Zoho-enczapikey ") ? token : `Zoho-enczapikey ${token}`;
+    const recipient = String(process.env.PRIMESERVE_NOTIFICATION_EMAIL || "primeserve45@gmail.com").trim();
+    const mailResponse = await fetch(process.env.MAIL_API_URL || "https://api.zeptomail.in/v1.1/email", {
+      method: "POST",
+      headers: { authorization, "content-type": "application/json" },
+      body: JSON.stringify({
+        from: { address: process.env.MAIL_FROM_ADDRESS || "info@primeserve.in", name: process.env.MAIL_FROM_NAME || "Primeserve" },
+        to: [{ email_address: { address: recipient, name: "Primeserve Admin" } }],
+        subject: `New Primeserve ${kind}`,
+        htmlbody: `<div style="font-family:Arial,sans-serif;color:#082f65"><h2>New ${escapeHtml(kind)}</h2><p>This submission has also been saved in the Primeserve Admin portal.</p><table style="border-collapse:collapse;width:100%;max-width:760px">${rows}</table></div>`,
+        ...(attachment?.data && attachment?.name ? {
+          attachments: [{
+            content: String(attachment.data).replace(/^data:[^;]+;base64,/, ""),
+            mime_type: String(attachment.data).match(/^data:([^;]+);base64,/)?.[1] || "application/octet-stream",
+            name: String(attachment.name).replace(/[^\w.\- ()]/g, "_").slice(0, 180),
+          }],
+        } : {}),
+      }),
+      signal: AbortSignal.timeout(15000),
+    });
+    if (!mailResponse.ok) throw new Error("Mail delivery failed.");
+    return sendJson(response, 200, { success: true });
+  } catch {
+    return sendJson(response, 502, { message: "Submission was saved, but the notification email could not be delivered." });
+  }
+}
+
 function getSuperAdminCredentials() {
   if (existsSync(superAdminFile)) {
     try {
@@ -114,12 +154,12 @@ async function handleSuperAdminPasswordUpdate(request, response) {
   }
 }
 
-function readRequestBody(request) {
+function readRequestBody(request, maxBytes = 1024 * 64) {
   return new Promise((resolveBody, rejectBody) => {
     let body = "";
     request.on("data", (chunk) => {
       body += chunk;
-      if (body.length > 1024 * 64) {
+      if (body.length > maxBytes) {
         request.destroy();
         rejectBody(new Error("Request body too large."));
       }
@@ -342,6 +382,10 @@ createServer(async (request, response) => {
 
   if (requestUrl.pathname === "/api/admin/forgot-password") {
     await handleSuperAdminRecovery(request, response);
+    return;
+  }
+  if (requestUrl.pathname === "/api/admin/submission-notification") {
+    await handleSubmissionNotification(request, response);
     return;
   }
   if (requestUrl.pathname === "/api/admin/super-password") {

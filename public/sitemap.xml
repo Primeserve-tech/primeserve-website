@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://primeserve.in/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://primeserve.in/services</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://primeserve.in/apis</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://primeserve.in/solutions/asp-gsp</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://primeserve.in/sap-services</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://primeserve.in/digital-signature-certificate</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://primeserve.in/business/managed-services</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://primeserve.in/application-development-ams</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://primeserve.in/services/workforce-solutions</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url>
     <loc>https://primeserve.in/gstin-search</loc>
     <changefreq>weekly</changefreq>

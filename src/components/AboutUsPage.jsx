@@ -1,23 +1,11 @@
+import { useEffect, useRef } from "react";
 import logo from "../assets/primeserve-logo-clean.png";
+import OfferingServiceIcon from "./OfferingServiceIcon";
+import { servicePortfolio } from "../data/servicePortfolio";
 
 function AboutUsPage() {
-  const services = [
-    { tag: "API", title: "250+ Enterprise APIs", text: "Production-ready APIs for verification, GST, tax, banking and compliance workflows." },
-    { tag: "ASP", title: "ASP-GSP Solutions", text: "Cloud GST, e-Invoice, e-Way Bill and reconciliation automation for enterprises." },
-    { tag: "GST", title: "GST APIs & Compliance", text: "GST taxpayer, return filed, e-Invoice, e-Way Bill, MCA, IEC, MSME and HSN APIs." },
-    { tag: "SAP", title: "SAP & ERP Integration", text: "SAP GST integration, DMS, invoice automation and enterprise workflow enablement." },
-    { tag: "DSC", title: "Digital Signature Certificates", text: "Class 3 DSC support for filings, e-Tendering, MCA, GST, DGFT, ICEGATE and EPFO." },
-    { tag: "KYC", title: "Identity Verification APIs", text: "PAN, Aadhaar eKYC, bank account, driving licence, voter ID, passport and video KYC." },
-    { tag: "BIZ", title: "Business Verification APIs", text: "Company, director, CIN, DIN, TAN, FSSAI, MSME and risk verification APIs." },
-    { tag: "TAX", title: "Managed Tax & Compliance", text: "Domain-led GST, direct tax, indirect tax, ROC, audit and advisory support." },
-  ];
-
-  const heroMetrics = [
-    { value: "250+", label: "Enterprise APIs" },
-    { value: "DSC", label: "Digital Signature" },
-    { value: "ASP", label: "GSP Workflows" },
-    { value: "SAP", label: "ERP Integration" },
-  ];
+  const strengthRailRef = useRef(null);
+  const services = servicePortfolio.map(({ icon, title, description }) => ({ icon, title, text: description }));
 
   const strengths = [
     {
@@ -26,15 +14,37 @@ function AboutUsPage() {
     },
     {
       title: "Compliance Automation",
-      text: "Cloud ASP-GSP workflows, GST reconciliation, return support, regulatory reporting and managed compliance services for growing businesses.",
+      text: "ASP-GSP Solutions, GST reconciliation, return support, regulatory reporting and managed compliance services for growing businesses.",
     },
     {
       title: "Enterprise Integration",
       text: "SAP, ERP, DMS, digital signature and workflow automation support for teams that need secure connected operations.",
     },
+    {
+      title: "Workforce Solutions",
+      text: "Permanent, contract and project-based staffing support that helps businesses deploy capable professionals at every level.",
+    },
+    {
+      title: "Application Development & AMS",
+      text: "Mobile apps, websites, portals, hosting, deployment and ongoing application maintenance support.",
+    },
   ];
 
   const carouselItems = [...services, ...services];
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    const timer = window.setInterval(() => {
+      const rail = strengthRailRef.current;
+      if (!rail) return;
+      const card = rail.querySelector(".about-strength-track > article");
+      const distance = (card?.getBoundingClientRect().width || 520) + 20;
+      const atEnd = rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 8;
+      if (atEnd) rail.scrollTo({ left: 0, behavior: "smooth" });
+      else rail.scrollBy({ left: distance, behavior: "smooth" });
+    }, 3400);
+    return () => window.clearInterval(timer);
+  }, []);
 
   return (
     <div className="about-page">
@@ -46,27 +56,34 @@ function AboutUsPage() {
             Primeserve Global Solution Private Limited is a technology and
             compliance solutions company helping businesses connect, automate,
             secure and transform critical operations through enterprise APIs,
-            ASP-GSP services, SAP and ERP integration, Digital Signature
-            Certificates, enterprise software and managed compliance services.
+            ASP-GSP Solutions, SAP and ERP integration, Digital Signature
+            Certificates, managed tax services, application development, workforce staffing and
+            deployment, enterprise software and managed compliance services.
           </p>
-          <div className="about-hero-metrics" aria-label="Primeserve capabilities">
-            {heroMetrics.map((metric) => (
-              <article key={metric.value}>
-                <strong>{metric.value}</strong>
-                <span>{metric.label}</span>
-              </article>
-            ))}
+          <div className="about-hero-offerings" aria-label="Primeserve offerings">
+            <div className="about-hero-offerings-track">
+              {[...servicePortfolio, ...servicePortfolio].map((service, index) => (
+                <a href={service.href} key={`${service.id}-${index}`}>
+                  <OfferingServiceIcon type={service.icon} />
+                  <span>{service.title}</span>
+                  <i aria-hidden="true">→</i>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
         <div className="about-hero-panel">
           <img src={logo} alt="Primeserve Global Solution Pvt. Ltd." />
-          <strong>Complete Enterprise Technology Partner</strong>
-          <p>Connect systems, automate compliance and enable secure digital transactions.</p>
+          <strong>Complete Enterprise Business Partner</strong>
+          <p>Connect systems, automate compliance, manage tax operations and deploy capable workforce teams.</p>
           <div>
             <span>APIs</span>
             <span>Compliance</span>
             <span>DSC</span>
             <span>SAP & ERP</span>
+            <span>Managed Tax</span>
+            <span>Application &amp; AMS</span>
+            <span>Workforce Staffing</span>
           </div>
         </div>
       </section>
@@ -89,7 +106,7 @@ function AboutUsPage() {
             Bill APIs, PAN Verification, PAN Fetch, Aadhaar eKYC, Credit Bureau
             APIs, Business Verification APIs, Bank Verification APIs, ITR APIs,
             MCA and MSME APIs, SAP and ERP Integration, Digital Signature
-            Certificates, GST Compliance Automation, Cloud ASP-GSP Solutions and
+            Certificates, GST Compliance Automation, ASP-GSP Solutions and
             Managed Tax and Regulatory Services.
           </p>
         </div>
@@ -104,7 +121,7 @@ function AboutUsPage() {
           <div className="about-service-track">
             {carouselItems.map((service, index) => (
               <article key={`${service.title}-${index}`} className="about-service-card">
-                <i aria-hidden="true">{service.tag}</i>
+                <OfferingServiceIcon type={service.icon} />
                 <h3>{service.title}</h3>
                 <p>{service.text}</p>
               </article>
@@ -113,14 +130,15 @@ function AboutUsPage() {
         </div>
       </section>
 
-      <section className="about-section about-services-feature">
-        {strengths.map((item) => (
-          <article key={item.title}>
-            <span>{item.title}</span>
-            <h3>{item.title}</h3>
-            <p>{item.text}</p>
-          </article>
-        ))}
+      <section className="about-section about-services-feature" ref={strengthRailRef}>
+        <div className="about-strength-track">
+          {strengths.map((item, index) => (
+            <article key={`${item.title}-${index}`}>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className="about-section about-dsc">
@@ -172,10 +190,12 @@ function AboutUsPage() {
       </section>
 
       <section className="about-closing">
-        <h2>At Primeserve, we do not just provide APIs.</h2>
+        <h2>One partner for technology, compliance and business operations.</h2>
         <p>
-          We deliver complete digital business solutions that connect, automate,
-          secure and transform how modern businesses operate.
+          Primeserve brings together enterprise APIs, ASP-GSP solutions, SAP and
+          ERP integration, Digital Signature Certificates, managed tax services,
+          application development, compliance automation and workforce staffing to help modern businesses
+          connect, operate and grow.
         </p>
       </section>
     </div>

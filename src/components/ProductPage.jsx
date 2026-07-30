@@ -47,7 +47,7 @@ function ProductPage() {
     },
     {
       icon: "cloud",
-      title: "Cloud ASP/GSP Platform",
+      title: "ASP-GSP Solutions",
       text: "Cloud-native platform for GST automation and enterprise compliance.",
     },
   ];

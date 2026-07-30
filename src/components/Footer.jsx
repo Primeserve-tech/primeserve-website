@@ -121,11 +121,16 @@ function Footer() {
           <section className="footer-brand-block" aria-label="Primeserve contact">
             <img className="footer-logo" src={logo} alt="Primeserve" />
             <p className="footer-about">
-              Primeserve Global Solution Pvt. Ltd. delivers powerful API
-              solutions that help businesses automate workflows, ensure
-              compliance, and drive growth with secure, reliable, and real-time
-              data.
+              Primeserve Global Solution Pvt. Ltd. delivers technology,
+              compliance and enterprise services designed to help businesses
+              operate efficiently, stay compliant and scale with confidence.
+              Our offerings include 250+ APIs, ASP-GSP Solutions, SAP Services,
+              Digital Signature Certificate (DSC), Managed Tax Services,
+              Application Development &amp; AMS and Workforce Staffing &amp; Deployment.
             </p>
+            <a className="footer-offerings-link" href="/#solutions">
+              Explore Our Offerings <span aria-hidden="true">→</span>
+            </a>
 
             <ul className="footer-contact-list">
               <li>
