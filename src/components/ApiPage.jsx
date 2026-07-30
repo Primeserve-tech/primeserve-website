@@ -35,6 +35,7 @@ function ApiPage() {
     { icon: "business", title: "Company & Director APIs", text: "Fetch CIN by PAN, company details, director DIN, PAN by DIN, TAN and FSSAI license." },
     { icon: "finance", title: "Bank Account & UPI APIs", text: "Verify bank account, reverse penny drop, UPI, UPI advanced and account lookup by mobile." },
     { icon: "finance", title: "IFSC & Bank Statement APIs", text: "Verify IFSC, bank branch details, payment channels and analyse bank statement PDFs." },
+    { icon: "finance", title: "CIBIL Score API – Equifax & TransUnion", text: "Access credit score and credit bureau insights from Equifax and TransUnion for eligible verification and risk workflows." },
     { icon: "utility", title: "Mobile Intelligence APIs", text: "Mobile lookup, WhatsApp profile, digital footprint, mobile prefill and spend insights." },
     { icon: "identity", title: "Criminal & Court APIs", text: "Criminal and court record verification reports for identity and risk assessment workflows." },
   ];
@@ -92,12 +93,7 @@ function ApiPage() {
 
       <section className="api-list-section" id="api-list">
         <div className="api-section-heading">
-          <span>- OUR APIs -</span>
           <h2>Powerful APIs for Every Business Need</h2>
-          <p>
-            Choose from our wide range of APIs and build powerful, reliable and
-            compliant applications.
-          </p>
         </div>
 
         <div className="api-carousel-shell" aria-label="Primeserve API catalogue carousel">

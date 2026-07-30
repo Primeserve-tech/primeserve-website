@@ -37,10 +37,12 @@ function CompanyPage() {
 
   const heroServices = [
     { icon: "document", text: "250+ APIs" },
-    { icon: "sap", text: "SAP Solution" },
-    { icon: "cloud", text: "ASP GSP Solution" },
-    { icon: "signature", text: "DSC" },
-    { icon: "tax", text: "Managed Services" },
+    { icon: "cloud", text: "ASP-GSP Solutions" },
+    { icon: "sap", text: "SAP Services" },
+    { icon: "signature", text: "Digital Signature Certificate (DSC)" },
+    { icon: "tax", text: "Managed Tax Services" },
+    { icon: "erp", text: "Application Development & AMS" },
+    { icon: "hr", text: "Workforce Staffing & Deployment" },
   ];
 
   return (
@@ -56,9 +58,9 @@ function CompanyPage() {
           </h1>
           <p>
             Primeserve Global Solution Pvt. Ltd. delivers enterprise APIs, GST
-            automation, Digital Signature solutions, SAP services and compliance
-            technologies that help businesses automate operations, simplify
-            regulatory processes and accelerate digital transformation.
+            automation, Digital Signature solutions, SAP services, managed tax,
+            application development and workforce solutions that help businesses
+            automate operations, simplify regulatory processes and grow.
           </p>
 
           <div className="company-actions">

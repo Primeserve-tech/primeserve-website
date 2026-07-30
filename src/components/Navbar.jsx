@@ -1,40 +1,48 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "../assets/primeserve-logo-clean.png";
+import OfferingServiceIcon from "./OfferingServiceIcon";
 import { getCmsData } from "../cmsStore";
+import { servicePortfolio } from "../data/servicePortfolio";
+
+function OfferingIcon({ type }) {
+  const mappedType = type === "compliance" ? "asp-gsp" : type;
+  return <OfferingServiceIcon type={mappedType} />;
+}
 
 function Navbar({ activePage, onNavigate }) {
   const [openMenu, setOpenMenu] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const settings = getCmsData().settings || {};
 
+  useEffect(() => {
+    const openRequestedMenu = (event) => {
+      const label = event.detail?.label;
+      if (!["Our Offerings", "Company", "Tools"].includes(label)) return;
+      setMobileOpen(window.innerWidth <= 960);
+      setOpenMenu(label);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+    window.addEventListener("primeserve:open-navigation-menu", openRequestedMenu);
+    return () => window.removeEventListener("primeserve:open-navigation-menu", openRequestedMenu);
+  }, []);
+  const settings = getCmsData().settings || {};
   const links = [
     { label: "Home", page: "home", activeWhen: "home" },
-    { label: "APIs", page: "apis", activeWhen: "apis" },
-    { label: "Products", page: "products", activeWhen: "products" },
-    { label: "Solutions", page: "solutions", activeWhen: "solutions" },
+    { label: "Our Offerings", page: "services", activeWhen: "services" },
     { label: "Company", page: "company", activeWhen: "company" },
-    { label: "Knowledge Center", page: "blog", activeWhen: "knowledge" },
     { label: "Tools", page: "hsn-sac", activeWhen: "tools" },
   ];
 
+  const serviceDetails = servicePortfolio.map((service) => ({
+    label: service.title,
+    description: service.description,
+    page: service.page,
+    icon: service.icon,
+  }));
+
   const companyDetails = [
     { label: "About Us", page: "company-about" },
-    { label: "Why Primeserve", page: "company-why" },
     { label: "Our Clients", page: "company-clients" },
     { label: "Careers", page: "careers" },
-    { label: "Partners", page: "company" },
-    { label: "News & Updates", page: "news" },
-    { label: "Contact Us", page: "company" },
-  ];
-
-  const knowledgeDetails = [
-    { label: "Blogs", page: "blog" },
-    { label: "FAQs", page: "faqs" },
-    { label: "Case Studies", page: "case-studies" },
-    { label: "Webinars", page: "webinars" },
-    { label: "Product Announcements", page: "product-announcements" },
-    { label: "API Release Notes", page: "api-release-notes" },
-    { label: "Resources", page: "resources" },
   ];
 
   const toolDetails = [
@@ -43,8 +51,8 @@ function Navbar({ activePage, onNavigate }) {
     settings.gstBulkDataFetchEnabled !== "No" && { label: "GST Bulk Data Fetch", href: "https://upload.primeserve.in/" },
   ].filter(Boolean);
 
-  const isKnowledgePage = ["blog", "faqs", "case-studies", "webinars", "product-announcements", "api-release-notes", "resources"].includes(activePage);
   const isToolsPage = ["hsn-sac", "gstin-validator"].includes(activePage);
+  const isOfferingPage = ["apis", "products", "solutions", "asp-gsp", "sap-services", "dsc", "services", "vertical-managed-services", "vertical-workforce-solutions", "application-development-ams"].includes(activePage);
 
   return (
     <header className="site-header">
@@ -87,23 +95,23 @@ function Navbar({ activePage, onNavigate }) {
             <a href={link.href} key={link.label} target="_blank" rel="noreferrer">
               {link.label}
             </a>
-          ) : link.label === "Company" || link.label === "Knowledge Center" || link.label === "Tools" ? (
+          ) : link.label === "Our Offerings" || link.label === "Company" || link.label === "Tools" ? (
             <div
-              className="nav-menu-item"
+              className={`nav-menu-item ${link.label === "Our Offerings" ? "offerings-menu" : ""}`}
               key={link.label}
               onMouseLeave={() => setOpenMenu(null)}
             >
               <button
                 className={
-                  link.label === "Company"
+                  link.label === "Our Offerings"
+                      ? isOfferingPage
+                        ? "active"
+                        : ""
+                    : link.label === "Company"
                     ? activePage.startsWith("company") || activePage === "careers" || activePage === "news"
                       ? "active"
                       : ""
-                    : link.label === "Knowledge Center"
-                      ? isKnowledgePage
-                        ? "active"
-                        : ""
-                      : isToolsPage
+                    : isToolsPage
                         ? "active"
                         : ""
                 }
@@ -112,30 +120,22 @@ function Navbar({ activePage, onNavigate }) {
                 aria-expanded={openMenu === link.label}
                 onMouseEnter={() => setOpenMenu(link.label)}
                 onClick={() => {
-                  if (
-                    link.label === "Tools" ||
-                    link.label === "Knowledge Center" ||
-                    (link.label === "Company" && window.innerWidth <= 760)
-                  ) {
-                    setOpenMenu((currentMenu) => currentMenu === link.label ? null : link.label);
-                    return;
-                  }
-                  setOpenMenu(null);
-                  setMobileOpen(false);
-                  onNavigate(link.page);
+                  setOpenMenu((currentMenu) => currentMenu === link.label ? null : link.label);
                 }}
               >
                 {link.label}
+                <span className="nav-menu-caret" aria-hidden="true">▼</span>
               </button>
               <div
-                className={`nav-dropdown ${openMenu === link.label ? "menu-open" : ""}`}
+                className={`nav-dropdown ${link.label === "Our Offerings" ? "offerings-mega-menu" : ""} ${openMenu === link.label ? "menu-open" : ""}`}
                 aria-label={`${link.label} menu`}
                 onMouseEnter={() => setOpenMenu(link.label)}
                 onMouseLeave={() => setOpenMenu(null)}
               >
-                {(link.label === "Company" ? companyDetails : link.label === "Knowledge Center" ? knowledgeDetails : toolDetails).map((item) => (
+                {(link.label === "Our Offerings" ? serviceDetails : link.label === "Company" ? companyDetails : toolDetails).map((item) => (
                   <button
                     key={item.label}
+                    className={link.label === "Our Offerings" ? "offering-mega-card" : ""}
                     type="button"
                       onClick={(event) => {
                         event.currentTarget.blur();
@@ -148,7 +148,16 @@ function Navbar({ activePage, onNavigate }) {
                         onNavigate(item.page);
                       }}
                   >
-                    {item.label}
+                    {link.label === "Our Offerings" ? (
+                      <>
+                        <span className="offering-mega-icon"><OfferingIcon type={item.icon} /></span>
+                        <span className="offering-mega-copy">
+                          <strong>{item.label}</strong>
+                          <small>{item.description}</small>
+                        </span>
+                        <span className="offering-mega-arrow" aria-hidden="true">→</span>
+                      </>
+                    ) : item.label}
                   </button>
                 ))}
               </div>

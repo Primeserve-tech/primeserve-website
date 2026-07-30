@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import logo from "../assets/primeserve-logo-clean.png";
 import alankitLogo from "../assets/client-logos/alankit.png";
 import acsLogo from "../assets/client-logos/acs-infotech.png";
@@ -11,6 +12,90 @@ import axisLogo from "../assets/client-logos/axis-bank.png";
 import airtelLogo from "../assets/client-logos/airtel-payments-bank.png";
 
 function ClientsPage() {
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const [heroClientCount, setHeroClientCount] = useState(() => reduceMotion ? 100 : 1);
+  const [clientCount, setClientCount] = useState(() => reduceMotion ? 100 : 1);
+  const [apiCount, setApiCount] = useState(() => reduceMotion ? 250 : 1);
+  const [apiCallCount, setApiCallCount] = useState(() => reduceMotion ? 10 : 1);
+  const heroCardRef = useRef(null);
+  const trustStripRef = useRef(null);
+
+  useEffect(() => {
+    if (reduceMotion) return undefined;
+
+    let frame;
+    let isVisible = false;
+
+    const startCountUp = () => {
+      window.cancelAnimationFrame(frame);
+      setHeroClientCount(1);
+      const startedAt = performance.now();
+
+      const countUp = (now) => {
+        const progress = Math.min(1, (now - startedAt) / 1800);
+        setHeroClientCount(Math.max(1, Math.round(1 + (99 * progress))));
+        if (progress < 1) frame = window.requestAnimationFrame(countUp);
+      };
+
+      frame = window.requestAnimationFrame(countUp);
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isVisible) startCountUp();
+        isVisible = entry.isIntersecting;
+      },
+      { threshold: 0.35 },
+    );
+
+    if (heroCardRef.current) observer.observe(heroCardRef.current);
+
+    return () => {
+      observer.disconnect();
+      window.cancelAnimationFrame(frame);
+    };
+  }, [reduceMotion]);
+
+  useEffect(() => {
+    if (reduceMotion) return undefined;
+
+    let frame;
+    let isVisible = false;
+
+    const startCountUp = () => {
+      window.cancelAnimationFrame(frame);
+      setClientCount(1);
+      setApiCount(1);
+      setApiCallCount(1);
+      const startedAt = performance.now();
+
+      const countUp = (now) => {
+        const progress = Math.min(1, (now - startedAt) / 1800);
+        setClientCount(Math.max(1, Math.round(1 + (99 * progress))));
+        setApiCount(Math.max(1, Math.round(1 + (249 * progress))));
+        setApiCallCount(Math.max(1, Math.round(1 + (9 * progress))));
+        if (progress < 1) frame = window.requestAnimationFrame(countUp);
+      };
+
+      frame = window.requestAnimationFrame(countUp);
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isVisible) startCountUp();
+        isVisible = entry.isIntersecting;
+      },
+      { threshold: 0.35 },
+    );
+
+    if (trustStripRef.current) observer.observe(trustStripRef.current);
+
+    return () => {
+      observer.disconnect();
+      window.cancelAnimationFrame(frame);
+    };
+  }, [reduceMotion]);
+
   const clients = [
     { name: "Alankit Limited", logo: alankitLogo, sector: "Enterprise compliance and digital services" },
     { name: "ACS Infotech", logo: acsLogo, sector: "Technology and software services" },
@@ -49,9 +134,9 @@ function ClientsPage() {
             with reliable APIs, compliance automation and digital solutions.
           </p>
         </div>
-        <div className="clients-hero-card">
+        <div className="clients-hero-card" ref={heroCardRef}>
           <img src={logo} alt="Primeserve Global Solution Pvt. Ltd." />
-          <strong>100+</strong>
+          <strong>{heroClientCount}+</strong>
           <span>Enterprise Clients</span>
           <p>Reliable APIs, innovative solutions and responsive support.</p>
         </div>
@@ -94,17 +179,17 @@ function ClientsPage() {
         </div>
       </section>
 
-      <section className="clients-trust-strip">
+      <section className="clients-trust-strip" ref={trustStripRef}>
         <article>
-          <strong>100+</strong>
+          <strong>{clientCount}+</strong>
           <span>Enterprise Clients</span>
         </article>
         <article>
-          <strong>250+</strong>
+          <strong>{apiCount}+</strong>
           <span>APIs & Solutions</span>
         </article>
         <article>
-          <strong>10M+</strong>
+          <strong>{apiCallCount}M+</strong>
           <span>API Calls</span>
         </article>
         <article>

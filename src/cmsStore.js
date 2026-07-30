@@ -1,3 +1,5 @@
+import { servicePortfolio } from "./data/servicePortfolio";
+
 const STORAGE_KEY = "primeserve_cms_data_v1";
 const SESSION_KEY = "primeserve_admin_session_v1";
 
@@ -35,6 +37,22 @@ export const defaultAdminUsers = [
 
 export const defaultCmsData = {
   adminUsers: defaultAdminUsers,
+  services: servicePortfolio.map((service, index) => ({
+    id: `service-${service.id}`,
+    title: service.title,
+    slug: service.href.replace(/^\//, ""),
+    category: service.category,
+    shortDescription: service.description,
+    fullDescription: service.description,
+    highlights: service.points.join("\n"),
+    industries: "",
+    engagementModels: "",
+    icon: service.icon,
+    ctaLabel: "Explore Service",
+    status: "Active",
+    featured: "Yes",
+    sortOrder: String(index + 1),
+  })),
   jobs: [
     {
       id: "job-1",
@@ -125,6 +143,7 @@ export const defaultCmsData = {
   webinars: [],
   caseStudies: [],
   productAnnouncements: [],
+  hiringUpdates: [],
   apiReleaseNotes: [],
   resources: [],
   hsnSacRecords: [],
@@ -148,6 +167,7 @@ export const defaultCmsData = {
       image: "",
       date: today,
       status: "Published",
+      showOnHomepage: "Yes",
     },
   ],
   apiUpdates: [
@@ -158,6 +178,7 @@ export const defaultCmsData = {
       description: "Improved response handling and faster validation performance.",
       releaseDate: today,
       status: "Published",
+      showOnHomepage: "Yes",
     },
     {
       id: "update-2",
@@ -166,6 +187,7 @@ export const defaultCmsData = {
       description: "New automation support for enterprise invoice generation workflows.",
       releaseDate: today,
       status: "Published",
+      showOnHomepage: "Yes",
     },
   ],
   clients: [
@@ -187,6 +209,24 @@ export const defaultCmsData = {
   ],
   supportTeam: [],
   newsletterSubscribers: [],
+  updatesHub: [
+    {
+      id: "updates-hub-1",
+      heading: "Primeserve Updates",
+      shortDescription: "Stay informed about product launches, compliance updates, platform alerts and business insights.",
+      newsletterText: "No spam. Unsubscribe anytime.",
+      apiLaunchesContent: "New API releases and capabilities.",
+      apiLaunchesEnabled: "Yes",
+      productNewsContent: "Product, compliance and regulatory news.",
+      productNewsEnabled: "Yes",
+      platformAlertsContent: "System alerts and service notifications.",
+      platformAlertsEnabled: "Yes",
+      specialOffersContent: "Business insights and selected offers.",
+      specialOffersEnabled: "Yes",
+      newsletterEnabled: "Yes",
+      status: "Active",
+    },
+  ],
   newsletterCampaigns: [
     {
       id: "newsletter-1",
@@ -263,7 +303,7 @@ export function getCmsData() {
     };
 
     if (!settings.primeserveNameCasingMigrated) {
-      mergedData = JSON.parse(JSON.stringify(mergedData).replaceAll("PrimeServe", "Primeserve"));
+      mergedData = JSON.parse(JSON.stringify(mergedData).replaceAll("Primeserve", "Primeserve"));
       mergedData.settings = { ...mergedData.settings, primeserveNameCasingMigrated: "true" };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedData));
     }
@@ -280,6 +320,17 @@ export function getCmsData() {
         ["job-1", "job-2"].includes(job.id) ? { ...job, status: "Inactive" } : job
       );
       mergedData.settings = { ...mergedData.settings, careersSeedMigrated: "true" };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedData));
+    }
+
+    if (!mergedData.settings.servicePortfolioSevenMigrated) {
+      const existingServices = (mergedData.services || []).filter(
+        (service) => service.title !== "Manpower Services",
+      );
+      const existingTitles = new Set(existingServices.map((service) => service.title));
+      const missingServices = defaultCmsData.services.filter((service) => !existingTitles.has(service.title));
+      mergedData.services = [...existingServices, ...missingServices];
+      mergedData.settings = { ...mergedData.settings, servicePortfolioSevenMigrated: "true" };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedData));
     }
 

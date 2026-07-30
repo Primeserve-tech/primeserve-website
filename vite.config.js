@@ -101,6 +101,38 @@ async function sendSuperAdminCredentials(req, res, env) {
   }
 }
 
+async function sendSubmissionNotification(req, res, env) {
+  if (req.method !== 'POST') return sendJson(res, 405, { message: 'Method not allowed.' })
+  try {
+    const body = await readJsonRequest(req)
+    const token = String(env.MAIL_SEND_TOKEN || env.SMTP_PASSWORD || '')
+    if (!token) return sendJson(res, 503, { message: 'Email notification is not configured on this server.' })
+    const kind = String(body.kind || 'Website submission').slice(0, 120)
+    const details = body.details && typeof body.details === 'object' ? body.details : {}
+    const rows = Object.entries(details)
+      .filter(([, value]) => value !== undefined && value !== null && String(value).trim())
+      .map(([key, value]) => `<tr><td style="padding:7px 12px;border:1px solid #dbe4ef;font-weight:700">${escapeHtml(key.replace(/([A-Z])/g, ' $1'))}</td><td style="padding:7px 12px;border:1px solid #dbe4ef">${escapeHtml(String(value))}</td></tr>`)
+      .join('')
+    const authorization = token.startsWith('Zoho-enczapikey ') ? token : `Zoho-enczapikey ${token}`
+    const recipient = String(env.PRIMESERVE_NOTIFICATION_EMAIL || 'primeserve45@gmail.com').trim()
+    const mailResponse = await fetch(env.MAIL_API_URL || 'https://api.zeptomail.in/v1.1/email', {
+      method: 'POST',
+      headers: { authorization, 'content-type': 'application/json' },
+      body: JSON.stringify({
+        from: { address: env.MAIL_FROM_ADDRESS || 'info@primeserve.in', name: env.MAIL_FROM_NAME || 'Primeserve' },
+        to: [{ email_address: { address: recipient, name: 'Primeserve Admin' } }],
+        subject: `New Primeserve ${kind}`,
+        htmlbody: `<div style="font-family:Arial,sans-serif;color:#082f65"><h2>New ${escapeHtml(kind)}</h2><p>This submission has also been saved in the Primeserve Admin portal.</p><table style="border-collapse:collapse;width:100%;max-width:760px">${rows}</table></div>`,
+      }),
+      signal: AbortSignal.timeout(15000),
+    })
+    if (!mailResponse.ok) throw new Error('Mail delivery failed.')
+    return sendJson(res, 200, { success: true })
+  } catch {
+    return sendJson(res, 502, { message: 'Submission was saved, but the notification email could not be delivered.' })
+  }
+}
+
 async function updateSuperAdminPassword(req, res, env) {
   if (req.method !== 'POST') return sendJson(res, 405, { message: 'Method not allowed.' })
   try {
@@ -215,6 +247,9 @@ export default defineConfig(({ mode }) => {
           })
           server.middlewares.use('/api/admin/forgot-password', async (req, res) => {
             await sendSuperAdminCredentials(req, res, env)
+          })
+          server.middlewares.use('/api/admin/submission-notification', async (req, res) => {
+            await sendSubmissionNotification(req, res, env)
           })
           server.middlewares.use('/api/admin/super-password', async (req, res) => {
             await updateSuperAdminPassword(req, res, env)

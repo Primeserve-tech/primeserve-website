@@ -45,147 +45,19 @@ const moduleConfig = {
     ],
     columns: ["title", "department", "experience", "status"],
   },
-  blogs: {
-    label: "Blogs",
+  latestUpdates: {
+    label: "Latest Updates",
     roles: ["Super Admin", "Content Admin"],
-    prefix: "blog",
+    prefix: "latest-update",
     fields: [
+      ["updateCategory", "Update Category", "select", ["Product Announcement", "News Update", "API Update", "Hiring Update"]],
       ["title", "Title", "text"],
-      ["slug", "Slug", "text"],
-      ["category", "Category", "text"],
-      ["shortDescription", "Short Description", "textarea"],
-      ["coverImage", "Cover Image", "file"],
-      ["coverAlt", "Cover Image Alt Text", "text"],
-      ["content", "Full Content", "richtext"],
-      ["author", "Author", "text"],
-      ["tags", "Tags", "text"],
-      ["seoTitle", "SEO Title", "text"],
-      ["seoDescription", "SEO Description", "textarea"],
-      ["status", "Status", "select", ["Draft", "Published", "Scheduled", "Archived"]],
-      ["publishDate", "Publish Date", "date"],
-      ["lastUpdatedDate", "Last Updated Date", "date"],
-      ["featured", "Featured Blog", "select", ["No", "Yes"]],
-      ["showOnHomepage", "Show on Homepage", "select", ["Yes", "No"]],
-      ["readingTime", "Reading Time", "text"],
-      ["ogImage", "Open Graph Image", "file"],
-      ["canonicalUrl", "Canonical URL", "url"],
-      ["relatedBlogs", "Related Blogs Slugs", "text"],
-      ["downloadPdf", "Download as PDF", "select", ["Yes", "No"]],
-    ],
-    columns: ["title", "category", "author", "status"],
-  },
-  faqs: {
-    label: "FAQs",
-    roles: ["Super Admin", "Content Admin"],
-    prefix: "faq",
-    fields: [
-      ["question", "Question", "text"],
-      ["answer", "Answer", "textarea"],
-      ["category", "Category", "select", ["Enterprise APIs", "GST APIs", "e-Invoice", "e-Way Bill", "ASP-GSP", "Digital Signature Certificate", "SAP Integration", "Pricing", "Onboarding", "Support"]],
-      ["tags", "Tags", "text"],
-      ["sortOrder", "Sort Order", "number"],
-      ["status", "Status", "select", ["Active", "Inactive"]],
-      ["showOnHomepage", "Show on Homepage", "select", ["No", "Yes"]],
-      ["seoTitle", "SEO Title", "text"],
-      ["seoDescription", "SEO Description", "textarea"],
-    ],
-    columns: ["question", "category", "status", "sortOrder"],
-  },
-  webinars: {
-    label: "Webinars",
-    roles: ["Super Admin", "Content Admin"],
-    prefix: "webinar",
-    fields: [
-      ["title", "Webinar Title", "text"],
-      ["slug", "Slug", "text"],
-      ["shortDescription", "Short Description", "textarea"],
-      ["fullDescription", "Full Description", "textarea"],
-      ["speakerName", "Speaker Name", "text"],
-      ["speakerDesignation", "Speaker Designation", "text"],
-      ["eventDate", "Event Date", "date"],
-      ["eventTime", "Event Time", "time"],
-      ["duration", "Duration", "text"],
-      ["registrationLink", "Registration Link", "url"],
-      ["webinarType", "Webinar Type", "select", ["Upcoming", "Completed", "Recorded"]],
-      ["videoUrl", "Video URL", "url"],
-      ["thumbnail", "Thumbnail Image", "file"],
+      ["description", "Content / Description", "textarea"],
+      ["date", "Publish Date", "date"],
       ["status", "Status", "select", ["Draft", "Published"]],
-      ["seoTitle", "SEO Title", "text"],
-      ["seoDescription", "SEO Description", "textarea"],
+      ["showOnHomepage", "Show in Latest Updates Ticker", "select", ["Yes", "No"]],
     ],
-    columns: ["title", "eventDate", "webinarType", "status"],
-  },
-  caseStudies: {
-    label: "Case Studies",
-    roles: ["Super Admin", "Content Admin"],
-    prefix: "case",
-    fields: [
-      ["title", "Case Study Title", "text"],
-      ["slug", "Slug", "text"],
-      ["clientName", "Client Name", "text"],
-      ["industry", "Industry", "text"],
-      ["challenge", "Challenge", "textarea"],
-      ["solution", "Solution Provided", "textarea"],
-      ["results", "Results / Impact", "textarea"],
-      ["servicesUsed", "Services Used", "text"],
-      ["clientLogo", "Client Logo", "file"],
-      ["coverImage", "Cover Image", "file"],
-      ["status", "Status", "select", ["Draft", "Published"]],
-      ["featured", "Featured", "select", ["No", "Yes"]],
-      ["seoTitle", "SEO Title", "text"],
-      ["seoDescription", "SEO Description", "textarea"],
-    ],
-    columns: ["title", "clientName", "industry", "status"],
-  },
-  productAnnouncements: {
-    label: "Product Announcements",
-    roles: ["Super Admin", "Content Admin"],
-    prefix: "announcement",
-    fields: [
-      ["title", "Title", "text"],
-      ["slug", "Slug", "text"],
-      ["product", "Product / Service", "text"],
-      ["announcementType", "Announcement Type", "select", ["New Launch", "Feature Update", "Maintenance", "Partnership", "Security Update"]],
-      ["shortDescription", "Short Description", "textarea"],
-      ["fullDetails", "Full Details", "textarea"],
-      ["publishDate", "Publish Date", "date"],
-      ["image", "Image Optional", "file"],
-      ["status", "Status", "select", ["Draft", "Published"]],
-      ["showOnHomepage", "Show on Homepage", "select", ["No", "Yes"]],
-    ],
-    columns: ["title", "product", "announcementType", "status"],
-  },
-  apiReleaseNotes: {
-    label: "API Release Notes",
-    roles: ["Super Admin", "Content Admin"],
-    prefix: "release",
-    fields: [
-      ["apiName", "API Name", "text"],
-      ["version", "Version", "text"],
-      ["releaseDate", "Release Date", "date"],
-      ["updateType", "Update Type", "select", ["New API", "Enhancement", "Bug Fix", "Deprecation", "Maintenance"]],
-      ["description", "Description", "textarea"],
-      ["breakingChange", "Breaking Change", "select", ["No", "Yes"]],
-      ["migrationNotes", "Migration Notes", "textarea"],
-      ["status", "Status", "select", ["Draft", "Published"]],
-    ],
-    columns: ["apiName", "version", "updateType", "status"],
-  },
-  resources: {
-    label: "Resources",
-    roles: ["Super Admin", "Content Admin"],
-    prefix: "resource",
-    fields: [
-      ["title", "Resource Title", "text"],
-      ["category", "Category", "text"],
-      ["description", "Description", "textarea"],
-      ["file", "File Upload PDF/DOC/PPT/XLS", "file"],
-      ["coverImage", "Cover Image", "file"],
-      ["accessType", "Access Type", "select", ["Public", "Lead Capture"]],
-      ["status", "Status", "select", ["Active", "Inactive"]],
-      ["publishDate", "Publish Date", "date"],
-    ],
-    columns: ["title", "category", "accessType", "status"],
+    columns: ["updateCategory", "title", "date", "status"],
   },
   hsnSacRecords: {
     label: "HSN/SAC Records",
@@ -219,33 +91,6 @@ const moduleConfig = {
       ["status", "Status", "select", ["New", "Contacted", "Converted", "Closed"]],
     ],
     columns: ["name", "service", "sourcePage", "status"],
-  },
-  news: {
-    label: "News Updates",
-    roles: ["Super Admin", "Content Admin"],
-    prefix: "news",
-    fields: [
-      ["title", "Title", "text"],
-      ["shortDescription", "Short Description", "textarea"],
-      ["fullDescription", "Full Description", "textarea"],
-      ["image", "Image", "file"],
-      ["date", "Date", "date"],
-      ["status", "Status", "select", ["Draft", "Published"]],
-    ],
-    columns: ["title", "date", "status"],
-  },
-  apiUpdates: {
-    label: "API Updates",
-    roles: ["Super Admin", "Content Admin"],
-    prefix: "update",
-    fields: [
-      ["productName", "API/Product Name", "text"],
-      ["updateType", "Update Type", "select", ["New Launch", "Enhancement", "Maintenance", "Deprecation"]],
-      ["description", "Description", "textarea"],
-      ["releaseDate", "Release Date", "date"],
-      ["status", "Status", "select", ["Draft", "Published"]],
-    ],
-    columns: ["productName", "updateType", "releaseDate", "status"],
   },
   clients: {
     label: "Client Logos",
@@ -290,29 +135,6 @@ const moduleConfig = {
     ],
     columns: ["name", "designation", "email", "status"],
   },
-  newsletterSubscribers: {
-    label: "Newsletter Subscribers",
-    roles: ["Super Admin", "Content Admin"],
-    prefix: "subscriber",
-    fields: [
-      ["email", "Email", "email"],
-      ["status", "Status", "select", ["Active", "Unsubscribed"]],
-      ["date", "Date", "date"],
-    ],
-    columns: ["email", "status", "date"],
-  },
-  newsletterCampaigns: {
-    label: "Newsletter Campaigns",
-    roles: ["Super Admin", "Content Admin"],
-    prefix: "newsletter",
-    fields: [
-      ["subject", "Email Subject", "text"],
-      ["body", "Email Body", "textarea"],
-      ["status", "Status", "select", ["Draft", "Ready"]],
-      ["date", "Date", "date"],
-    ],
-    columns: ["subject", "status", "date"],
-  },
   applications: {
     label: "Applicants",
     roles: ["Super Admin", "HR Admin"],
@@ -346,10 +168,11 @@ const moduleConfig = {
       ["service", "Service Interested", "text"],
       ["message", "Message", "textarea"],
       ["date", "Date", "date"],
-      ["status", "Status", "select", ["New", "Contacted", "Converted", "Closed"]],
+      ["dateTime", "Date & Time", "text"],
+      ["status", "Status", "select", ["New", "Contacted", "In Progress", "Closed"]],
       ["type", "Type", "select", ["Contact Enquiry", "Demo Request"]],
     ],
-    columns: ["name", "service", "status", "type"],
+    columns: ["name", "company", "email", "mobile", "service", "dateTime", "status"],
   },
   seo: {
     label: "SEO Settings",
@@ -572,6 +395,8 @@ function AdminDashboard() {
   const [activeModule, setActiveModule] = useState("dashboard");
   const [editing, setEditing] = useState(null);
   const [query, setQuery] = useState("");
+  const [enquiryServiceFilter, setEnquiryServiceFilter] = useState("");
+  const [enquiryStatusFilter, setEnquiryStatusFilter] = useState("");
   const [toast, setToast] = useState("");
 
   const allowedModules = useMemo(() => {
@@ -591,15 +416,10 @@ function AdminDashboard() {
   };
 
   const summary = [
-    ["Total Blogs", data.blogs.length],
-    ["Published Blogs", data.blogs.filter((blog) => blog.status === "Published").length],
-    ["Draft Blogs", data.blogs.filter((blog) => blog.status === "Draft").length],
+    ["Active Services", (data.services || []).filter((service) => service.status === "Active").length],
     ["Total News Updates", data.news.length],
     ["Active Jobs", data.jobs.filter((job) => job.status === "Active").length],
     ["Total Applicants", data.applications.length],
-    ["Total FAQs", (data.faqs || []).length],
-    ["Case Studies", (data.caseStudies || []).length],
-    ["Webinars", (data.webinars || []).length],
     ["Announcements", (data.productAnnouncements || []).length],
     ["HSN/SAC Records", ((data.hsnSacRecords || []).length || 22537)],
     ["Total Leads", (data.leads || []).length],
@@ -618,6 +438,41 @@ function AdminDashboard() {
     });
     setEditing({ moduleKey, item, isNew: true });
   };
+
+  const getLatestUpdateRows = () => [
+    ...(data.productAnnouncements || []).map((item) => ({
+      ...item,
+      updateCategory: "Product Announcement",
+      title: item.title || "",
+      description: item.shortDescription || item.fullDetails || "",
+      date: item.publishDate || "",
+      _source: "productAnnouncements",
+    })),
+    ...(data.news || []).map((item) => ({
+      ...item,
+      updateCategory: "News Update",
+      title: item.title || "",
+      description: item.shortDescription || item.fullDescription || "",
+      date: item.date || "",
+      _source: "news",
+    })),
+    ...(data.apiUpdates || []).map((item) => ({
+      ...item,
+      updateCategory: "API Update",
+      title: item.productName || "",
+      description: item.description || "",
+      date: item.releaseDate || "",
+      _source: "apiUpdates",
+    })),
+    ...(data.hiringUpdates || []).map((item) => ({
+      ...item,
+      updateCategory: "Hiring Update",
+      title: item.title || "",
+      description: item.description || "",
+      date: item.date || "",
+      _source: "hiringUpdates",
+    })),
+  ].sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
 
   const downloadNewsletterCsv = () => {
     const rows = [["Email", "Status", "Date"], ...(data.newsletterSubscribers || []).map((item) => [item.email, item.status, item.date])];
@@ -647,6 +502,69 @@ function AdminDashboard() {
   const saveItem = async () => {
     const { moduleKey, item, isNew } = editing;
     const nextItem = { ...item };
+    if (moduleKey === "latestUpdates") {
+      const sourceByCategory = {
+        "Product Announcement": "productAnnouncements",
+        "News Update": "news",
+        "API Update": "apiUpdates",
+        "Hiring Update": "hiringUpdates",
+      };
+      const targetSource = sourceByCategory[nextItem.updateCategory] || "news";
+      const previousSource = nextItem._source;
+      const base = {
+        id: nextItem.id,
+        status: nextItem.status,
+        showOnHomepage: nextItem.showOnHomepage,
+      };
+      const storedItem = targetSource === "productAnnouncements"
+        ? {
+            ...base,
+            title: nextItem.title,
+            shortDescription: nextItem.description,
+            fullDetails: nextItem.description,
+            publishDate: nextItem.date,
+            product: nextItem.product || "",
+            announcementType: nextItem.announcementType || "Feature Update",
+          }
+        : targetSource === "apiUpdates"
+          ? {
+              ...base,
+              productName: nextItem.title,
+              description: nextItem.description,
+              releaseDate: nextItem.date,
+              updateType: nextItem.updateType || "Enhancement",
+            }
+          : targetSource === "hiringUpdates"
+            ? {
+                ...base,
+                title: nextItem.title,
+                description: nextItem.description,
+                date: nextItem.date,
+              }
+            : {
+              ...base,
+              title: nextItem.title,
+              shortDescription: nextItem.description,
+              fullDescription: nextItem.description,
+              date: nextItem.date,
+            };
+
+      const nextData = { ...data };
+      ["productAnnouncements", "news", "apiUpdates", "hiringUpdates"].forEach((source) => {
+        const list = data[source] || [];
+        if (!isNew && source === previousSource && previousSource !== targetSource) {
+          nextData[source] = list.filter((entry) => entry.id !== nextItem.id);
+        } else if (source === targetSource) {
+          const exists = list.some((entry) => entry.id === nextItem.id);
+          nextData[source] = exists
+            ? list.map((entry) => (entry.id === nextItem.id ? { ...entry, ...storedItem } : entry))
+            : [storedItem, ...list];
+        }
+      });
+      updateData(nextData, "Latest update saved successfully.");
+      setEditing(null);
+      return;
+    }
     if (moduleKey === "adminUsers") {
       nextItem.letterheadAccess = nextItem.role === "Super Admin" ? "Yes" : nextItem.letterheadAccess || "No";
       const existingItem = (data.adminUsers || []).find((entry) => entry.id === nextItem.id);
@@ -668,6 +586,13 @@ function AdminDashboard() {
           return;
         }
       }
+    }
+    if (moduleKey === "services" && !String(nextItem.slug || "").trim()) {
+      nextItem.slug = String(nextItem.title || "service")
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
     }
     if (moduleKey === "blogs") {
       const plainText = String(nextItem.content || "").replace(/<[^>]*>/g, " ");
@@ -758,6 +683,15 @@ function AdminDashboard() {
 
   const deleteItem = (moduleKey, itemId) => {
     if (!window.confirm("Delete this item?")) return;
+    if (moduleKey === "latestUpdates") {
+      const row = getLatestUpdateRows().find((item) => item.id === itemId);
+      if (!row) return;
+      updateData(
+        { ...data, [row._source]: (data[row._source] || []).filter((item) => item.id !== itemId) },
+        "Deleted successfully."
+      );
+      return;
+    }
     updateData({ ...data, [moduleKey]: data[moduleKey].filter((item) => item.id !== itemId) }, "Deleted successfully.");
   };
 
@@ -796,15 +730,26 @@ function AdminDashboard() {
   };
 
   const filteredRows = (moduleKey) => {
-    const rows = data[moduleKey] || [];
-    if (!query) return rows;
-    return rows.filter((row) => JSON.stringify(row).toLowerCase().includes(query.toLowerCase()));
+    const rows = moduleKey === "latestUpdates" ? getLatestUpdateRows() : data[moduleKey] || [];
+    return rows.filter((row) => {
+      const matchesQuery = !query || JSON.stringify(row).toLowerCase().includes(query.toLowerCase());
+      const matchesService = moduleKey !== "enquiries" || !enquiryServiceFilter || row.service === enquiryServiceFilter;
+      const matchesStatus = moduleKey !== "enquiries" || !enquiryStatusFilter || row.status === enquiryStatusFilter;
+      return matchesQuery && matchesService && matchesStatus;
+    });
   };
 
   return (
     <div className="admin-shell">
       <aside className="admin-sidebar">
-        <img src={logo} alt="Primeserve" />
+        <button
+          className="admin-logo-button"
+          type="button"
+          onClick={() => setActiveModule("dashboard")}
+          aria-label="Open Admin Dashboard"
+        >
+          <img src={logo} alt="Primeserve" />
+        </button>
         <p>{session.name}</p>
         <span>{session.role}</span>
         <button className={activeModule === "dashboard" ? "active" : ""} onClick={() => setActiveModule("dashboard")}>Dashboard</button>
@@ -892,6 +837,18 @@ function AdminDashboard() {
           <div className="admin-table-card">
             <div className="admin-table-tools">
               <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search records..." />
+              {activeModule === "enquiries" && (
+                <>
+                  <select value={enquiryServiceFilter} onChange={(event) => setEnquiryServiceFilter(event.target.value)}>
+                    <option value="">All Services</option>
+                    {[...new Set((data.enquiries || []).map((item) => item.service).filter(Boolean))].map((service) => <option key={service}>{service}</option>)}
+                  </select>
+                  <select value={enquiryStatusFilter} onChange={(event) => setEnquiryStatusFilter(event.target.value)}>
+                    <option value="">All Statuses</option>
+                    {["New", "Contacted", "In Progress", "Closed"].map((status) => <option key={status}>{status}</option>)}
+                  </select>
+                </>
+              )}
               {activeModule === "newsletterSubscribers" && (
                 <button onClick={downloadNewsletterCsv}>Download Report</button>
               )}
@@ -926,7 +883,24 @@ function AdminDashboard() {
                       <td>
                         <button onClick={() => setEditing({ moduleKey: activeModule, item: row, isNew: false })}>Edit</button>
                         {activeModule === "newsletterCampaigns" && <button onClick={() => sendNewsletterCampaign(row)}>Send Email</button>}
-                        {row.resumeName && <button onClick={() => alert(`Resume file: ${row.resumeName}`)}>Resume</button>}
+                        {row.resumeName && (
+                          <button
+                            onClick={() => {
+                              if (!row.resumeData) {
+                                alert("This older application stored only the resume filename. Please ask the applicant to upload the file again.");
+                                return;
+                              }
+                              const link = document.createElement("a");
+                              link.href = row.resumeData;
+                              link.download = row.resumeName;
+                              document.body.appendChild(link);
+                              link.click();
+                              link.remove();
+                            }}
+                          >
+                            Download Resume
+                          </button>
+                        )}
                         <button onClick={() => deleteItem(activeModule, row.id)}>Delete</button>
                       </td>
                     </tr>

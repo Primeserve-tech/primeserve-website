@@ -1,13 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import { jsPDF } from "jspdf";
 import { createId, getCmsData, saveCmsData } from "../cmsStore";
+import { notifyAdminOfSubmission } from "../adminNotifications";
 import { hsnSacSeedData } from "../data/hsnSacData";
 import primeServeLogo from "../assets/primeserve-logo-clean.png";
+
+function readFileAsDataUrl(file) {
+  if (!file || !file.name) return Promise.resolve("");
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ""));
+    reader.onerror = () => reject(new Error("Unable to read the selected resume."));
+    reader.readAsDataURL(file);
+  });
+}
 
 function PublicHero({ eyebrow, title, text, compact = false }) {
   return (
     <section className={`cms-public-hero ${compact ? "cms-public-hero-compact" : ""}`}>
-      <span>{eyebrow}</span>
+      {eyebrow && <span>{eyebrow}</span>}
       <h1>{title}</h1>
       <p>{text}</p>
     </section>
@@ -338,6 +349,7 @@ function LeadCaptureForm({ sourcePage = "Website", service = "Primeserve Service
       status: "New",
     };
     saveCmsData({ ...data, leads: [lead, ...(data.leads || [])] });
+    notifyAdminOfSubmission("website enquiry", lead);
     setSent(true);
     event.currentTarget.reset();
   };
@@ -346,11 +358,11 @@ function LeadCaptureForm({ sourcePage = "Website", service = "Primeserve Service
     <form className="lead-capture-card" onSubmit={submitLead}>
       <h3>Need help from Primeserve?</h3>
       <p>Share your details and our team will connect with you.</p>
-      {sent && <strong className="lead-success">Request saved successfully.</strong>}
+      {sent && <strong className="lead-success">Thank you. Our team has received your request and will get in touch with you shortly.</strong>}
       <input name="name" placeholder="Name" required />
       <input name="company" placeholder="Company" />
       <input name="email" type="email" placeholder="Email" required />
-      <input name="mobile" placeholder="Mobile" />
+      <input name="mobile" inputMode="numeric" maxLength="10" placeholder="Mobile" onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/\D/g, "").slice(0, 10); }} />
       <input name="service" placeholder="Service Interested" defaultValue={service} />
       <textarea name="message" rows="4" placeholder="Message" />
       <button type="submit">Submit Enquiry</button>
@@ -362,8 +374,11 @@ export function CareersPage() {
   const [data, setData] = useState(getCmsData);
   const [selectedJob, setSelectedJob] = useState(null);
   const [toast, setToast] = useState("");
-  const jobs = data.jobs.filter((job) => job.status === "Active");
-  const careersEmail = data.settings?.careersEmail || data.settings?.infoEmail || "info@primeserve.in";
+  const workFeatureRailRef = useRef(null);
+  const hiringUpdates = (data.hiringUpdates || [])
+    .filter((item) => item.status === "Published")
+    .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+  const careersEmail = "hr@primeserve.in";
 
   const workFeatures = [
     {
@@ -392,6 +407,20 @@ export function CareersPage() {
     },
   ];
 
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    const timer = window.setInterval(() => {
+      const rail = workFeatureRailRef.current;
+      if (!rail) return;
+      const card = rail.querySelector(".careers-feature-card");
+      const distance = (card?.getBoundingClientRect().width || 360) + 20;
+      const atEnd = rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 8;
+      if (atEnd) rail.scrollTo({ left: 0, behavior: "smooth" });
+      else rail.scrollBy({ left: distance, behavior: "smooth" });
+    }, 3200);
+    return () => window.clearInterval(timer);
+  }, []);
+
   const benefits = [
     "Competitive Compensation",
     "Career Growth Opportunities",
@@ -411,10 +440,12 @@ export function CareersPage() {
     "Offer & Onboarding",
   ];
 
-  const submitApplication = (event) => {
+  const submitApplication = async (event) => {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     const resume = form.get("resume");
+    const resumeData = await readFileAsDataUrl(resume);
     const application = {
       id: createId("app"),
       fullName: form.get("fullName"),
@@ -426,25 +457,77 @@ export function CareersPage() {
       expectedCtc: form.get("expectedCtc"),
       noticePeriod: form.get("noticePeriod"),
       resumeName: resume?.name || "",
+      resumeData,
       message: form.get("message"),
       status: "New",
       date: new Date().toISOString().slice(0, 10),
     };
-    const nextData = { ...data, applications: [application, ...data.applications] };
+    const nextData = { ...data, applications: [application, ...(data.applications || [])] };
     saveCmsData(nextData);
     setData(nextData);
-    setToast("Application submitted successfully.");
-    event.currentTarget.reset();
+    notifyAdminOfSubmission("career application", application);
+    setToast("Thank you for applying. Our recruitment team will review your profile and contact you if your experience matches a suitable opportunity.");
+    setSelectedJob(null);
+    formElement.reset();
   };
 
+  const submitResume = async (event) => {
+    event.preventDefault();
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
+    const resume = form.get("resume");
+    const resumeData = await readFileAsDataUrl(resume);
+    const now = new Date();
+    const application = {
+      id: createId("app"),
+      fullName: String(form.get("fullName") || "").trim(),
+      email: String(form.get("email") || "").trim(),
+      mobile: String(form.get("mobile") || "").trim(),
+      position: String(form.get("position") || "General Application").trim(),
+      experience: "",
+      currentCtc: "",
+      expectedCtc: "",
+      noticePeriod: "",
+      resumeName: resume?.name || "",
+      resumeData,
+      message: String(form.get("message") || "").trim(),
+      status: "New",
+      date: now.toISOString().slice(0, 10),
+      dateTime: now.toISOString(),
+    };
+    const latestData = getCmsData();
+    const nextData = {
+      ...latestData,
+      applications: [application, ...(latestData.applications || [])],
+    };
+    saveCmsData(nextData);
+    setData(nextData);
+    notifyAdminOfSubmission("resume submission", application);
+    formElement.reset();
+    setToast("Thank you for sharing your profile. Our recruitment team will review it and get in touch if a suitable opportunity becomes available.");
+  };
+
+  // Retained for the Admin-published job/application UI when it is enabled again.
+  void selectedJob;
+  void submitApplication;
+  void submitResume;
+
   return (
-    <div className="cms-public-page">
+    <div className="cms-public-page careers-page">
       <PublicHero
-        eyebrow="CAREERS"
         title="Join Primeserve"
         text="Build the future of digital compliance, enterprise APIs and business technology with us."
       />
-      {toast && <div className="cms-toast">{toast}</div>}
+      {toast && (
+        <div className="cms-success-backdrop" role="presentation">
+          <section className="cms-success-popup" role="alertdialog" aria-modal="true" aria-labelledby="career-success-title">
+            <div className="cms-success-check" aria-hidden="true">✓</div>
+            <h2 id="career-success-title">Successfully Submitted</h2>
+            <p>{toast}</p>
+            <button type="button" onClick={() => setToast("")}>Done</button>
+          </section>
+        </div>
+      )}
 
       <section className="careers-intro-band">
         <div>
@@ -458,7 +541,7 @@ export function CareersPage() {
             environment where your ideas are valued and your career can grow.
           </p>
         </div>
-        <a href="#open-positions">View Open Positions</a>
+        <a href="#career-roles">Explore Roles</a>
       </section>
 
       <section className="careers-section">
@@ -466,7 +549,7 @@ export function CareersPage() {
           <span>- WHY WORK WITH US -</span>
           <h2>A place to learn, contribute and grow.</h2>
         </div>
-        <div className="careers-feature-grid">
+        <div className="careers-feature-grid" ref={workFeatureRailRef}>
           {workFeatures.map((item, index) => (
             <article className="careers-feature-card" key={item.title}>
               <span>{String(index + 1).padStart(2, "0")}</span>
@@ -477,47 +560,35 @@ export function CareersPage() {
         </div>
       </section>
 
-      <section className="careers-section" id="open-positions">
-        <div className="careers-section-heading">
-          <span>- CURRENT OPENINGS -</span>
-          <h2>Active vacancies published by HR.</h2>
-          <p>
-            Only roles marked Active in the Admin CMS are shown here.
-          </p>
-        </div>
-
-        {jobs.length > 0 ? (
-          <div className="career-openings-wrap">
-            {jobs.map((job) => (
-              <article className="career-opening-card" key={job.id}>
-                <div>
-                  <span>{job.department}</span>
-                  <h3>{job.title}</h3>
-                  <p>{job.description}</p>
-                </div>
-                <div className="cms-card-meta">
-                  <b>{job.experience}</b>
-                  <b>{job.location}</b>
-                  <b>{job.employmentType}</b>
-                </div>
-                <button type="button" onClick={() => setSelectedJob(job)}>
-                  Apply Now
-                </button>
+      {hiringUpdates.length > 0 && (
+        <section className="careers-section careers-hiring-updates" aria-labelledby="hiring-updates-title">
+          <div className="careers-section-heading">
+            <h2 id="hiring-updates-title">Hiring Updates</h2>
+            <p>Latest recruitment announcements published by the Primeserve team.</p>
+          </div>
+          <div className="careers-hiring-updates-grid">
+            {hiringUpdates.map((item) => (
+              <article key={item.id}>
+                <time dateTime={item.date}>{item.date || "Latest update"}</time>
+                <h3>{item.title}</h3>
+                {item.description && <p>{item.description}</p>}
+                <a href="#career-roles">Explore Roles</a>
               </article>
             ))}
           </div>
-        ) : (
-          <article className="careers-empty-card">
-            <span>No Current Openings</span>
-            <h3>Did not find a suitable role?</h3>
-            <p>
-              We are always looking for passionate and talented individuals. If
-              you do not see a suitable opening, send your resume and we will
-              contact you when a relevant opportunity becomes available.
-            </p>
-            <a href={`mailto:${careersEmail}`}>{careersEmail}</a>
-          </article>
-        )}
+        </section>
+      )}
+
+      <section className="careers-section" id="career-roles">
+        <article className="careers-empty-card">
+          <h3>Did not find a suitable role?</h3>
+          <p>
+            We are always looking for passionate and talented individuals. Send
+            your resume and we will contact you when a relevant opportunity
+            becomes available.
+          </p>
+          <a href={`mailto:${careersEmail}`}>{careersEmail}</a>
+        </article>
       </section>
 
       <section className="careers-section careers-two-column">
@@ -548,61 +619,6 @@ export function CareersPage() {
         </div>
       </section>
 
-      <section className="careers-resume-card">
-        <div>
-          <span>SUBMIT RESUME</span>
-          <h2>Stay connected for future roles.</h2>
-          <p>
-            Share your profile with Primeserve. This request is sent to the
-            careers email configured in Admin CMS.
-          </p>
-        </div>
-        <form
-          className="careers-resume-form"
-          action={`mailto:${careersEmail}`}
-          method="post"
-          encType="text/plain"
-        >
-          <input name="Full Name" placeholder="Full Name" required />
-          <input name="Email" type="email" placeholder="Email" required />
-          <input name="Mobile" placeholder="Mobile" />
-          <input name="Preferred Role" placeholder="Preferred Role" />
-          <input name="Resume" type="file" accept=".pdf,.doc,.docx" />
-          <textarea name="Message" placeholder="Short message" rows="4" />
-          <button type="submit">Submit Your Resume</button>
-        </form>
-      </section>
-
-      {selectedJob && (
-        <div className="cms-apply-overlay" onClick={() => setSelectedJob(null)}>
-          <div className="cms-apply-modal" onClick={(event) => event.stopPropagation()}>
-            <button className="cms-close" type="button" onClick={() => setSelectedJob(null)}>
-              x
-            </button>
-            <h2>{selectedJob.title}</h2>
-            <p>{selectedJob.description}</p>
-            <div className="cms-job-detail">
-              <strong>Responsibilities</strong>
-              <p>{selectedJob.responsibilities}</p>
-              <strong>Required Skills</strong>
-              <p>{selectedJob.skills}</p>
-            </div>
-            <form onSubmit={submitApplication}>
-              <input name="fullName" placeholder="Full Name" required />
-              <input name="email" type="email" placeholder="Email" required />
-              <input name="mobile" placeholder="Mobile" required />
-              <input name="position" value={selectedJob.title} readOnly />
-              <input name="experience" placeholder="Experience" required />
-              <input name="currentCtc" placeholder="Current CTC" />
-              <input name="expectedCtc" placeholder="Expected CTC" />
-              <input name="noticePeriod" placeholder="Notice Period" />
-              <input name="resume" type="file" accept=".pdf,.doc,.docx" />
-              <textarea name="message" placeholder="Message" rows="4" />
-              <button type="submit">Submit Application</button>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -778,7 +794,7 @@ export function FaqPage() {
 
   return (
     <div className="cms-public-page">
-      <PublicHero eyebrow="FAQS" title="Answers for Primeserve services." text="Search common questions about APIs, GST, DSC, ASP-GSP, onboarding and support." />
+      <PublicHero eyebrow="FAQS" title="Answers for Primeserve services." text="Search common questions about APIs, GST, DSC, ASP-GSP Solutions, onboarding and support." />
       <section className="knowledge-section">
         <div className="knowledge-filters">
           <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search FAQs by keyword" />
@@ -957,6 +973,7 @@ export function ResourcesPage() {
     };
     const cms = getCmsData();
     saveCmsData({ ...cms, leads: [lead, ...(cms.leads || [])] });
+    notifyAdminOfSubmission("resource enquiry", lead);
     setUnlocked({ ...unlocked, [item.id]: true });
   };
 
@@ -975,7 +992,7 @@ export function ResourcesPage() {
                 <input name="name" placeholder="Name" required />
                 <input name="company" placeholder="Company" />
                 <input name="email" type="email" placeholder="Email" required />
-                <input name="mobile" placeholder="Mobile" />
+                <input name="mobile" inputMode="numeric" maxLength="10" placeholder="Mobile" onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/\D/g, "").slice(0, 10); }} />
                 <button type="submit">Unlock Download</button>
               </form>
             ) : (
@@ -1012,7 +1029,7 @@ export function HsnSacFinderPage() {
 
   return (
     <div className="cms-public-page">
-      <PublicHero compact eyebrow="TOOLS" title="HSN/SAC Code Finder" text="Enter an HSN or SAC code and click Search to view GST rate and classification details." />
+      <PublicHero compact title="HSN/SAC Code Finder" text="Enter an HSN or SAC code and click Search to view GST rate and classification details." />
       <section className="hsn-tool-panel tools-search-panel">
         {!isEnabled ? (
           <div className="tool-disabled-card">
@@ -1089,7 +1106,7 @@ function getBase64Candidate(payload) {
   return "";
 }
 
-function decodePrimeServeResponse(rawPayload) {
+function decodePrimeserveResponse(rawPayload) {
   let payload = rawPayload;
   if (typeof rawPayload === "string") {
     try {
@@ -1200,7 +1217,7 @@ async function fetchGstinViaProxy({ endpoint }) {
     throw new Error("GSTIN server endpoint is not active. Please restart the local server and save the API key again from Admin > Website Settings.");
   }
 
-  const decoded = normalizeGstinPayload(decodePrimeServeResponse(rawText));
+  const decoded = normalizeGstinPayload(decodePrimeserveResponse(rawText));
   if (decoded?.error || decoded?.message === "API key required") {
     throw new Error(decoded.error || decoded.message);
   }
@@ -1299,7 +1316,7 @@ export function GstinValidatorPage() {
 
   return (
     <div className="cms-public-page">
-      <PublicHero compact eyebrow="TOOLS" title="GSTIN Validator" text="Enter a GSTIN and click Search to validate taxpayer details through Primeserve API." />
+      <PublicHero compact title="GSTIN Validator" text="Enter a GSTIN and click Search to validate taxpayer details through Primeserve API." />
       <section className="hsn-tool-panel tools-search-panel">
         {!isEnabled ? (
           <div className="tool-disabled-card">
@@ -1383,7 +1400,7 @@ export function GstinSearchPage() {
 
   return (
     <div className="cms-public-page">
-      <PublicHero compact eyebrow="GST PUBLIC SEARCH" title="GSTIN Search" text="Enter a GSTIN and click Search to view live taxpayer details through Primeserve GST Public API." />
+      <PublicHero compact title="GSTIN Search" text="Enter a GSTIN and click Search to view live taxpayer details through Primeserve GST Public API." />
       <section className="hsn-tool-panel tools-search-panel gstin-search-hidden-page">
         <form className="tool-search-card" onSubmit={handleSearch}>
           <label htmlFor="gstin-search-input">Enter GSTIN</label>

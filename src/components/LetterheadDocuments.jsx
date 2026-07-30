@@ -17,7 +17,7 @@ const starterContent = "<p>Dear Sir/Madam,</p><p>Write or paste your official le
 function getSavedDocuments() {
   try {
     const stored = localStorage.getItem(STORAGE_KEY) || "[]";
-    const migrated = stored.replaceAll("PrimeServe", "Primeserve");
+    const migrated = stored.replaceAll("Primeserve", "Primeserve");
     if (migrated !== stored) localStorage.setItem(STORAGE_KEY, migrated);
     const next = JSON.parse(migrated);
     return Array.isArray(next) ? next : [];

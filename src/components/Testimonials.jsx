@@ -16,46 +16,49 @@ function Testimonials() {
     .filter((item) => item.status === "Active")
     .slice(0, 8);
 
-  if (testimonials.length === 0) return null;
-
   const displayTestimonials =
     testimonials.length > 1 ? [...testimonials, ...testimonials] : testimonials;
 
   return (
-    <section className="home-testimonials-section" aria-label="Client testimonials">
-      <div className="section-heading">
-        <span>- CLIENT TESTIMONIALS -</span>
-        <h2>Trusted by growing businesses.</h2>
-        <p>
-          Feedback published from the Primeserve Admin CMS appears here
-          automatically.
-        </p>
-      </div>
+    <section className="home-testimonials-section home-testimonials-without-heading">
+      <div className="home-blue-divider" aria-hidden="true" />
 
-      <div className="testimonial-carousel-shell">
-        <div className={`testimonial-track ${testimonials.length > 1 ? "is-sliding" : ""}`}>
-          {displayTestimonials.map((item, index) => (
-            <article className="testimonial-card" key={`${item.id}-${index}`}>
-              <div className="testimonial-profile">
-                {item.photo ? (
-                  <img src={item.photo} alt={item.clientName} />
-                ) : (
-                  <span>{getInitials(item.clientName) || "PS"}</span>
-                )}
-                <div>
-                  <h3>{item.clientName}</h3>
-                  <p>{item.designation}</p>
-                </div>
-              </div>
-              <blockquote>{item.testimonial}</blockquote>
-              <div className="testimonial-meta">
-                <strong>{item.companyName}</strong>
-                {item.rating && <span>{item.rating}/5</span>}
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
+      {testimonials.length > 0 && (
+        <>
+          <div className="testimonial-heading">
+            <span>- CLIENT TESTIMONIALS -</span>
+            <h2>Trusted by growing businesses.</h2>
+          </div>
+          <div className="testimonial-carousel-shell">
+            <div
+              className={`testimonial-track ${
+                testimonials.length > 1 ? "is-sliding" : ""
+              }`}
+            >
+              {displayTestimonials.map((item, index) => (
+                <article className="testimonial-card" key={`${item.id}-${index}`}>
+                  <div className="testimonial-profile">
+                    {item.photo ? (
+                      <img src={item.photo} alt={item.clientName} />
+                    ) : (
+                      <span>{getInitials(item.clientName) || "PS"}</span>
+                    )}
+                    <div>
+                      <h3>{item.clientName}</h3>
+                      <p>{item.designation}</p>
+                    </div>
+                  </div>
+                  <blockquote>{item.testimonial}</blockquote>
+                  <div className="testimonial-meta">
+                    <strong>{item.companyName}</strong>
+                    {item.rating && <span>{item.rating}/5</span>}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </section>
   );
 }
