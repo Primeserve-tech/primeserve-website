@@ -7,11 +7,14 @@
   }
 
   .hero .hero-inner {
+    align-items: start;
+    box-sizing: border-box;
     padding-left: clamp(12px, 1vw, 24px);
+    padding-top: clamp(28px, 3vw, 40px);
   }
 
   .hero .hero-copy {
-    transform: translateY(-72px);
+    transform: none;
   }
 
   .hero .hero-copy h1 {
@@ -90,10 +93,19 @@
     font-size: 15px;
     min-height: 36px;
   }
+
+  .home-solution-card {
+    height: 450px !important;
+    min-height: 450px !important;
+  }
 }
 
 @media (max-width: 1023px) {
   .hero-desktop-break {
     display: none;
   }
+}
+
+.home-update-track {
+  animation-duration: 140s !important;
 }
