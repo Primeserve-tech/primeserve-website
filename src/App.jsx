@@ -18,7 +18,7 @@ import ApplicationDevelopmentPage from "./components/ApplicationDevelopmentPage"
 import OfferingsPage from "./components/OfferingsPage";
 import CompanyPage from "./components/CompanyPage";
 import AboutUsPage from "./components/AboutUsPage";
-import WhyPrimeservePage from "./components/WhyPrimeservePage";
+import WhyPrimeservePage from "./components/WhyPrimeServePage";
 import ClientsPage from "./components/ClientsPage";
 import AdminDashboard from "./components/AdminDashboard";
 import {
