@@ -1,4 +1,4 @@
-import { servicePortfolio } from "./data/servicePortfolio";
+import { servicePortfolio } from "./data/servicePortfolio.js";
 
 const SESSION_KEY = "primeserve_admin_session_v1";
 
