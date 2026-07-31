@@ -20,12 +20,32 @@ function sendJson(response, status, payload, extraHeaders = {}) {
 function readBody(request, maxBytes = 12 * 1024 * 1024) {
   return new Promise((resolve, reject) => {
     let body = "";
+    let settled = false;
     request.on("data", (chunk) => {
+      if (settled) return;
       body += chunk;
-      if (body.length > maxBytes) reject(new Error("Request body too large"));
+      if (body.length > maxBytes) {
+        settled = true;
+        reject(new Error("Request body too large"));
+      }
     });
-    request.on("end", () => resolve(body ? JSON.parse(body) : {}));
-    request.on("error", reject);
+    request.on("end", () => {
+      if (settled) return;
+      try {
+        settled = true;
+        resolve(body ? JSON.parse(body) : {});
+      } catch {
+        settled = true;
+        const error = new Error("Invalid JSON request body");
+        error.statusCode = 400;
+        reject(error);
+      }
+    });
+    request.on("error", (error) => {
+      if (settled) return;
+      settled = true;
+      reject(error);
+    });
   });
 }
 
@@ -127,6 +147,6 @@ export async function handleCmsApi(request, response, pathname) {
     }
     return sendJson(response, 405, { message: "Method not allowed." });
   } catch (error) {
-    return sendJson(response, 500, { message: error.message || "CMS database request failed." });
+    return sendJson(response, error.statusCode || 500, { message: error.message || "CMS database request failed." });
   }
 }
