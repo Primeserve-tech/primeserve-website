@@ -1,6 +1,5 @@
-import { servicePortfolio } from "./data/servicePortfolio";
+import { servicePortfolio } from "./data/servicePortfolio.js";
 
-const STORAGE_KEY = "primeserve_cms_data_v1";
 const SESSION_KEY = "primeserve_admin_session_v1";
 
 const today = "2026-07-07";
@@ -158,55 +157,14 @@ export const defaultCmsData = {
     },
   ],
   leads: [],
-  news: [
-    {
-      id: "news-1",
-      title: "Primeserve expands enterprise API catalogue",
-      shortDescription: "New verification, GST and compliance APIs added for growing enterprises.",
-      fullDescription: "Primeserve continues to expand its enterprise API catalogue with secure and scalable APIs for verification, GST, compliance and automation workflows.",
-      image: "",
-      date: today,
-      status: "Published",
-      showOnHomepage: "Yes",
-    },
-  ],
-  apiUpdates: [
-    {
-      id: "update-1",
-      productName: "GST Taxpayer API",
-      updateType: "Enhancement",
-      description: "Improved response handling and faster validation performance.",
-      releaseDate: today,
-      status: "Published",
-      showOnHomepage: "Yes",
-    },
-    {
-      id: "update-2",
-      productName: "e-Invoice API",
-      updateType: "New Launch",
-      description: "New automation support for enterprise invoice generation workflows.",
-      releaseDate: today,
-      status: "Published",
-      showOnHomepage: "Yes",
-    },
-  ],
+  news: [],
+  apiUpdates: [],
   clients: [
     { id: "client-1", name: "Alankit Limited", logo: "", industry: "Compliance Services", status: "Active", sortOrder: "1" },
     { id: "client-2", name: "Axis Bank", logo: "", industry: "Banking", status: "Active", sortOrder: "2" },
     { id: "client-3", name: "Bharti Airtel Payments Bank", logo: "", industry: "Payments", status: "Active", sortOrder: "3" },
   ],
-  testimonials: [
-    {
-      id: "testimonial-1",
-      clientName: "Enterprise Client",
-      companyName: "Primeserve Customer",
-      designation: "Operations Head",
-      photo: "",
-      testimonial: "Primeserve helped us automate compliance workflows with reliable support.",
-      rating: "5",
-      status: "Active",
-    },
-  ],
+  testimonials: [],
   supportTeam: [],
   newsletterSubscribers: [],
   updatesHub: [
@@ -283,70 +241,39 @@ export const defaultCmsData = {
   ],
 };
 
+let cmsDataCache = defaultCmsData;
+
 export function getCmsData() {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (!stored) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultCmsData));
-    return defaultCmsData;
-  }
-  try {
-    const storedData = JSON.parse(stored);
-    const settings = {
-      ...defaultCmsData.settings,
-      ...(storedData.settings || {}),
-    };
-    let mergedData = {
-      ...defaultCmsData,
-      ...storedData,
-      adminUsers: storedData.adminUsers || defaultCmsData.adminUsers,
-      settings,
-    };
-
-    if (!settings.primeserveNameCasingMigrated) {
-      mergedData = JSON.parse(JSON.stringify(mergedData).replaceAll("Primeserve", "Primeserve"));
-      mergedData.settings = { ...mergedData.settings, primeserveNameCasingMigrated: "true" };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedData));
-    }
-
-    const now = Date.now();
-    mergedData.supportTeam = (mergedData.supportTeam || []).filter((member) => {
-      if (member.status === "Inactive") return true;
-      const createdAt = member.createdAt ? new Date(member.createdAt).getTime() : now;
-      return now - createdAt < 24 * 60 * 60 * 1000;
-    });
-
-    if (!settings.careersSeedMigrated) {
-      mergedData.jobs = (mergedData.jobs || []).map((job) =>
-        ["job-1", "job-2"].includes(job.id) ? { ...job, status: "Inactive" } : job
-      );
-      mergedData.settings = { ...mergedData.settings, careersSeedMigrated: "true" };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedData));
-    }
-
-    if (!mergedData.settings.servicePortfolioSevenMigrated) {
-      const existingServices = (mergedData.services || []).filter(
-        (service) => service.title !== "Manpower Services",
-      );
-      const existingTitles = new Set(existingServices.map((service) => service.title));
-      const missingServices = defaultCmsData.services.filter((service) => !existingTitles.has(service.title));
-      mergedData.services = [...existingServices, ...missingServices];
-      mergedData.settings = { ...mergedData.settings, servicePortfolioSevenMigrated: "true" };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedData));
-    }
-
-    return mergedData;
-  } catch {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultCmsData));
-    return defaultCmsData;
-  }
+  return cmsDataCache;
 }
 
-export function saveCmsData(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+export async function loadCmsData() {
+  const response = await fetch("/api/cms", { credentials: "same-origin", cache: "no-store" });
+  if (!response.ok) throw new Error("Unable to load shared CMS data.");
+  const payload = await response.json();
+  cmsDataCache = { ...(payload.data || {}), settings: { ...defaultCmsData.settings, ...(payload.data?.settings || {}) } };
+  if (payload.session) {
+    localStorage.setItem(SESSION_KEY, JSON.stringify(payload.session));
+  } else {
+    localStorage.removeItem(SESSION_KEY);
+  }
+  return cmsDataCache;
 }
 
-export function resetCmsData() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultCmsData));
+export async function saveCmsData(data) {
+  const response = await fetch("/api/cms", {
+    method: "PUT",
+    credentials: "same-origin",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ data }),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => ({}))).message || "Unable to save shared CMS data.");
+  cmsDataCache = data;
+  return data;
+}
+
+export async function resetCmsData() {
+  return saveCmsData(defaultCmsData);
 }
 
 export function getSession() {
@@ -354,27 +281,23 @@ export function getSession() {
   return stored ? JSON.parse(stored) : null;
 }
 
-export function loginAdmin(email, password) {
-  const users = getCmsData().adminUsers || defaultAdminUsers;
-  const user = users.find(
-    (item) =>
-      item.status === "Active" &&
-      item.email.toLowerCase() === email.toLowerCase() &&
-      item.password === password
-  );
-  if (!user) return null;
-  const session = {
-    email: user.email,
-    name: user.name,
-    role: user.role,
-    letterheadAccess: user.role === "Super Admin" ? "Yes" : user.letterheadAccess || "No",
-  };
-  localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-  return session;
+export async function loginAdmin(email, password) {
+  const response = await fetch("/api/cms/login", {
+    method: "POST",
+    credentials: "same-origin",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!response.ok) return null;
+  const payload = await response.json();
+  cmsDataCache = payload.data || defaultCmsData;
+  localStorage.setItem(SESSION_KEY, JSON.stringify(payload.session));
+  return payload.session;
 }
 
 export function logoutAdmin() {
   localStorage.removeItem(SESSION_KEY);
+  fetch("/api/cms/logout", { method: "POST", credentials: "same-origin" }).catch(() => {});
 }
 
 export function createId(prefix) {

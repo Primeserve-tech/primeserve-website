@@ -216,10 +216,10 @@ function AdminLogin({ onLogin }) {
   const [resetMessage, setResetMessage] = useState("");
   const [resetBusy, setResetBusy] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    const session = loginAdmin(form.get("email"), form.get("password"));
+    const session = await loginAdmin(form.get("email"), form.get("password"));
     if (!session) {
       setError("Invalid admin email or password.");
       return;
@@ -408,8 +408,8 @@ function AdminDashboard() {
 
   if (!session) return <AdminLogin onLogin={setSession} />;
 
-  const updateData = (nextData, message) => {
-    saveCmsData(nextData);
+  const updateData = async (nextData, message) => {
+    await saveCmsData(nextData);
     setData(nextData);
     setToast(message);
     setTimeout(() => setToast(""), 2200);
@@ -782,9 +782,9 @@ function AdminDashboard() {
             <span>Primeserve CMS</span>
             <h1>{activeModule === "dashboard" ? "Dashboard Home" : activeModule === "letterhead" ? "Letterhead Documents" : activeModule === "settings" ? "Website Settings" : moduleConfig[activeModule]?.label}</h1>
           </div>
-          <button onClick={() => {
-            resetCmsData();
-            setData(getCmsData());
+          <button onClick={async () => {
+            const restoredData = await resetCmsData();
+            setData(restoredData);
             setToast("Seed data restored.");
           }}>
             Restore Seed Data

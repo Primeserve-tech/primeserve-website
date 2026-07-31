@@ -19,12 +19,13 @@ function Testimonials() {
   const displayTestimonials =
     testimonials.length > 1 ? [...testimonials, ...testimonials] : testimonials;
 
+  if (testimonials.length === 0) return null;
+
   return (
     <section className="home-testimonials-section home-testimonials-without-heading">
       <div className="home-blue-divider" aria-hidden="true" />
 
-      {testimonials.length > 0 && (
-        <>
+      <>
           <div className="testimonial-heading">
             <span>- CLIENT TESTIMONIALS -</span>
             <h2>Trusted by growing businesses.</h2>
@@ -57,8 +58,7 @@ function Testimonials() {
               ))}
             </div>
           </div>
-        </>
-      )}
+      </>
     </section>
   );
 }

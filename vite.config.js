@@ -3,6 +3,7 @@ import path from 'node:path'
 import process from 'node:process'
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
+import { handleCmsApi } from './server/cmsDatabase.js'
 
 const secretsDir = path.resolve(process.cwd(), '.primeserve-secrets')
 const gstinKeyFile = path.join(secretsDir, 'gstin-key.json')
@@ -204,6 +205,10 @@ export default defineConfig(({ mode }) => {
       {
         name: 'primeserve-local-gstin-secret',
         configureServer(server) {
+          server.middlewares.use('/api/cms', async (req, res) => {
+            const pathname = new URL(req.url || '/', 'http://localhost/api/cms').pathname === '/' ? '/api/cms' : `/api/cms${new URL(req.url || '/', 'http://localhost/api/cms').pathname}`
+            await handleCmsApi(req, res, pathname)
+          })
           server.middlewares.use('/api/gstin-validator.php', async (req, res) => {
             await handleLocalGstinLookup(req, res, env)
           })
