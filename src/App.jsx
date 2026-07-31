@@ -40,6 +40,7 @@ import Footer from "./components/CompactFooter";
 import "./App.css";
 import "./home-hero-final.css";
 import "./final-site-refinements.css";
+import { loadCmsData } from "./cmsStore";
 
 function App() {
   const getInitialPage = () => {
@@ -87,6 +88,13 @@ function App() {
   };
 
   const [page, setPage] = useState(getInitialPage);
+  const [cmsReady, setCmsReady] = useState(false);
+
+  useEffect(() => {
+    loadCmsData()
+      .catch((error) => console.error(error))
+      .finally(() => setCmsReady(true));
+  }, []);
 
   useEffect(() => {
     const handlePopState = () => setPage(getInitialPage());
@@ -136,6 +144,8 @@ function App() {
     window.history.pushState({}, "", path);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  if (!cmsReady) return <div className="cms-loading-screen">Loading Primeserve…</div>;
 
   return (
     <>

@@ -95,8 +95,8 @@
   }
 
   .home-solution-card {
-    height: 450px !important;
-    min-height: 450px !important;
+    height: 320px !important;
+    min-height: 320px !important;
   }
 }
 

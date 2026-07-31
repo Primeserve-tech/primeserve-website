@@ -4,6 +4,7 @@ import { extname, join, normalize, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import process from "node:process";
 import { Buffer } from "node:buffer";
+import { handleCmsApi } from "./server/cmsDatabase.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const distDir = resolve(__dirname, "dist");
@@ -369,6 +370,11 @@ function serveStatic(requestUrl, response) {
 
 createServer(async (request, response) => {
   const requestUrl = new URL(request.url || "/", `http://${request.headers.host || "localhost"}`);
+
+  if (requestUrl.pathname.startsWith("/api/cms")) {
+    await handleCmsApi(request, response, requestUrl.pathname);
+    return;
+  }
 
   if (requestUrl.pathname === "/api/gstin-validator.php" || requestUrl.pathname === "/api/gstin-search.php") {
     await handleGstinLookup(requestUrl, response);
