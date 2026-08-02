@@ -104,9 +104,22 @@ export default function AspGspPage() {
         </div>
         <div className="asp-gsp-hero-visual">
           <img
-            src={multiGstinDashboard}
-            alt="Multi-GSTIN management dashboard in ASP-GSP Solutions"
+            key={showcaseSlides[activeShowcase].src}
+            src={showcaseSlides[activeShowcase].src}
+            alt={`${showcaseSlides[activeShowcase].title} dashboard in ASP-GSP Solutions`}
           />
+          <div className="asp-hero-dashboard-dots" aria-label="ASP-GSP hero dashboard views">
+            {showcaseSlides.map((slide, index) => (
+              <button
+                type="button"
+                key={slide.title}
+                className={index === activeShowcase ? "is-active" : ""}
+                onClick={() => setActiveShowcase(index)}
+                aria-label={`Show ${slide.title} dashboard`}
+                aria-pressed={index === activeShowcase}
+              />
+            ))}
+          </div>
         </div>
       </section>
 

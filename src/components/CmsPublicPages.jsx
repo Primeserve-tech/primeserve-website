@@ -507,10 +507,11 @@ export function CareersPage() {
     setToast("Thank you for sharing your profile. Our recruitment team will review it and get in touch if a suitable opportunity becomes available.");
   };
 
-  // Retained for the Admin-published job/application UI when it is enabled again.
-  void selectedJob;
-  void submitApplication;
-  void submitResume;
+  const askAboutRole = (job) => {
+    window.dispatchEvent(new CustomEvent("primeserve:open-contact", {
+      detail: { service: `Careers - ${job.title}` },
+    }));
+  };
 
   return (
     <div className="cms-public-page careers-page">
@@ -572,7 +573,10 @@ export function CareersPage() {
                 <time dateTime={item.date}>{item.date || "Latest update"}</time>
                 <h3>{item.title}</h3>
                 {item.description && <p>{item.description}</p>}
-                <a href="#career-roles">Explore Roles</a>
+                <div className="career-role-actions">
+                  <button type="button" onClick={() => askAboutRole(item)}>Ask About This Role</button>
+                  <button type="button" onClick={() => setSelectedJob(item)}>Apply / Submit Resume</button>
+                </div>
               </article>
             ))}
           </div>
@@ -589,6 +593,23 @@ export function CareersPage() {
           </p>
           <a href={`mailto:${careersEmail}`}>{careersEmail}</a>
         </article>
+      </section>
+
+      <section className="careers-resume-card" id="submit-resume">
+        <div>
+          <span>GENERAL APPLICATION</span>
+          <h2>Ask about roles or submit your resume.</h2>
+          <p>Share your profile for current and future opportunities published by Primeserve.</p>
+        </div>
+        <form className="careers-resume-form" onSubmit={submitResume}>
+          <input name="fullName" placeholder="Full name" required />
+          <input name="email" type="email" placeholder="Email address" required />
+          <input name="mobile" type="tel" placeholder="Mobile number" required />
+          <input name="position" placeholder="Role interested in" defaultValue="General Application" required />
+          <input name="resume" type="file" accept=".pdf,.doc,.docx" required />
+          <textarea name="message" rows="4" placeholder="Tell us about your experience or ask about a role" />
+          <button type="submit">Submit Resume</button>
+        </form>
       </section>
 
       <section className="careers-section careers-two-column">
@@ -618,6 +639,29 @@ export function CareersPage() {
           </div>
         </div>
       </section>
+
+      {selectedJob && (
+        <div className="career-application-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedJob(null); }}>
+          <section className="career-application-modal" role="dialog" aria-modal="true" aria-labelledby="career-application-title">
+            <button className="career-application-close" type="button" onClick={() => setSelectedJob(null)} aria-label="Close application form">×</button>
+            <span>APPLY FOR ROLE</span>
+            <h2 id="career-application-title">{selectedJob.title}</h2>
+            <form className="careers-resume-form" onSubmit={submitApplication}>
+              <input name="fullName" placeholder="Full name" required />
+              <input name="email" type="email" placeholder="Email address" required />
+              <input name="mobile" type="tel" placeholder="Mobile number" required />
+              <input name="position" value={selectedJob.title} readOnly />
+              <input name="experience" placeholder="Experience" />
+              <input name="currentCtc" placeholder="Current CTC" />
+              <input name="expectedCtc" placeholder="Expected CTC" />
+              <input name="noticePeriod" placeholder="Notice period" />
+              <input name="resume" type="file" accept=".pdf,.doc,.docx" required />
+              <textarea name="message" rows="4" placeholder="Message" />
+              <button type="submit">Apply and Submit Resume</button>
+            </form>
+          </section>
+        </div>
+      )}
 
     </div>
   );

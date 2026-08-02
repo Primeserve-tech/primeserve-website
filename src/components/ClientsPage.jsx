@@ -1,11 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import logo from "../assets/primeserve-logo-clean.png";
 import alankitLogo from "../assets/client-logos/alankit.png";
-import acsLogo from "../assets/client-logos/acs-infotech.png";
 import cuttackLogo from "../assets/client-logos/cuttack-bulk-carrier.png";
-import mcrtLogo from "../assets/client-logos/mcrt-software.png";
-import viaszLogo from "../assets/client-logos/viasz-infotech.png";
-import rjSoniLogo from "../assets/client-logos/rj-soni-associates.png";
 import prathamLogo from "../assets/client-logos/pratham-group.png";
 import vegasLogo from "../assets/client-logos/vegas-mall.png";
 import axisLogo from "../assets/client-logos/axis-bank.png";
@@ -98,11 +94,7 @@ function ClientsPage() {
 
   const clients = [
     { name: "Alankit Limited", logo: alankitLogo, sector: "Enterprise compliance and digital services" },
-    { name: "ACS Infotech", logo: acsLogo, sector: "Technology and software services" },
     { name: "Cuttack Bulk Carrier Pvt. Ltd.", logo: cuttackLogo, sector: "Logistics and transport operations" },
-    { name: "MCRT Software India Pvt. Ltd.", logo: mcrtLogo, sector: "Smart business software solutions" },
-    { name: "Viasz Infotech (India) Pvt. Ltd.", logo: viaszLogo, sector: "IT services and digital solutions" },
-    { name: "R.J. Soni & Associates", logo: rjSoniLogo, sector: "Chartered accountants and advisory" },
     { name: "Pratham Group", logo: prathamLogo, sector: "Enterprise and business group" },
     { name: "Vegas Mall", logo: vegasLogo, sector: "Retail and commercial operations" },
     { name: "Axis Bank", logo: axisLogo, sector: "Banking and financial services" },

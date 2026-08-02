@@ -24,6 +24,23 @@ function Navbar({ activePage, onNavigate }) {
     window.addEventListener("primeserve:open-navigation-menu", openRequestedMenu);
     return () => window.removeEventListener("primeserve:open-navigation-menu", openRequestedMenu);
   }, []);
+
+  useEffect(() => {
+    if (!mobileOpen) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") {
+        setMobileOpen(false);
+        setOpenMenu(null);
+      }
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [mobileOpen]);
   const settings = getCmsData().settings || {};
   const links = [
     { label: "Home", page: "home", activeWhen: "home" },

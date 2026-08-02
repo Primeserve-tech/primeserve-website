@@ -1,10 +1,5 @@
-import apiHeroOriginal from "../assets/api-page-hero.png";
-import apiHeroV2 from "../assets/api-page-hero-v2.png";
 import Stats from "./Stats";
-
-// Change to false to restore the original API hero.
-const USE_API_HERO_V2 = true;
-const apiHero = USE_API_HERO_V2 ? apiHeroV2 : apiHeroOriginal;
+import apiEcosystemHero from "../assets/api-ecosystem-hero-4k.png";
 
 function ApiPage() {
   const trustItems = [
@@ -12,13 +7,6 @@ function ApiPage() {
     { icon: "code", text: "Developer Friendly" },
     { icon: "time", text: "Real-time Data" },
     { icon: "uptime", text: "High Availability" },
-  ];
-
-  const heroServices = [
-    { icon: "gst", text: "GST APIs" },
-    { icon: "utility", text: "E-Invoice APIs" },
-    { icon: "finance", text: "Bank APIs" },
-    { icon: "business", text: "Company APIs" },
   ];
 
   const apiCards = [
@@ -42,7 +30,7 @@ function ApiPage() {
 
   return (
     <div className="api-page">
-      <section className="api-hero" style={{ "--page-hero-image": `url(${apiHero})` }}>
+      <section className="api-hero api-hero-with-ecosystem-image" style={{ "--api-ecosystem-image": `url(${apiEcosystemHero})` }}>
         <div className="api-hero-copy">
           <h1>
             Enterprise APIs for
@@ -77,16 +65,7 @@ function ApiPage() {
             ))}
           </div>
 
-          <div className="hero-logo-strip" aria-label="Primeserve API logos">
-            {heroServices.map((item) => (
-              <span className="hero-logo-chip" key={item.text}>
-                <i className={`api-card-icon ${item.icon}`} />
-                {item.text}
-              </span>
-            ))}
-          </div>
         </div>
-
       </section>
 
       <Stats />
