@@ -85,7 +85,7 @@ function createToken(session) {
   return `${payload}.${sign(payload)}`;
 }
 
-function sessionFromRequest(request) {
+export function sessionFromRequest(request) {
   if (!secret()) return null;
   const cookies = Object.fromEntries(String(request.headers.cookie || "").split(";").map((part) => part.trim().split("=")));
   const token = cookies[COOKIE_NAME];

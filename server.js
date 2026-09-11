@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import process from "node:process";
 import { Buffer } from "node:buffer";
 import { handleCmsApi } from "./server/cmsDatabase.js";
+import { handleHrmsApi } from "./server/hrmsDatabase.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const distDir = resolve(__dirname, "dist");
@@ -373,6 +374,11 @@ createServer(async (request, response) => {
 
   if (requestUrl.pathname.startsWith("/api/cms")) {
     await handleCmsApi(request, response, requestUrl.pathname);
+    return;
+  }
+
+  if (requestUrl.pathname.startsWith("/api/hrms")) {
+    await handleHrmsApi(request, response, requestUrl.pathname);
     return;
   }
 

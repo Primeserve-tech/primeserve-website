@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import logo from "../assets/primeserve-logo-clean.png";
 import LetterheadDocuments from "./LetterheadDocuments";
+import AdminHrms from "./AdminHrms";
 import {
   createId,
   getCmsData,
@@ -392,7 +393,7 @@ async function optimizeCmsStorage(value, key = "", maxSide = 900, quality = 0.68
 function AdminDashboard() {
   const [session, setSession] = useState(getSession);
   const [data, setData] = useState(getCmsData);
-  const [activeModule, setActiveModule] = useState("dashboard");
+  const [activeModule, setActiveModule] = useState(() => window.location.pathname.startsWith("/admin/hr") ? "hrms" : "dashboard");
   const [editing, setEditing] = useState(null);
   const [query, setQuery] = useState("");
   const [enquiryServiceFilter, setEnquiryServiceFilter] = useState("");
@@ -417,14 +418,14 @@ function AdminDashboard() {
 
   const summary = [
     ["Active Services", (data.services || []).filter((service) => service.status === "Active").length],
-    ["Total News Updates", data.news.length],
-    ["Active Jobs", data.jobs.filter((job) => job.status === "Active").length],
-    ["Total Applicants", data.applications.length],
+    ["Total News Updates", (data.news || []).length],
+    ["Active Jobs", (data.jobs || []).filter((job) => job.status === "Active").length],
+    ["Total Applicants", (data.applications || []).length],
     ["Announcements", (data.productAnnouncements || []).length],
     ["HSN/SAC Records", ((data.hsnSacRecords || []).length || 22537)],
     ["Total Leads", (data.leads || []).length],
-    ["Contact Enquiries", data.enquiries.filter((item) => item.type === "Contact Enquiry").length],
-    ["Demo Requests", data.enquiries.filter((item) => item.type === "Demo Request").length],
+    ["Contact Enquiries", (data.enquiries || []).filter((item) => item.type === "Contact Enquiry").length],
+    ["Demo Requests", (data.enquiries || []).filter((item) => item.type === "Demo Request").length],
   ];
 
   const openCreate = (moduleKey) => {
@@ -753,6 +754,11 @@ function AdminDashboard() {
         <p>{session.name}</p>
         <span>{session.role}</span>
         <button className={activeModule === "dashboard" ? "active" : ""} onClick={() => setActiveModule("dashboard")}>Dashboard</button>
+        {(session.role === "Super Admin" || session.role === "HR Admin") && (
+          <button className={activeModule === "hrms" ? "active admin-hrms-entry" : "admin-hrms-entry"} onClick={() => setActiveModule("hrms")}>
+            <span aria-hidden="true">HR</span> Employee &amp; HR Management
+          </button>
+        )}
         {(session.role === "Super Admin" || session.letterheadAccess === "Yes") && (
           <button className={activeModule === "letterhead" ? "active" : ""} onClick={() => setActiveModule("letterhead")}>Letterhead Documents</button>
         )}
@@ -780,7 +786,7 @@ function AdminDashboard() {
         <header className="admin-topbar">
           <div>
             <span>Primeserve CMS</span>
-            <h1>{activeModule === "dashboard" ? "Dashboard Home" : activeModule === "letterhead" ? "Letterhead Documents" : activeModule === "settings" ? "Website Settings" : moduleConfig[activeModule]?.label}</h1>
+            <h1>{activeModule === "dashboard" ? "Dashboard Home" : activeModule === "hrms" ? "Employee & HR Management" : activeModule === "letterhead" ? "Letterhead Documents" : activeModule === "settings" ? "Website Settings" : moduleConfig[activeModule]?.label}</h1>
           </div>
           <button onClick={async () => {
             const restoredData = await resetCmsData();
@@ -803,6 +809,8 @@ function AdminDashboard() {
             ))}
           </div>
         )}
+
+        {activeModule === "hrms" && (session.role === "Super Admin" || session.role === "HR Admin") && <AdminHrms onToast={setToast} />}
 
         {activeModule === "letterhead" && (session.role === "Super Admin" || session.letterheadAccess === "Yes") && <LetterheadDocuments session={session} />}
 

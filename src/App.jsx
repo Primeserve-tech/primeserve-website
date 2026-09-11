@@ -145,7 +145,13 @@ function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (!cmsReady) return <div className="cms-loading-screen">Loading Primeserve…</div>;
+  // Public pages can render immediately from the built-in CMS cache. The
+  // server response refreshes the same tree as soon as it arrives, avoiding
+  // a blocking loading screen on every visit. Admin still waits for the
+  // authoritative shared CMS data before it becomes interactive.
+  if (!cmsReady && page === "admin") {
+    return null;
+  }
 
   return (
     <>

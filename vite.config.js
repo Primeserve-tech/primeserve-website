@@ -4,6 +4,7 @@ import process from 'node:process'
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { handleCmsApi } from './server/cmsDatabase.js'
+import { handleHrmsApi } from './server/hrmsDatabase.js'
 
 const secretsDir = path.resolve(process.cwd(), '.primeserve-secrets')
 const gstinKeyFile = path.join(secretsDir, 'gstin-key.json')
@@ -208,6 +209,11 @@ export default defineConfig(({ mode }) => {
           server.middlewares.use('/api/cms', async (req, res) => {
             const pathname = new URL(req.url || '/', 'http://localhost/api/cms').pathname === '/' ? '/api/cms' : `/api/cms${new URL(req.url || '/', 'http://localhost/api/cms').pathname}`
             await handleCmsApi(req, res, pathname)
+          })
+          server.middlewares.use('/api/hrms', async (req, res) => {
+            const suffix = new URL(req.url || '/', 'http://localhost/api/hrms').pathname
+            const pathname = suffix === '/' ? '/api/hrms' : `/api/hrms${suffix}`
+            await handleHrmsApi(req, res, pathname)
           })
           server.middlewares.use('/api/gstin-validator.php', async (req, res) => {
             await handleLocalGstinLookup(req, res, env)
