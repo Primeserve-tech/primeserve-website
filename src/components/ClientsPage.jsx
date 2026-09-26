@@ -6,6 +6,9 @@ import prathamLogo from "../assets/client-logos/pratham-group.png";
 import vegasLogo from "../assets/client-logos/vegas-mall.png";
 import axisLogo from "../assets/client-logos/axis-bank.png";
 import airtelLogo from "../assets/client-logos/airtel-payments-bank.png";
+import denizLogo from "../assets/client-logos/deniz-logistics.png";
+import renutechLogo from "../assets/client-logos/renutech-solutions-hd.webp";
+import maxiconLogo from "../assets/client-logos/maxicon-hd.webp";
 
 function ClientsPage() {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -99,6 +102,9 @@ function ClientsPage() {
     { name: "Vegas Mall", logo: vegasLogo, sector: "Retail and commercial operations" },
     { name: "Axis Bank", logo: axisLogo, sector: "Banking and financial services" },
     { name: "Bharti Airtel Payments Bank", logo: airtelLogo, sector: "Digital banking and payments" },
+    { name: "Deniz", logo: denizLogo, sector: "Logistics and supply chain services" },
+    { name: "Ré NuTech Solutions Inc.", logo: renutechLogo, sector: "Technology and software solutions" },
+    { name: "Maxicon", logo: maxiconLogo, sector: "Business and enterprise services" },
   ];
 
   const industries = [

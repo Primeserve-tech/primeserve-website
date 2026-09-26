@@ -1,9 +1,9 @@
-import companyHeroOriginal from "../assets/company-page-hero.png";
-import companyHeroV2 from "../assets/company-page-hero-v2.png";
-import companyHeroV3 from "../assets/company-page-hero-v3.png";
-import companyHeroV4 from "../assets/company-page-hero-v4.png";
-import companyHeroV5 from "../assets/company-page-hero-v5.png";
-import companyHeroV6 from "../assets/company-page-hero-v6.png";
+import companyHeroOriginal from "../assets/company-page-hero.webp";
+import companyHeroV2 from "../assets/company-page-hero-v2.webp";
+import companyHeroV3 from "../assets/company-page-hero-v3.webp";
+import companyHeroV4 from "../assets/company-page-hero-v4.webp";
+import companyHeroV5 from "../assets/company-page-hero-v5.webp";
+import companyHeroV6 from "../assets/company-page-hero-v6.webp";
 
 // Change this value to an earlier version to restore a previous Company hero.
 const COMPANY_HERO_VERSION = "v6";

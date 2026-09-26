@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import OfferingServiceIcon from "./OfferingServiceIcon";
-import managedTaxHero from "../assets/managed-services-hero.png";
+import managedTaxHero from "../assets/managed-services-hero.webp";
 
 const taxServices = [
   ["Direct Tax Compliance", "Corporate tax, TDS/TCS, computation, return-filing coordination and documentation support.", ["Corporate tax support", "TDS/TCS compliance", "Tax computation support", "Return filing coordination", "Tax documentation support"]],

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import sapHero from "../assets/enterprise-solutions-hero.png";
+import sapHero from "../assets/enterprise-solutions-hero.webp";
 
 const benefits = [
   ["Business-Focused Approach", "Solutions aligned with operational and transformation objectives."],

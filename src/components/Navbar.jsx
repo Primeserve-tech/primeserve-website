@@ -19,7 +19,7 @@ function Navbar({ activePage, onNavigate }) {
       if (!["Our Offerings", "Company", "Tools"].includes(label)) return;
       setMobileOpen(window.innerWidth <= 960);
       setOpenMenu(label);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "auto" });
     };
     window.addEventListener("primeserve:open-navigation-menu", openRequestedMenu);
     return () => window.removeEventListener("primeserve:open-navigation-menu", openRequestedMenu);
@@ -116,7 +116,9 @@ function Navbar({ activePage, onNavigate }) {
             <div
               className={`nav-menu-item ${link.label === "Our Offerings" ? "offerings-menu" : ""}`}
               key={link.label}
-              onMouseLeave={() => setOpenMenu(null)}
+              onMouseLeave={() => {
+                if (window.innerWidth > 960) setOpenMenu(null);
+              }}
             >
               <button
                 className={
@@ -135,9 +137,14 @@ function Navbar({ activePage, onNavigate }) {
                 type="button"
                 aria-haspopup="menu"
                 aria-expanded={openMenu === link.label}
-                onMouseEnter={() => setOpenMenu(link.label)}
+                onMouseEnter={() => {
+                  if (window.innerWidth > 960) setOpenMenu(link.label);
+                }}
                 onClick={() => {
-                  setOpenMenu((currentMenu) => currentMenu === link.label ? null : link.label);
+                  const usesDesktopHover = window.innerWidth > 960 && window.matchMedia("(hover: hover)").matches;
+                  setOpenMenu((currentMenu) => usesDesktopHover
+                    ? link.label
+                    : currentMenu === link.label ? null : link.label);
                 }}
               >
                 {link.label}
@@ -146,8 +153,12 @@ function Navbar({ activePage, onNavigate }) {
               <div
                 className={`nav-dropdown ${link.label === "Our Offerings" ? "offerings-mega-menu" : ""} ${openMenu === link.label ? "menu-open" : ""}`}
                 aria-label={`${link.label} menu`}
-                onMouseEnter={() => setOpenMenu(link.label)}
-                onMouseLeave={() => setOpenMenu(null)}
+                onMouseEnter={() => {
+                  if (window.innerWidth > 960) setOpenMenu(link.label);
+                }}
+                onMouseLeave={() => {
+                  if (window.innerWidth > 960) setOpenMenu(null);
+                }}
               >
                 {(link.label === "Our Offerings" ? serviceDetails : link.label === "Company" ? companyDetails : toolDetails).map((item) => (
                   <button

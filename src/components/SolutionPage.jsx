@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import solutionHeroOriginal from "../assets/solution-page-hero.png";
-import solutionHeroV2 from "../assets/solution-page-hero-v2.png";
+import solutionHeroOriginal from "../assets/solution-page-hero.webp";
+import solutionHeroV2 from "../assets/solution-page-hero-v2.webp";
 import DSCIcon from "./DSCIcon";
 
 // Change this to false at any time to restore the original hero image.

@@ -788,7 +788,10 @@
 .hero {
   background:
     linear-gradient(90deg, rgba(0, 24, 59, 1) 0%, rgba(0, 24, 59, 0.94) 36%, rgba(0, 24, 59, 0.38) 64%, rgba(0, 24, 59, 0.04) 100%),
-    url("./assets/home-hero-bg.png") center center / cover no-repeat,
+    image-set(
+      url("./assets/home-hero-bg.webp") type("image/webp"),
+      url("./assets/home-hero-bg.png") type("image/png")
+    ) center center / cover no-repeat,
     #00183b;
   color: #ffffff;
   height: 400px;
@@ -1380,7 +1383,10 @@
   .hero {
     background:
       linear-gradient(180deg, rgba(0, 24, 59, 0.98) 0%, rgba(0, 24, 59, 0.88) 100%),
-      url("./assets/home-hero-bg.png") center top / cover no-repeat,
+      image-set(
+        url("./assets/home-hero-bg.webp") type("image/webp"),
+        url("./assets/home-hero-bg.png") type("image/png")
+      ) center top / cover no-repeat,
       #00183b;
     height: auto;
     min-height: 420px;

@@ -1,5 +1,5 @@
-import productHeroOriginal from "../assets/product-page-hero.png";
-import productHeroV2 from "../assets/product-page-hero-v2.png";
+import productHeroOriginal from "../assets/product-page-hero.webp";
+import productHeroV2 from "../assets/product-page-hero-v2.webp";
 import productCta from "../assets/product-cta.png";
 
 // Change to false to restore the original Product hero.

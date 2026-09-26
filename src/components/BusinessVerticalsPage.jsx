@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import businessHero from "../assets/business-verticals-hero.png";
-import technologyHero from "../assets/technology-apis-hero.png";
-import taxHero from "../assets/tax-compliance-hero.png";
-import enterpriseHero from "../assets/enterprise-solutions-hero.png";
-import managedHero from "../assets/managed-services-hero.png";
+import businessHero from "../assets/business-verticals-hero.webp";
+import technologyHero from "../assets/technology-apis-hero.webp";
+import taxHero from "../assets/tax-compliance-hero.webp";
+import enterpriseHero from "../assets/enterprise-solutions-hero.webp";
+import managedHero from "../assets/managed-services-hero.webp";
 import OfferingServiceIcon from "./OfferingServiceIcon";
 
 const businessVerticals = [

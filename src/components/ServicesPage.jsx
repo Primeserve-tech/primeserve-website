@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { createId, getCmsData, saveCmsData } from "../cmsStore";
 import { notifyAdminOfSubmission } from "../adminNotifications";
-import manpowerHero from "../assets/manpower-services-hero.png";
+import manpowerHero from "../assets/manpower-services-hero.webp";
 import { OtherVerticals } from "./BusinessVerticalsPage";
 
 function readFileAsDataUrl(file) {

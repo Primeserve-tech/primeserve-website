@@ -1,5 +1,5 @@
 import Stats from "./Stats";
-import apiEcosystemHero from "../assets/api-ecosystem-hero-4k.png";
+import apiEcosystemHero from "../assets/api-ecosystem-hero-4k.webp";
 
 function ApiPage() {
   const trustItems = [

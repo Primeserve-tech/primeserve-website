@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import applicationDevelopmentHero from "../assets/application-development-hero.png";
+import applicationDevelopmentHero from "../assets/application-development-hero.webp";
 
 const applicationServices = [
   {
