@@ -6,6 +6,7 @@ import process from "node:process";
 import { Buffer } from "node:buffer";
 import { handleCmsApi } from "./server/cmsDatabase.js";
 import { handleHrmsApi } from "./server/hrmsDatabase.js";
+import { defaultAdminUsers } from "./src/cmsStore.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const distDir = resolve(__dirname, "dist");
@@ -128,9 +129,10 @@ function getSuperAdminCredentials() {
       // Fall back to environment configuration.
     }
   }
+  const builtInSuperAdmin = defaultAdminUsers.find((user) => user.role === "Super Admin") || {};
   return {
-    email: String(process.env.PRIMESERVE_SUPER_ADMIN_EMAIL || "primeserve45@gmail.com").trim().toLowerCase(),
-    password: String(process.env.PRIMESERVE_SUPER_ADMIN_PASSWORD || ""),
+    email: String(process.env.PRIMESERVE_SUPER_ADMIN_EMAIL || builtInSuperAdmin.email || "").trim().toLowerCase(),
+    password: String(process.env.PRIMESERVE_SUPER_ADMIN_PASSWORD || builtInSuperAdmin.password || ""),
   };
 }
 
