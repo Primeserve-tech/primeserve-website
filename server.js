@@ -373,7 +373,9 @@ createServer(async (request, response) => {
   const requestUrl = new URL(request.url || "/", `http://${request.headers.host || "localhost"}`);
 
   if (requestUrl.pathname.startsWith("/api/cms")) {
-    await handleCmsApi(request, response, requestUrl.pathname);
+    await handleCmsApi(request, response, requestUrl.pathname, {
+      superAdminCredentials: getSuperAdminCredentials(),
+    });
     return;
   }
 

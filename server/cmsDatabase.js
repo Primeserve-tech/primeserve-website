@@ -108,14 +108,38 @@ function publicData(data) {
   return safe;
 }
 
-export async function handleCmsApi(request, response, pathname) {
+export async function handleCmsApi(request, response, pathname, options = {}) {
   try {
     if (pathname === "/api/cms/login") {
       if (request.method !== "POST") return sendJson(response, 405, { message: "Method not allowed." });
       if (!secret()) return sendJson(response, 503, { message: "CMS_SESSION_SECRET is not configured." });
       const body = await readBody(request);
       const data = await readCms();
-      const user = (data.adminUsers || []).find((item) => item.status === "Active" && item.email.toLowerCase() === String(body.email || "").toLowerCase() && item.password === body.password);
+      const submittedEmail = String(body.email || "").trim().toLowerCase();
+      const submittedPassword = String(body.password || "");
+      const configuredSuperAdminEmail = String(options.superAdminCredentials?.email || "").trim().toLowerCase();
+      const configuredSuperAdminPassword = String(options.superAdminCredentials?.password || "");
+      const configuredSuperAdminMatches = Boolean(
+        configuredSuperAdminEmail
+        && configuredSuperAdminPassword
+        && submittedEmail === configuredSuperAdminEmail
+        && submittedPassword === configuredSuperAdminPassword
+      );
+      const storedUser = (data.adminUsers || []).find((item) => (
+        item.status === "Active"
+        && String(item.email || "").trim().toLowerCase() === submittedEmail
+        && item.password === submittedPassword
+      ));
+      const user = configuredSuperAdminMatches
+        ? {
+            ...((data.adminUsers || []).find((item) => item.role === "Super Admin") || {}),
+            email: configuredSuperAdminEmail,
+            name: "Super Admin",
+            role: "Super Admin",
+            letterheadAccess: "Yes",
+            status: "Active",
+          }
+        : storedUser;
       if (!user) return sendJson(response, 401, { message: "Invalid admin email or password." });
       const session = { email: user.email, name: user.name, role: user.role, letterheadAccess: user.role === "Super Admin" ? "Yes" : user.letterheadAccess || "No" };
       const cookie = `${COOKIE_NAME}=${createToken(session)}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${SESSION_MAX_AGE}${process.env.NODE_ENV === "production" ? "; Secure" : ""}`;
