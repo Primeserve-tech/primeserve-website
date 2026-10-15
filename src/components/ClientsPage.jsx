@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import logo from "../assets/primeserve-logo-clean.png";
-import alankitLogo from "../assets/client-logos/alankit.png";
 import cuttackLogo from "../assets/client-logos/cuttack-bulk-carrier.png";
 import prathamLogo from "../assets/client-logos/pratham-group.png";
 import vegasLogo from "../assets/client-logos/vegas-mall.png";
@@ -96,7 +95,6 @@ function ClientsPage() {
   }, [reduceMotion]);
 
   const clients = [
-    { name: "Alankit Limited", logo: alankitLogo, sector: "Enterprise compliance and digital services" },
     { name: "Cuttack Bulk Carrier Pvt. Ltd.", logo: cuttackLogo, sector: "Logistics and transport operations" },
     { name: "Pratham Group", logo: prathamLogo, sector: "Enterprise and business group" },
     { name: "Vegas Mall", logo: vegasLogo, sector: "Retail and commercial operations" },

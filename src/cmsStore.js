@@ -160,7 +160,6 @@ export const defaultCmsData = {
   news: [],
   apiUpdates: [],
   clients: [
-    { id: "client-1", name: "Alankit Limited", logo: "", industry: "Compliance Services", status: "Active", sortOrder: "1" },
     { id: "client-2", name: "Axis Bank", logo: "", industry: "Banking", status: "Active", sortOrder: "2" },
     { id: "client-3", name: "Bharti Airtel Payments Bank", logo: "", industry: "Payments", status: "Active", sortOrder: "3" },
   ],
