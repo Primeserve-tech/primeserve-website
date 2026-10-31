@@ -66,6 +66,7 @@ function Navbar({ activePage, onNavigate }) {
     settings.hsnSacToolEnabled !== "No" && { label: "HSN/SAC Code Finder", page: "hsn-sac" },
     settings.gstinValidatorEnabled !== "No" && { label: "GSTIN Validator", page: "gstin-validator" },
     settings.gstBulkDataFetchEnabled !== "No" && { label: "GST Bulk Data Fetch", href: "https://upload.primeserve.in/" },
+    { label: "GST Return Download", href: "https://gstreturns.primeserve.in/" },
   ].filter(Boolean);
 
   const isToolsPage = ["hsn-sac", "gstin-validator"].includes(activePage);
